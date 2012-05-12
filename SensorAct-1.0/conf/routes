@@ -1,0 +1,41 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+
+GET     /                                       Application.index
+POST    /                                       Application.index
+
+POST    /user/register                          Application.userRegister
+POST    /user/login                             Application.userLogin
+
+POST    /device/add                             Application.deviceAdd
+POST    /device/delete                          Application.deviceDelete
+POST    /device/get                             Application.deviceGet
+POST    /device/list                            Application.deviceList
+POST    /device/share                           Application.deviceShare
+POST    /device/search                          Application.deviceSearch
+
+POST    /guardrule/add                          Application.guardRuleAdd
+POST    /guardrule/delete                       Application.guardRuleDelete
+POST    /guardrule/get                          Application.guardRuleGet
+POST    /guardrule/list                         Application.guardRuleList
+
+POST    /task/add                               Application.taskAdd     
+POST    /task/delete                            Application.taskDelete
+POST    /task/get                               Application.taskGet
+POST    /task/list                              Application.taskList
+        
+POST    /data/query                             Application.dataQuery
+POST    /data/upload/wavesegment                Application.dataUploadWaveSegment
+
+# Ignore favicon requests
+GET     /favicon.ico                            404
+
+# Map static resources from the /app/public folder to the /public path
+# GET     /public/                                staticDir:public
+# GET     /doc/                                   staticDir:doc
+
+# Catch all
+*       /{controller}/{action}                  {controller}.{action}
