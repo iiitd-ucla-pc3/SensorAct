@@ -29,7 +29,8 @@ public class DataUploadWaveSegment extends SensorActAPI {
 	private static int WaveSegmentSize = 5;
 	private static boolean isSendResponseEnabled = false;
 
-	private HashMap<String, ArrayList<WaveSegmentFormat>> hashmapWaveSegments = new HashMap<String, ArrayList<WaveSegmentFormat>>();
+	private HashMap<String, ArrayList<WaveSegmentFormat>> hashmapWaveSegments = 
+			new HashMap<String, ArrayList<WaveSegmentFormat>>();
 
 	/**
 	 * Sends error message to the callel.
