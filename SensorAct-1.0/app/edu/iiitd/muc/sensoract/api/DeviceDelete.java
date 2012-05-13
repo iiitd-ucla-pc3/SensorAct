@@ -26,8 +26,8 @@ public class DeviceDelete extends SensorActAPI {
 	 * Converts the device/delete request attributes in Json string to object.
 	 * 
 	 * @param deviceDeleteJson
-	 *            Delete device request attributes in Json string
-	 * @return Converted delete device request format object
+	 *            Device delete request attributes in Json string
+	 * @return Converted device delete request format object
 	 * @throws InvalidJsonException
 	 *             If the Json string is not valid or not in the required
 	 *             request format
@@ -51,16 +51,16 @@ public class DeviceDelete extends SensorActAPI {
 	}
 
 	/**
-	 * Validates the delete device request format attributes. If validation
+	 * Validates the device delete request format attributes. If validation
 	 * fails, sends corresponding failure message to the caller.
 	 * 
-	 * @param deleteDevice
+	 * @param deviceDeleteRequest
 	 *            Delete device request format object
 	 */
-	private void validateRequest(final DeviceDeleteFormat deleteDevice) {
+	private void validateRequest(final DeviceDeleteFormat deviceDeleteRequest) {
 
-		validator.validateSecretKey(deleteDevice.secretkey);
-		validator.validateDeviceName(deleteDevice.devicename);
+		validator.validateSecretKey(deviceDeleteRequest.secretkey);
+		validator.validateDeviceName(deviceDeleteRequest.devicename);
 
 		if (validator.hasErrors()) {
 			response.sendFailure(Const.API_DEVICE_DELETE,
@@ -69,34 +69,38 @@ public class DeviceDelete extends SensorActAPI {
 	}
 
 	/**
-	 * Services the deleteDevice API.
+	 * Services the device/delete API.
 	 * 
 	 * Removes a device profile corresponding to the user's secret key and
 	 * device name from the repository. Sends success or failure, in case of any
 	 * error, response message in Json to the caller.
 	 * 
-	 * @param deleteDeviceJson
-	 *            Delete device request attributes in Json string
+	 * @param deviceDeleteJson
+	 *            Device delete request attributes in Json string
 	 */
-	public void doProcess(final String deleteDeviceJson) {
+	public void doProcess(final String deviceDeleteJson) {
 
 		try {
 
-			DeviceDeleteFormat deleteDevice = convertToDeviceDeleteFormat(deleteDeviceJson);
-			validateRequest(deleteDevice);
+			DeviceDeleteFormat deviceDeleteRequest = convertToDeviceDeleteFormat(deviceDeleteJson);
+			validateRequest(deviceDeleteRequest);
 
-			if (!UserProfile.isRegisteredSecretkey(deleteDevice.secretkey)) {
+			if (!UserProfile
+					.isRegisteredSecretkey(deviceDeleteRequest.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_DELETE,
-						ErrorType.UNREGISTERED_SECRETKEY,deleteDevice.secretkey);
+						ErrorType.UNREGISTERED_SECRETKEY,
+						deviceDeleteRequest.secretkey);
 			}
 
-			if (!DeviceProfile.deleteDeviceProfile(deleteDevice.secretkey,
-					deleteDevice.devicename)) {
+			if (!DeviceProfile.deleteDeviceProfile(
+					deviceDeleteRequest.secretkey,
+					deviceDeleteRequest.devicename)) {
 				response.sendFailure(Const.API_DEVICE_DELETE,
-						ErrorType.DEVICE_NOTFOUND, deleteDevice.devicename);
+						ErrorType.DEVICE_NOTFOUND,
+						deviceDeleteRequest.devicename);
 			}
 			response.SendSuccess(Const.API_DEVICE_DELETE, Const.DEVICE_DELETED,
-					deleteDevice.devicename);
+					deviceDeleteRequest.devicename);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_DEVICE_DELETE,

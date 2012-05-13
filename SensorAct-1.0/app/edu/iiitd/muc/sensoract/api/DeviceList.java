@@ -32,8 +32,8 @@ public class DeviceList extends SensorActAPI {
 	 * Converts device/list request attributes in Json string to object.
 	 * 
 	 * @param deviceListJson
-	 *            Get device request attributes in Json string
-	 * @return Converted list all devices request format object
+	 *            Device list request attributes in Json string
+	 * @return Converted device list request format object
 	 * @throws InvalidJsonException
 	 *             If the Json string is not valid or not in the required
 	 *             request format
@@ -57,15 +57,15 @@ public class DeviceList extends SensorActAPI {
 	}
 
 	/**
-	 * Validates the list all devices request format attributes. If validation
-	 * fails, sends corresponding failure message to the caller.
+	 * Validates the device list request format attributes. If validation fails,
+	 * sends corresponding failure message to the caller.
 	 * 
-	 * @param listAllDevices
+	 * @param deviceListRequest
 	 *            List all devices request format object
 	 */
-	private void validateRequest(final DeviceListFormat listAllDevices) {
+	private void validateRequest(final DeviceListFormat deviceListRequest) {
 
-		validator.validateSecretKey(listAllDevices.secretkey);
+		validator.validateSecretKey(deviceListRequest.secretkey);
 
 		if (validator.hasErrors()) {
 			response.sendFailure(Const.API_DEVICE_DELETE,
@@ -98,34 +98,34 @@ public class DeviceList extends SensorActAPI {
 	}
 
 	/**
-	 * Services the listAllDevices API.
+	 * Services the device/list API.
 	 * 
 	 * Retrieves all device profiles added by an user from the repository. Sends
 	 * all device profiles in Json array to the caller on success, otherwise,
 	 * corresponding failure message.
 	 * 
-	 * @param listAllDevicesJson
-	 *            List all devices request attributes in Json string
+	 * @param deviceListJson
+	 *            Device list request attributes in Json string
 	 */
-	public void doProcess(final String listAllDevicesJson) {
+	public void doProcess(final String deviceListJson) {
 
 		try {
 
-			DeviceListFormat listAllDevices = convertToDeviceListFormat(listAllDevicesJson);
-			validateRequest(listAllDevices);
+			DeviceListFormat deviceListRequest = convertToDeviceListFormat(deviceListJson);
+			validateRequest(deviceListRequest);
 
-			if (!UserProfile.isRegisteredSecretkey(listAllDevices.secretkey)) {
+			if (!UserProfile.isRegisteredSecretkey(deviceListRequest.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_ALL,
 						ErrorType.UNREGISTERED_SECRETKEY,
-						listAllDevices.secretkey);
+						deviceListRequest.secretkey);
 			}
 
 			List<DeviceProfileModel> devicesList = DeviceProfile
-					.getAllDeviceProfileList(listAllDevices.secretkey);
+					.getAllDeviceProfileList(deviceListRequest.secretkey);
 			if (null == devicesList || 0 == devicesList.size()) {
 				response.sendFailure(Const.API_DEVICE_ALL,
 						ErrorType.DEVICE_NODEVICE_FOUND,
-						listAllDevices.secretkey);
+						deviceListRequest.secretkey);
 			}
 
 			sendDeviceProfileList(devicesList);

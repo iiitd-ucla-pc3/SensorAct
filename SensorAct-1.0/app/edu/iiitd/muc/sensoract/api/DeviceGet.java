@@ -23,24 +23,24 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
  */
 public class DeviceGet extends SensorActAPI {
 
-
 	/**
 	 * Converts the device/get request attributes in Json string to object.
 	 * 
 	 * @param deviceGetJson
-	 *            Get device request attributes in Json string
-	 * @return Converted delete device request format object
+	 *            Device get request attributes in Json string
+	 * @return Converted device add request format object
 	 * @throws InvalidJsonException
 	 *             If the Json string is not valid or not in the required
 	 *             request format
 	 * @see DeviceGetFormat
 	 */
-	public DeviceGetFormat convertToDeviceGetFormat(
-			final String deviceGetJson) throws InvalidJsonException {
+	public DeviceGetFormat convertToDeviceGetFormat(final String deviceGetJson)
+			throws InvalidJsonException {
 
 		DeviceGetFormat deviceGetFormat = null;
 		try {
-			deviceGetFormat = gson.fromJson(deviceGetJson, DeviceGetFormat.class);
+			deviceGetFormat = gson.fromJson(deviceGetJson,
+					DeviceGetFormat.class);
 		} catch (Exception e) {
 			throw new InvalidJsonException(e.getMessage());
 		}
@@ -52,16 +52,16 @@ public class DeviceGet extends SensorActAPI {
 	}
 
 	/**
-	 * Validates the get device request format attributes. If validation fails,
+	 * Validates the device get request format attributes. If validation fails,
 	 * sends corresponding failure message to the caller.
 	 * 
-	 * @param getDevice
-	 *            Get device request format object
+	 * @param deviceGetRequest
+	 *            Device get request format object
 	 */
-	private void validateRequest(final DeviceGetFormat getDevice) {
+	private void validateRequest(final DeviceGetFormat deviceGetRequest) {
 
-		validator.validateSecretKey(getDevice.secretkey);
-		validator.validateDeviceName(getDevice.devicename);
+		validator.validateSecretKey(deviceGetRequest.secretkey);
+		validator.validateDeviceName(deviceGetRequest.devicename);
 
 		if (validator.hasErrors()) {
 			response.sendFailure(Const.API_DEVICE_GET,
@@ -95,33 +95,34 @@ public class DeviceGet extends SensorActAPI {
 	}
 
 	/**
-	 * Services the getdevice API.
+	 * Services the device/get API.
 	 * 
 	 * Retrieves a device profile corresponding to the user's secret key and
 	 * device name from the repository. Sends the requested device profile in
 	 * Json format to the caller on success, otherwise, corresponding failure
 	 * message.
 	 * 
-	 * @param getDeviceJson
-	 *            Get device request attributes in Json string
+	 * @param deviceGetJson
+	 *            Device get request attributes in Json string
 	 */
-	public void doProcess(final String getDeviceJson) {
+	public void doProcess(final String deviceGetJson) {
 
 		try {
 
-			DeviceGetFormat getDevice = convertToDeviceGetFormat(getDeviceJson);
-			validateRequest(getDevice);
+			DeviceGetFormat deviceGetRequest = convertToDeviceGetFormat(deviceGetJson);
+			validateRequest(deviceGetRequest);
 
-			if (!UserProfile.isRegisteredSecretkey(getDevice.secretkey)) {
+			if (!UserProfile.isRegisteredSecretkey(deviceGetRequest.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_GET,
-						ErrorType.UNREGISTERED_SECRETKEY, getDevice.secretkey);
+						ErrorType.UNREGISTERED_SECRETKEY,
+						deviceGetRequest.secretkey);
 			}
 
 			DeviceProfileModel oneDevice = DeviceProfile.getDeviceProfile(
-					getDevice.secretkey, getDevice.devicename);
+					deviceGetRequest.secretkey, deviceGetRequest.devicename);
 			if (null == oneDevice) {
 				response.sendFailure(Const.API_DEVICE_GET,
-						ErrorType.DEVICE_NOTFOUND, getDevice.devicename);
+						ErrorType.DEVICE_NOTFOUND, deviceGetRequest.devicename);
 			}
 
 			sendDeviceProfile(oneDevice);

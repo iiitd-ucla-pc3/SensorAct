@@ -153,7 +153,7 @@ public class DeviceAdd extends SensorActAPI {
 	/**
 	 * Validates device profile attributes. If validation fails, sends
 	 * corresponding failure message to the caller.
-	 *
+	 * 
 	 * @param newDevice
 	 *            Device profile object to validate
 	 */
@@ -202,7 +202,7 @@ public class DeviceAdd extends SensorActAPI {
 	}
 
 	/**
-	 * Services the adddevice API.
+	 * Services the device/add API.
 	 * <p>
 	 * Followings are the steps to be followed to add a new device profile
 	 * successfully to the repository.
@@ -219,13 +219,13 @@ public class DeviceAdd extends SensorActAPI {
 	 * </ol>
 	 * <p>
 	 * 
-	 * @param deviceJson
+	 * @param deviceAddJson
 	 *            Device profile in Json
 	 */
-	public void doProcess(final String addDeviceJson) {
+	public void doProcess(final String deviceAddJson) {
 
 		try {
-			DeviceAddFormat newDevice = convertToDeviceAddFormat(addDeviceJson);
+			DeviceAddFormat newDevice = convertToDeviceAddFormat(deviceAddJson);
 			validateRequest(newDevice);
 
 			if (!UserProfile.isRegisteredSecretkey(newDevice.secretkey)) {
