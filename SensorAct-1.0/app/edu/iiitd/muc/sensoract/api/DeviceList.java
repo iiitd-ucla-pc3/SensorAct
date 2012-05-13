@@ -39,7 +39,7 @@ public class DeviceList extends SensorActAPI {
 	 *             request format
 	 * @see DeviceListFormat
 	 */
-	public DeviceListFormat convertToDeviceListFormat(
+	private DeviceListFormat convertToDeviceListFormat(
 			final String deviceListJson) throws InvalidJsonException {
 
 		DeviceListFormat deviceListFormat = null;

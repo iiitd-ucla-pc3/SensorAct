@@ -32,7 +32,7 @@ public class DeviceSearch extends SensorActAPI {
 	 *             request format
 	 * @see DeviceSearchFormat
 	 */
-	public DeviceSearchFormat convertToDeviceSearchFormat(
+	private DeviceSearchFormat convertToDeviceSearchFormat(
 			final String deviceSearchJson) throws InvalidJsonException {
 
 		DeviceSearchFormat deviceSearchFormat = null;

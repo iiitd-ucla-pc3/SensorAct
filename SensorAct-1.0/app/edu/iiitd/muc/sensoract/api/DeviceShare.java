@@ -32,7 +32,7 @@ public class DeviceShare extends SensorActAPI {
 	 *             request format
 	 * @see DeviceShareFormat
 	 */
-	public DeviceShareFormat convertToDeviceShareFormat(
+	private DeviceShareFormat convertToDeviceShareFormat(
 			final String deviceShareJson) throws InvalidJsonException {
 
 		DeviceShareFormat deviceShareFormat = null;

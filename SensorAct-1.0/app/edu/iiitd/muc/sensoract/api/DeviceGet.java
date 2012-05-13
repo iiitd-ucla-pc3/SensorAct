@@ -34,7 +34,7 @@ public class DeviceGet extends SensorActAPI {
 	 *             request format
 	 * @see DeviceGetFormat
 	 */
-	public DeviceGetFormat convertToDeviceGetFormat(final String deviceGetJson)
+	private DeviceGetFormat convertToDeviceGetFormat(final String deviceGetJson)
 			throws InvalidJsonException {
 
 		DeviceGetFormat deviceGetFormat = null;

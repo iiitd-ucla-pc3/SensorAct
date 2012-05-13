@@ -33,7 +33,7 @@ public class DeviceDelete extends SensorActAPI {
 	 *             request format
 	 * @see DeviceDeleteFormat
 	 */
-	public DeviceDeleteFormat convertToDeviceDeleteFormat(
+	private DeviceDeleteFormat convertToDeviceDeleteFormat(
 			final String deviceDeleteJson) throws InvalidJsonException {
 
 		DeviceDeleteFormat deviceDeleteFormat = null;
