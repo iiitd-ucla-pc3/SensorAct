@@ -68,7 +68,7 @@ public class DeviceList extends SensorActAPI {
 		validator.validateSecretKey(deviceListRequest.secretkey);
 
 		if (validator.hasErrors()) {
-			response.sendFailure(Const.API_DEVICE_DELETE,
+			response.sendFailure(Const.API_DEVICE_LIST,
 					ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
 		}
 	}
@@ -115,7 +115,7 @@ public class DeviceList extends SensorActAPI {
 			validateRequest(deviceListRequest);
 
 			if (!UserProfile.isRegisteredSecretkey(deviceListRequest.secretkey)) {
-				response.sendFailure(Const.API_DEVICE_ALL,
+				response.sendFailure(Const.API_DEVICE_LIST,
 						ErrorType.UNREGISTERED_SECRETKEY,
 						deviceListRequest.secretkey);
 			}
@@ -123,7 +123,7 @@ public class DeviceList extends SensorActAPI {
 			List<DeviceProfileModel> devicesList = DeviceProfile
 					.getAllDeviceProfileList(deviceListRequest.secretkey);
 			if (null == devicesList || 0 == devicesList.size()) {
-				response.sendFailure(Const.API_DEVICE_ALL,
+				response.sendFailure(Const.API_DEVICE_LIST,
 						ErrorType.DEVICE_NODEVICE_FOUND,
 						deviceListRequest.secretkey);
 			}
@@ -131,10 +131,10 @@ public class DeviceList extends SensorActAPI {
 			sendDeviceProfileList(devicesList);
 
 		} catch (InvalidJsonException e) {
-			response.sendFailure(Const.API_DEVICE_ALL, ErrorType.INVALID_JSON,
+			response.sendFailure(Const.API_DEVICE_LIST, ErrorType.INVALID_JSON,
 					e.getMessage());
 		} catch (Exception e) {
-			response.sendFailure(Const.API_DEVICE_ALL, ErrorType.SYSTEM_ERROR,
+			response.sendFailure(Const.API_DEVICE_LIST, ErrorType.SYSTEM_ERROR,
 					e.getMessage());
 		}
 	}

@@ -62,7 +62,7 @@ public class DeviceSearch extends SensorActAPI {
 		// TODO: add validation for other parameters
 
 		if (validator.hasErrors()) {
-			response.sendFailure(Const.API_DEVICE_DELETE,
+			response.sendFailure(Const.API_DEVICE_SEARCH,
 					ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
 		}
 	}
@@ -82,7 +82,7 @@ public class DeviceSearch extends SensorActAPI {
 
 			if (!UserProfile
 					.isRegisteredSecretkey(deviceSearchRequest.secretkey)) {
-				response.sendFailure(Const.API_DEVICE_ALL,
+				response.sendFailure(Const.API_DEVICE_SEARCH,
 						ErrorType.UNREGISTERED_SECRETKEY,
 						deviceSearchRequest.secretkey);
 			}
@@ -90,10 +90,10 @@ public class DeviceSearch extends SensorActAPI {
 			// TODO: Search device
 
 		} catch (InvalidJsonException e) {
-			response.sendFailure(Const.API_DEVICE_ALL, ErrorType.INVALID_JSON,
+			response.sendFailure(Const.API_DEVICE_SEARCH, ErrorType.INVALID_JSON,
 					e.getMessage());
 		} catch (Exception e) {
-			response.sendFailure(Const.API_DEVICE_ALL, ErrorType.SYSTEM_ERROR,
+			response.sendFailure(Const.API_DEVICE_SEARCH, ErrorType.SYSTEM_ERROR,
 					e.getMessage());
 		}
 	}

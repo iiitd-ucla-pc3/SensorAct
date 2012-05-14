@@ -40,7 +40,19 @@ public class Const {
 	public static final String API_DEVICE_ADD = "device/add";
 	public static final String API_DEVICE_DELETE = "device/delete";
 	public static final String API_DEVICE_GET = "device/get";
-	public static final String API_DEVICE_ALL = "device/list";
+	public static final String API_DEVICE_LIST = "device/list";
+	public static final String API_DEVICE_SEARCH = "device/search";
+	public static final String API_DEVICE_SHARE = "device/share";
+	
+	public static final String API_GUARDRULE_ADD = "guardrule/add";
+	public static final String API_GUARDRULE_DELETE = "guardrule/delete";
+	public static final String API_GUARDRULE_GET = "guardrule/get";
+	public static final String API_GUARDRULE_LIST = "guardrule/list";
+	
+	public static final String API_TASK_ADD = "task/add";
+	public static final String API_TASK_DELETE = "task/delete";
+	public static final String API_TASK_GET = "task/get";
+	public static final String API_TASK_LIST = "task/list";
 	
 	public static final String API_DATA_UPLOAD_WAVESEGMENT = "data/upload/wavesegment";
 	public static final String API_DATA_QUERY = "data/query";
