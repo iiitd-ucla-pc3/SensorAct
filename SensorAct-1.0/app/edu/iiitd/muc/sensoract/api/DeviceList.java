@@ -124,8 +124,7 @@ public class DeviceList extends SensorActAPI {
 					.getAllDeviceProfileList(deviceListRequest.secretkey);
 			if (null == devicesList || 0 == devicesList.size()) {
 				response.sendFailure(Const.API_DEVICE_LIST,
-						ErrorType.DEVICE_NODEVICE_FOUND,
-						deviceListRequest.secretkey);
+						ErrorType.DEVICE_NODEVICE_FOUND, Const.MSG_NONE);
 			}
 
 			sendDeviceProfileList(devicesList);
