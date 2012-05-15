@@ -33,6 +33,18 @@ public class SensorActAPI extends Application {
 	public static DeviceDelete deviceDelete = new DeviceDelete();
 	public static DeviceGet deviceGet = new DeviceGet();
 	public static DeviceList deviceList = new DeviceList();
+	public static DeviceShare deviceShare = new DeviceShare();
+	public static DeviceSearch deviceSearch = new DeviceSearch();
+	
+	public static GuardRuleAdd guardRuleAdd = new GuardRuleAdd();
+	public static GuardRuleDelete guardRuleDelete = new GuardRuleDelete();
+	public static GuardRuleGet guardRuleGet = new GuardRuleGet();
+	public static GuardRuleList guardRuleList = new GuardRuleList();
+
+	public static TaskAdd taskAdd = new TaskAdd();
+	public static TaskDelete taskDelete = new TaskDelete();
+	public static TaskGet taskGet = new TaskGet();
+	public static TaskList taskList = new TaskList();
 
 	public static DataUploadWaveSegment dataUploadWaveseg = new DataUploadWaveSegment();
 	public static DataQuery dataQuery = new DataQuery();

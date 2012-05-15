@@ -88,6 +88,7 @@ public class GuardRuleList extends SensorActAPI {
 			}
 
 			// TODO: list guard rule
+			response.SendSuccess(Const.API_GUARDRULE_LIST, Const.TODO);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_GUARDRULE_LIST,

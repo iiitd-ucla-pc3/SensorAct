@@ -88,6 +88,7 @@ public class DeviceShare extends SensorActAPI {
 			}
 
 			// TODO: share device
+			response.SendSuccess(Const.API_DEVICE_SHARE, Const.TODO);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_DEVICE_SHARE, ErrorType.INVALID_JSON,

@@ -88,6 +88,7 @@ public class GuardRuleDelete extends SensorActAPI {
 			}
 
 			// TODO: delete guard rule
+			response.SendSuccess(Const.API_GUARDRULE_DELETE, Const.TODO);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_GUARDRULE_DELETE, ErrorType.INVALID_JSON,

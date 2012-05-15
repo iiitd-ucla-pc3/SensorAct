@@ -87,6 +87,7 @@ public class TaskList extends SensorActAPI {
 			}
 
 			// TODO: List a task
+			response.SendSuccess(Const.API_TASK_LIST, Const.TODO);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_TASK_LIST, ErrorType.INVALID_JSON,

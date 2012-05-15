@@ -87,6 +87,7 @@ public class TaskGet extends SensorActAPI {
 			}
 
 			// TODO: Get a task
+			response.SendSuccess(Const.API_TASK_GET, Const.TODO);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_TASK_GET, ErrorType.INVALID_JSON,

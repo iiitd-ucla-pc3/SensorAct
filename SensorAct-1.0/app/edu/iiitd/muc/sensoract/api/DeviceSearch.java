@@ -88,6 +88,8 @@ public class DeviceSearch extends SensorActAPI {
 			}
 
 			// TODO: Search device
+			response.SendSuccess(Const.API_DEVICE_SEARCH, Const.TODO);
+
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_DEVICE_SEARCH, ErrorType.INVALID_JSON,

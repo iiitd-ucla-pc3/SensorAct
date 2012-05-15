@@ -20,87 +20,85 @@ import edu.iiitd.muc.sensoract.constants.Const;
 
 public class Application extends Controller {
 
-	private static SensorActAPI api = new SensorActAPI();
-
 	public static void index() {
 		renderText("Welcome to SensorAct!");
 	}
 
 	// User profile management
 	public static void userLogin() {
-		api.userLogin.doProcess(request.params.get("body"));
+		SensorActAPI.userLogin.doProcess(request.params.get("body"));
 	}
 
 	public static void userRegister() {
-		api.userRegister.doProcess(request.params.get("body"));
+		SensorActAPI.userRegister.doProcess(request.params.get("body"));
 	}
 
 	// Device profile management
 	public static void deviceAdd() {
-		api.deviceAdd.doProcess(request.params.get("body"));
+		SensorActAPI.deviceAdd.doProcess(request.params.get("body"));
 	}
 
 	public static void deviceDelete() {
-		api.deviceDelete.doProcess(request.params.get("body"));
+		SensorActAPI.deviceDelete.doProcess(request.params.get("body"));
 	}
 
 	public static void deviceGet() {
-		api.deviceGet.doProcess(request.params.get("body"));
+		SensorActAPI.deviceGet.doProcess(request.params.get("body"));
 	}
 
 	public static void deviceList() {
-		api.deviceList.doProcess(request.params.get("body"));
+		SensorActAPI.deviceList.doProcess(request.params.get("body"));
 	}
 
 	public static void deviceShare() {
-		renderText(Const.TODO);
+		SensorActAPI.deviceShare.doProcess(request.params.get("body"));
 	}
 
 	public static void deviceSearch() {
-		renderText(Const.TODO);
+		SensorActAPI.deviceSearch.doProcess(request.params.get("body"));
 	}
 
 	// Guard rule management
 	public static void guardRuleAdd() {
-		renderText(Const.TODO);
+		SensorActAPI.guardRuleAdd.doProcess(request.params.get("body"));
 	}
 
 	public static void guardRuleDelete() {
-		renderText(Const.TODO);
+		SensorActAPI.guardRuleDelete.doProcess(request.params.get("body"));
 	}
 
 	public static void guardRuleGet() {
-		renderText(Const.TODO);
+		SensorActAPI.guardRuleGet.doProcess(request.params.get("body"));
 	}
 
 	public static void guardRuleList() {
-		renderText(Const.TODO);
+		SensorActAPI.guardRuleList.doProcess(request.params.get("body"));
 	}
 
 	// Task management
 	public static void taskAdd() {
-		renderText("addtask success! ");
+		SensorActAPI.taskAdd.doProcess(request.params.get("body"));
 	}
 
 	public static void taskDelete() {
-		renderText("edittask success! ");
+		SensorActAPI.taskDelete.doProcess(request.params.get("body"));
 	}
 
 	public static void taskGet() {
-		renderText("deletetask success! ");
+		SensorActAPI.taskGet.doProcess(request.params.get("body"));
 	}
 
 	public static void taskList() {
-		renderText("deletetask success! ");
+		SensorActAPI.taskList.doProcess(request.params.get("body"));
 	}
 
 	// Data management
 	public static void dataQuery() {
-		api.dataQuery.doProcess(request.params.get("body"));
+		SensorActAPI.dataQuery.doProcess(request.params.get("body"));
 	}
 
 	public static void dataUploadWaveSegment() {
-		api.dataUploadWaveseg.doProcess(request.params.get("body"));
+		SensorActAPI.dataUploadWaveseg.doProcess(request.params.get("body"));
 	}
 
 }

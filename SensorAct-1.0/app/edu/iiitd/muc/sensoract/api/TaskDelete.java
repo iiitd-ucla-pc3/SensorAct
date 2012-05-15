@@ -87,6 +87,7 @@ public class TaskDelete extends SensorActAPI {
 			}
 
 			// TODO: Delete a task
+			response.SendSuccess(Const.API_TASK_DELETE, Const.TODO);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_TASK_DELETE, ErrorType.INVALID_JSON,
