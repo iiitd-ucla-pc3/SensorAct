@@ -28,6 +28,7 @@ POST    /task/get                               Application.taskGet
 POST    /task/list                              Application.taskList
         
 POST    /data/query                             Application.dataQuery
+POST    /upload/wavesegment                     Application.dataUploadWaveSegment
 POST    /data/upload/wavesegment                Application.dataUploadWaveSegment
 
 # Ignore favicon requests

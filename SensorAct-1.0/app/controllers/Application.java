@@ -9,7 +9,6 @@ package controllers;
 
 import play.mvc.Controller;
 import edu.iiitd.muc.sensoract.api.SensorActAPI;
-import edu.iiitd.muc.sensoract.constants.Const;
 
 /**
  * Application class, entry point for all APIs.
@@ -81,7 +80,7 @@ public class Application extends Controller {
 	}
 
 	public static void taskDelete() {
-		SensorActAPI.taskDelete.doProcess(request.params.get("body"));
+		SensorActAPI.taskDelete.doProcess(request.params.get("body"));		
 	}
 
 	public static void taskGet() {
