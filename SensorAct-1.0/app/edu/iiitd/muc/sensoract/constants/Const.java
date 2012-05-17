@@ -28,7 +28,8 @@ public class Const {
 	public static final String MSG_FAILED = "Failed";
 	public static final String MSG_ERROR = "Error ";
 	public static final String MSG_NONE = "None";
-	public static final String DELIM = ": ";
+	public static final String DELIM1 = "-> ";
+	public static final String DELIM2 = ": ";
 
 	public static final int SUCCESS = 0;
 

@@ -42,7 +42,7 @@ public class ResponseFormat extends SensorActAPI {
 	 *            Status of the success message
 	 */
 	public void SendSuccess(final String apiname, final String message) {
-		log.info(apiname + Const.DELIM + message);
+		log.info(apiname + Const.DELIM1 + message);
 		sendJSON(new ResponseFormat(apiname, Const.SUCCESS, message));
 	}
 
@@ -57,7 +57,7 @@ public class ResponseFormat extends SensorActAPI {
 	 */
 	public void SendSuccess(final String apiname, final String message,
 			final String param) {
-		log.info(apiname + Const.DELIM + message + Const.DELIM + param);
+		log.info(apiname + Const.DELIM1 + message + Const.DELIM2 + param);
 		sendJSON(new ResponseFormat(apiname, Const.SUCCESS, message + ": "
 				+ param));
 	}
@@ -74,11 +74,11 @@ public class ResponseFormat extends SensorActAPI {
 	 */
 	public void sendFailure(final String apiname, final ErrorType err,
 			final String description) {
-		String error = apiname + Const.DELIM + "(" + err.getCode() + ")"
-				+ err.getMessage() + Const.DELIM + description;
+		String error = apiname + Const.DELIM1 + "[" + err.getCode() + "]"
+				+ err.getMessage() + Const.DELIM2 + description;
 		log.error(error);
 		ResponseFormat response = new ResponseFormat(apiname, err.getCode(),
-				err.getMessage() + Const.DELIM + description);
+				err.getMessage() + Const.DELIM2 + description);
 		sendJSON(response);
 	}
 
