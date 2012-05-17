@@ -7,6 +7,8 @@
 GET     /                                       Application.index
 POST    /                                       Application.index
 
+GET     /repo/info                              Application.repoInfo
+
 POST    /user/register                          Application.userRegister
 POST    /user/login                             Application.userLogin
 POST    /user/generate/secretkey                Application.userGenerateSecretkey

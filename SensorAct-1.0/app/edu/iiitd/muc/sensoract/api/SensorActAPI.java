@@ -25,6 +25,7 @@ public class SensorActAPI extends Application {
 	/*
 	 * API references
 	 */
+	public static RepoInfo repoInfo = new RepoInfo();
 	public static UserRegister userRegister = new UserRegister();
 //	public static UserRemove userRemove = new UserRemove();
 	public static UserLogin userLogin = new UserLogin();

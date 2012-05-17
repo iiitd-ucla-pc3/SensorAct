@@ -19,6 +19,10 @@ public class Const {
 	/*
 	 * General 
 	 */
+	
+	public static final String repoName = "SensorActRepo";
+	public static final String repoURL = "http://localhost:9000/";
+	
 	public static final String SENSORACT = "SensorAct";
 	public static final String APPLICATION_NAME = SENSORACT;
 
@@ -36,6 +40,7 @@ public class Const {
 	/*
 	 * API names
 	 */
+	public static final String API_REPO_INFO = "repo/info";
 	public static final String API_USER_LOGIN = "user/login";
 	public static final String API_USER_REGISTER = "user/register";
 	public static final String API_USER_GENERATE_SECRETKEY = "user/generate/secretkey";

@@ -23,6 +23,12 @@ public class Application extends Controller {
 		renderText("Welcome to SensorAct!");
 	}
 
+	// Repo information
+	public static void repoInfo() {
+		SensorActAPI.repoInfo.doProcess();
+	}
+
+	
 	// User profile management
 	public static void userLogin() {
 		SensorActAPI.userLogin.doProcess(request.params.get("body"));
