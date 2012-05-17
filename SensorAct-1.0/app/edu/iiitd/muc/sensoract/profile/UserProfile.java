@@ -9,6 +9,7 @@ package edu.iiitd.muc.sensoract.profile;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -85,7 +86,7 @@ public class UserProfile {
 	 */
 	public static String getSecretkey(final String username,
 			final String password) {
-		
+
 		List<UserProfileModel> userList = UserProfileModel.find(
 				"byUsernameAndPassword", username, password).fetchAll();
 		if (null != userList && userList.size() > 0) {
@@ -103,8 +104,18 @@ public class UserProfile {
 	 * @return True, for registered secretkey, otherwise false.
 	 */
 	public static boolean isRegisteredSecretkey(final String secretkey) {
-		return 0 == UserProfileModel.count("bySecretkey", secretkey) ? false
-				: true;
+
+		boolean isRegisteredSecretkey = true;
+		boolean isRegisteredBrokerkey = true;
+
+		if (0 == UserProfileModel.count("bySecretkey", secretkey)) {
+			isRegisteredSecretkey = false;
+		}
+		if (0 == UserProfileModel.count("byBrokerkeys", secretkey)) {
+			isRegisteredBrokerkey = false;
+		}
+
+		return (isRegisteredSecretkey || isRegisteredBrokerkey);
 	}
 
 	/**
@@ -116,8 +127,7 @@ public class UserProfile {
 	 * @return True, for registered username, otherwise false.
 	 */
 	public static boolean isRegisteredUser(final String username) {
-		return 0 == UserProfileModel.count("byUsername", username) ? false
-				: true;
+		return !(0 == UserProfileModel.count("byUsername", username));
 	}
 
 	/**
@@ -130,32 +140,38 @@ public class UserProfile {
 	 *         otherwise false.
 	 */
 	public static boolean isUserProfileExists(final UserRegisterFormat newUser) {
-		return 0 == UserProfileModel.count("byUsername", newUser.username) ? false
-				: true;
+		return !(0 == UserProfileModel.count("byUsername", newUser.username));
 	}
 
-	// public static boolean isUserProfileExists(final String username, final
-	// String password) {
-	// return 0 == UserProfileModel.count("byUsernameAndPassword", username,
-	// password)
-	// ? false : true;
-	// }
-	public static boolean updateRepoList(final String secretkey,
-			final String reponame) {
+	/**
+	 * Updates the broker key list of a user profile.
+	 * 
+	 * @param username
+	 *            User name
+	 * @param secretkey
+	 *            Secretkey of the user or broker (generated)
+	 * @return True, if the broker key list is successfully updated, otherwise
+	 *         false.
+	 */
+	public static boolean updateBrokerKeys(final String username,
+			final String secretkey) {
 
-		List<UserProfileModel> userList = UserProfileModel.find("bySecretkey")
-				.fetchAll();
+		List<UserProfileModel> userList = UserProfileModel.find("byUsername",
+				username).fetchAll();
 
 		if (null == userList || 0 == userList.size()) {
 			return false;
 		}
-		// List<String> repoList = userList.get(0).repolist;
-		// if( null == repoList) {
-		// repoList = new ArrayList<String>();
-		// }
-		//
-		// userList.get(0).repolist= repoList;
-		// userList.get(0).save();
+
+		List<String> keyList = userList.get(0).brokerkeys;
+		if (null == keyList) {
+			keyList = new ArrayList<String>();
+		}
+		keyList.add(secretkey);
+
+		userList.get(0).brokerkeys = keyList;
+		userList.get(0).save();
+
 		return true;
 	}
 

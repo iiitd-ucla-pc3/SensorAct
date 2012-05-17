@@ -7,6 +7,9 @@
  */
 package edu.iiitd.muc.sensoract.model.user;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import play.modules.morphia.Model;
 import com.google.code.morphia.annotations.Entity;
 
@@ -23,6 +26,7 @@ public class UserProfileModel extends Model {
 	public String password = null;
 	public String email = null;
 	public String secretkey = null;
+	public List<String> brokerkeys = null;
 
 	public UserProfileModel(final String username, final String password,
 			final String email, final String secretkey) {
@@ -30,6 +34,7 @@ public class UserProfileModel extends Model {
 		this.password = password;
 		this.email = email;
 		this.secretkey = secretkey;
+		this.brokerkeys = new ArrayList<String>();
 	}
 	
 	UserProfileModel() {

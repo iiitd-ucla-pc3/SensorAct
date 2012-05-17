@@ -32,6 +32,10 @@ public class Application extends Controller {
 		SensorActAPI.userRegister.doProcess(request.params.get("body"));
 	}
 
+	public static void userGenerateSecretkey() {
+		SensorActAPI.userGenerateSecretkey.doProcess(request.params.get("body"));
+	}
+
 	// Device profile management
 	public static void deviceAdd() {
 		SensorActAPI.deviceAdd.doProcess(request.params.get("body"));

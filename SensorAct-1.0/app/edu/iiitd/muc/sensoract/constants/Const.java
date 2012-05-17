@@ -37,6 +37,7 @@ public class Const {
 	 */
 	public static final String API_USER_LOGIN = "user/login";
 	public static final String API_USER_REGISTER = "user/register";
+	public static final String API_USER_GENERATE_SECRETKEY = "user/generate/secretkey";
 
 	public static final String API_DEVICE_ADD = "device/add";
 	public static final String API_DEVICE_DELETE = "device/delete";

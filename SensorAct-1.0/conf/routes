@@ -9,6 +9,7 @@ POST    /                                       Application.index
 
 POST    /user/register                          Application.userRegister
 POST    /user/login                             Application.userLogin
+POST    /user/generate/secretkey                Application.userGenerateSecretkey
 
 POST    /device/add                             Application.deviceAdd
 POST    /device/delete                          Application.deviceDelete
