@@ -78,7 +78,7 @@ public class UserProfile {
 	}
 
 	/**
-	 * Retrieves the secretkey corresponding to the given username.
+	 * Retrieves the secretkey corresponding to the given username and password.
 	 * 
 	 * @param username
 	 *            User name
@@ -89,6 +89,23 @@ public class UserProfile {
 
 		List<UserProfileModel> userList = UserProfileModel.find(
 				"byUsernameAndPassword", username, password).fetchAll();
+		if (null != userList && userList.size() > 0) {
+			return userList.get(0).secretkey;
+		}
+		return null;
+	}
+
+	/**
+	 * Retrieves the secretkey corresponding to the given username.
+	 * 
+	 * @param username
+	 *            User name
+	 * @return Secretkey of the user, if already registered, otherwise null.
+	 */
+	public static String getSecretkey(final String username) {
+
+		List<UserProfileModel> userList = UserProfileModel.find(
+				"byUsername", username).fetchAll();
 		if (null != userList && userList.size() > 0) {
 			return userList.get(0).secretkey;
 		}

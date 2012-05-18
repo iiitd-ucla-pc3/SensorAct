@@ -82,7 +82,7 @@ public class DataQuery extends SensorActAPI {
 	private void executeQuery(final DataQueryFormat queryObj) {
 
 		// TODO: add extensive query processing options
-		String secretkey = UserProfile.getSecretkey(queryObj.username, null);
+		String secretkey = UserProfile.getSecretkey(queryObj.username);
 		if (null == secretkey) {
 			response.sendFailure(Const.API_DATA_QUERY,
 					ErrorType.UNREGISTERED_USERNAME, "");
