@@ -22,6 +22,7 @@ public class Const {
 	
 	public static final String repoName = "SensorActRepo";
 	public static final String repoURL = "http://localhost:9000/";
+	//public static final String repoURL = "http:muc.iiitd.com:9000/";
 	
 	public static final String SENSORACT = "SensorAct";
 	public static final String APPLICATION_NAME = SENSORACT;
