@@ -22,11 +22,14 @@ public class DeviceChannelModel extends Model {
 	public String name = null;
 	public String type = null;
 	public String unit = null;
+	public Integer samplingperiod = null;
 
 	public DeviceChannelModel(final DeviceAddFormat.DeviceChannel channel) {
 		name = channel.name;
 		type = channel.type;
 		unit = channel.unit;
+		samplingperiod = channel.samplingperiod;
+		
 	}
 
 	DeviceChannelModel() {
