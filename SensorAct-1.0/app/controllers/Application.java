@@ -27,7 +27,6 @@ public class Application extends Controller {
 	public static void repoInfo() {
 		SensorActAPI.repoInfo.doProcess();
 	}
-
 	
 	// User profile management
 	public static void userLogin() {
@@ -38,8 +37,8 @@ public class Application extends Controller {
 		SensorActAPI.userRegister.doProcess(request.params.get("body"));
 	}
 
-	public static void userGenerateSecretkey() {
-		SensorActAPI.userGenerateSecretkey.doProcess(request.params.get("body"));
+	public static void userGenerateRepokey() {
+		SensorActAPI.userGenerateRepokey.doProcess(request.params.get("body"));
 	}
 
 	// Device profile management
@@ -65,6 +64,23 @@ public class Application extends Controller {
 
 	public static void deviceSearch() {
 		SensorActAPI.deviceSearch.doProcess(request.params.get("body"));
+	}
+
+	// Device template management
+	public static void deviceTemplateAdd() {
+		SensorActAPI.deviceTemplateAdd.doProcess(request.params.get("body"));
+	}
+
+	public static void deviceTemplateDelete() {
+		SensorActAPI.deviceTemplateDelete.doProcess(request.params.get("body"));
+	}
+
+	public static void deviceTemplateGet() {
+		SensorActAPI.deviceTemplateGet.doProcess(request.params.get("body"));
+	}
+
+	public static void deviceTemplateList() {
+		SensorActAPI.deviceTemplateList.doProcess(request.params.get("body"));
 	}
 
 	// Guard rule management

@@ -44,7 +44,7 @@ public class Const {
 	public static final String API_REPO_INFO = "repo/info";
 	public static final String API_USER_LOGIN = "user/login";
 	public static final String API_USER_REGISTER = "user/register";
-	public static final String API_USER_GENERATE_SECRETKEY = "user/generate/secretkey";
+	public static final String API_USER_GENERATE_REPOKEY = "user/generate/repokey";
 
 	public static final String API_DEVICE_ADD = "device/add";
 	public static final String API_DEVICE_DELETE = "device/delete";
@@ -52,7 +52,12 @@ public class Const {
 	public static final String API_DEVICE_LIST = "device/list";
 	public static final String API_DEVICE_SEARCH = "device/search";
 	public static final String API_DEVICE_SHARE = "device/share";
-	
+
+	public static final String API_DEVICE_TEMPLATE_ADD = "device/template/add";
+	public static final String API_DEVICE_TEMPLATE_DELETE = "device/template/delete";
+	public static final String API_DEVICE_TEMPLATE_GET = "device/template/get";
+	public static final String API_DEVICE_TEMPLATE_LIST = "device/template/list";
+
 	public static final String API_GUARDRULE_ADD = "guardrule/add";
 	public static final String API_GUARDRULE_DELETE = "guardrule/delete";
 	public static final String API_GUARDRULE_GET = "guardrule/get";

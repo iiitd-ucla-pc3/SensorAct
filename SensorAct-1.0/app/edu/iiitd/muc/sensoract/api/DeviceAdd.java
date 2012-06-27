@@ -40,7 +40,7 @@ public class DeviceAdd extends SensorActAPI {
 	 *             request format
 	 * @see DeviceAddFormat
 	 */
-	private DeviceAddFormat convertToDeviceAddFormat(final String deviceJson)
+	protected DeviceAddFormat convertToDeviceAddFormat(final String deviceJson)
 			throws InvalidJsonException {
 
 		DeviceAddFormat deviceAddFormat = null;
@@ -157,7 +157,7 @@ public class DeviceAdd extends SensorActAPI {
 	 * @param newDevice
 	 *            Device profile object to validate
 	 */
-	private void validateRequest(final DeviceAddFormat newDevice) {
+	protected void validateRequest(final DeviceAddFormat newDevice) {
 
 		validator.validateSecretKey(newDevice.secretkey);
 
@@ -195,10 +195,10 @@ public class DeviceAdd extends SensorActAPI {
 			}
 		}
 
-		if (validator.hasErrors()) {
-			response.sendFailure(Const.API_DEVICE_ADD,
-					ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
-		}
+//		if (validator.hasErrors()) {
+//			response.sendFailure(Const.API_DEVICE_ADD,
+//					ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
+//		}
 	}
 
 	/**
@@ -226,7 +226,13 @@ public class DeviceAdd extends SensorActAPI {
 
 		try {
 			DeviceAddFormat newDevice = convertToDeviceAddFormat(deviceAddJson);
+			
 			validateRequest(newDevice);
+			if (validator.hasErrors()) {
+				response.sendFailure(Const.API_DEVICE_ADD,
+						ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
+			}
+
 
 			if (!UserProfile.isRegisteredSecretkey(newDevice.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_ADD,

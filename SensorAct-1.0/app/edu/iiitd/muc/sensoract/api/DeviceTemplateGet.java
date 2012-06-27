@@ -21,49 +21,7 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
-public class DeviceGet extends SensorActAPI {
-
-	/**
-	 * Converts the device/get request attributes in Json string to object.
-	 * 
-	 * @param deviceGetJson
-	 *            Device get request attributes in Json string
-	 * @return Converted device add request format object
-	 * @throws InvalidJsonException
-	 *             If the Json string is not valid or not in the required
-	 *             request format
-	 * @see DeviceGetFormat
-	 */
-	protected DeviceGetFormat convertToDeviceGetFormat(final String deviceGetJson)
-			throws InvalidJsonException {
-
-		DeviceGetFormat deviceGetFormat = null;
-		try {
-			deviceGetFormat = gson.fromJson(deviceGetJson,
-					DeviceGetFormat.class);
-		} catch (Exception e) {
-			throw new InvalidJsonException(e.getMessage());
-		}
-
-		if (null == deviceGetFormat) {
-			throw new InvalidJsonException(Const.EMPTY_JSON);
-		}
-		return deviceGetFormat;
-	}
-
-	/**
-	 * Validates the device get request format attributes. If validation fails,
-	 * sends corresponding failure message to the caller.
-	 * 
-	 * @param deviceGetRequest
-	 *            Device get request format object
-	 */
-	protected void validateRequest(final DeviceGetFormat deviceGetRequest) {
-
-		validator.validateSecretKey(deviceGetRequest.secretkey);
-		validator.validateDeviceName(deviceGetRequest.devicename);
-
-	}
+public class DeviceTemplateGet extends DeviceGet {
 
 	/**
 	 * Sends the requested device profile object to caller in Json
@@ -75,7 +33,7 @@ public class DeviceGet extends SensorActAPI {
 
 		// TODO: Remove unnecessary _id attributes thrown by morphia
 		oneDevice.secretkey = null;
-		oneDevice.name = oneDevice.devicename;
+		oneDevice.name = oneDevice.templatename;
 		oneDevice.devicename = null;
 		oneDevice.templatename = null;
 		response.sendJSON(oneDevice);
@@ -109,6 +67,7 @@ public class DeviceGet extends SensorActAPI {
 		try {
 
 			DeviceGetFormat deviceGetRequest = convertToDeviceGetFormat(deviceGetJson);
+
 			validateRequest(deviceGetRequest);
 			if (validator.hasErrors()) {
 				response.sendFailure(Const.API_DEVICE_GET,
@@ -122,7 +81,7 @@ public class DeviceGet extends SensorActAPI {
 						deviceGetRequest.secretkey);
 			}
 
-			DeviceProfileModel oneDevice = DeviceProfile.getDeviceProfile(
+			DeviceProfileModel oneDevice = DeviceProfile.getDeviceTemplate(
 					deviceGetRequest.secretkey, deviceGetRequest.devicename);
 			if (null == oneDevice) {
 				response.sendFailure(Const.API_DEVICE_GET,

@@ -7,10 +7,12 @@
  */
 package edu.iiitd.muc.sensoract.profile;
 
+import java.util.Iterator;
 import java.util.List;
 
 import play.modules.morphia.Model.MorphiaQuery;
 import edu.iiitd.muc.sensoract.api.request.DeviceAddFormat;
+import edu.iiitd.muc.sensoract.api.response.DeviceListResponseFormat;
 import edu.iiitd.muc.sensoract.model.device.DeviceProfileModel;
 
 /**
@@ -30,6 +32,21 @@ public class DeviceProfile {
 	 */
 	public static boolean addDeviceProfile(final DeviceAddFormat newDevice) {
 		DeviceProfileModel newDeviceProfile = new DeviceProfileModel(newDevice);
+		newDeviceProfile.templatename = null;
+		newDeviceProfile.devicename = newDevice.deviceprofile.name;
+		newDeviceProfile.save();
+		return true;
+	}
+
+	/**
+	 * 
+	 * @param newDevice
+	 * @return
+	 */
+	public static boolean addDeviceTemplate(final DeviceAddFormat newDevice) {
+		DeviceProfileModel newDeviceProfile = new DeviceProfileModel(newDevice);		
+		newDeviceProfile.templatename = newDevice.deviceprofile.name;
+		newDeviceProfile.devicename = null;
 		newDeviceProfile.save();
 		return true;
 	}
@@ -50,7 +67,23 @@ public class DeviceProfile {
 
 		// TODO: Include other params to uniquely identify device profile
 		// TODO: Inconsistent way with play's jpa Model
-		MorphiaQuery mq = DeviceProfileModel.find("bySecretkeyAndName",
+		MorphiaQuery mq = DeviceProfileModel.find("bySecretkeyAndDevicename",
+				secretkey, devicename);
+		if (0 == mq.count()) {
+			return false;
+		}
+		// DeviceProfileModel.find("bySecretkeyAndName", secretkey,
+		// devicename).delete();
+		mq.delete();
+		return true;
+	}
+
+	public static boolean deleteDeviceTemplate(final String secretkey,
+			final String devicename) {
+
+		// TODO: Include other params to uniquely identify device profile
+		// TODO: Inconsistent way with play's jpa Model
+		MorphiaQuery mq = DeviceProfileModel.find("bySecretkeyAndTemplatename",
 				secretkey, devicename);
 		if (0 == mq.count()) {
 			return false;
@@ -77,7 +110,19 @@ public class DeviceProfile {
 
 		// TODO: Inconsistent way with play's jpa Model
 		List<DeviceProfileModel> oneDevice = DeviceProfileModel.find(
-				"bySecretkeyAndName", secretkey, devicename).fetchAll();
+				"bySecretkeyAndDevicename", secretkey, devicename).fetchAll();
+		if (null == oneDevice || 0 == oneDevice.size()) {
+			return null;
+		}
+		return oneDevice.get(0);
+	}
+
+	public static DeviceProfileModel getDeviceTemplate(final String secretkey,
+			final String templatename) {
+
+		// TODO: Inconsistent way with play's jpa Model
+		List<DeviceProfileModel> oneDevice = DeviceProfileModel.find(
+				"bySecretkeyAndTemplatename", secretkey, templatename).fetchAll();
 		if (null == oneDevice || 0 == oneDevice.size()) {
 			return null;
 		}
@@ -85,8 +130,8 @@ public class DeviceProfile {
 	}
 
 	/**
-	 * Retrieves all  device profiles from the data repository corresponding to the
-	 * request.
+	 * Retrieves all device profiles from the data repository corresponding to
+	 * the request.
 	 * 
 	 * @param secretkey
 	 *            Secret key of the registered user associated with the devices
@@ -102,6 +147,27 @@ public class DeviceProfile {
 		if (null == allDevicesList || 0 == allDevicesList.size()) {
 			return null;
 		}
+		// TODO: filter only devices
+//		Iterator<DeviceProfileModel> devicesListIterator = allDevicesList
+//				.iterator();
+//		while (devicesListIterator.hasNext()) {
+//			devicesListIterator.next().templatename = null;			
+//		}
+
+		
+		return allDevicesList;
+	}
+
+	public static List<DeviceProfileModel> getAllDeviceTemplateList(
+			final String secretkey) {
+
+		// TODO: Inconsistent way with play's jpa Model
+		List<DeviceProfileModel> allDevicesList = DeviceProfileModel.find(
+				"bySecretkey", secretkey).fetchAll();
+		if (null == allDevicesList || 0 == allDevicesList.size()) {
+			return null;
+		}
+		
 		return allDevicesList;
 	}
 
@@ -111,13 +177,23 @@ public class DeviceProfile {
 	 * 
 	 * @param newDevice
 	 *            Device profile object to check duplicates
-	 * @return True, if device profile exists in the repository, otherwise false.
+	 * @return True, if device profile exists in the repository, otherwise
+	 *         false.
 	 */
 	public static boolean isDeviceProfileExists(final DeviceAddFormat newDevice) {
 
 		// TODO: Check the uniqueness against id, ip, etc also
-		return 0 == DeviceProfileModel.count("bySecretkeyAndName",
+		return 0 == DeviceProfileModel.count("bySecretkeyAndDevicename",
 				newDevice.secretkey, newDevice.deviceprofile.name) ? false
 				: true;
 	}
+
+	public static boolean isDeviceTemplateExists(final DeviceAddFormat newDevice) {
+
+		// TODO: Check the uniqueness against id, ip, etc also
+		return 0 == DeviceProfileModel.count("bySecretkeyAndTemplatename",
+				newDevice.secretkey, newDevice.deviceprofile.name) ? false
+				: true;
+	}
+
 }

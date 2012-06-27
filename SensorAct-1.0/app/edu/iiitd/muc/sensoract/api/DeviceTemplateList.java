@@ -26,48 +26,7 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
-public class DeviceList extends SensorActAPI {
-
-	/**
-	 * Converts device/list request attributes in Json string to object.
-	 * 
-	 * @param deviceListJson
-	 *            Device list request attributes in Json string
-	 * @return Converted device list request format object
-	 * @throws InvalidJsonException
-	 *             If the Json string is not valid or not in the required
-	 *             request format
-	 * @see DeviceListFormat
-	 */
-	protected DeviceListFormat convertToDeviceListFormat(
-			final String deviceListJson) throws InvalidJsonException {
-
-		DeviceListFormat deviceListFormat = null;
-		try {
-			deviceListFormat = gson.fromJson(deviceListJson,
-					DeviceListFormat.class);
-		} catch (Exception e) {
-			throw new InvalidJsonException(e.getMessage());
-		}
-
-		if (null == deviceListFormat) {
-			throw new InvalidJsonException(Const.EMPTY_JSON);
-		}
-		return deviceListFormat;
-	}
-
-	/**
-	 * Validates the device list request format attributes. If validation fails,
-	 * sends corresponding failure message to the caller.
-	 * 
-	 * @param deviceListRequest
-	 *            List all devices request format object
-	 */
-	protected void validateRequest(final DeviceListFormat deviceListRequest) {
-
-		validator.validateSecretKey(deviceListRequest.secretkey);
-
-	}
+public class DeviceTemplateList extends DeviceList {
 
 	/**
 	 * Sends the list of requested device profile object to caller in Json
@@ -76,7 +35,7 @@ public class DeviceList extends SensorActAPI {
 	 * @param devicesList
 	 *            List of device profile objects to send.
 	 */
-	private void sendDeviceProfileList(
+	private void sendDeviceTemplateList(
 			final List<DeviceProfileModel> devicesList) {
 
 		DeviceListResponseFormat outList = new DeviceListResponseFormat();
@@ -85,9 +44,9 @@ public class DeviceList extends SensorActAPI {
 
 		while (devicesListIterator.hasNext()) {
 			DeviceProfileModel device = devicesListIterator.next();
-			if (device.devicename != null) {
+			if (device.templatename != null) {
 				device.secretkey = null;
-				device.name = device.devicename;
+				device.name = device.templatename;
 				device.devicename = null;
 				device.templatename = null;
 				outList.devicelist.add(device);
@@ -116,9 +75,9 @@ public class DeviceList extends SensorActAPI {
 			validateRequest(deviceListRequest);
 			if (validator.hasErrors()) {
 				response.sendFailure(Const.API_DEVICE_LIST,
-						ErrorType.VALIDATION_FAILED,
-						validator.getErrorMessages());
+						ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
 			}
+
 
 			if (!UserProfile.isRegisteredSecretkey(deviceListRequest.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_LIST,
@@ -127,13 +86,13 @@ public class DeviceList extends SensorActAPI {
 			}
 
 			List<DeviceProfileModel> devicesList = DeviceProfile
-					.getAllDeviceProfileList(deviceListRequest.secretkey);
+					.getAllDeviceTemplateList(deviceListRequest.secretkey);
 			if (null == devicesList || 0 == devicesList.size()) {
 				response.sendFailure(Const.API_DEVICE_LIST,
 						ErrorType.DEVICE_NODEVICE_FOUND, Const.MSG_NONE);
 			}
 
-			sendDeviceProfileList(devicesList);
+			sendDeviceTemplateList(devicesList);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_DEVICE_LIST, ErrorType.INVALID_JSON,

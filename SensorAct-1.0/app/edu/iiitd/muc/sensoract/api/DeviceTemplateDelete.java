@@ -20,49 +20,7 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
-public class DeviceDelete extends SensorActAPI {
-
-	/**
-	 * Converts the device/delete request attributes in Json string to object.
-	 * 
-	 * @param deviceDeleteJson
-	 *            Device delete request attributes in Json string
-	 * @return Converted device delete request format object
-	 * @throws InvalidJsonException
-	 *             If the Json string is not valid or not in the required
-	 *             request format
-	 * @see DeviceDeleteFormat
-	 */
-	protected DeviceDeleteFormat convertToDeviceDeleteFormat(
-			final String deviceDeleteJson) throws InvalidJsonException {
-
-		DeviceDeleteFormat deviceDeleteFormat = null;
-		try {
-			deviceDeleteFormat = gson.fromJson(deviceDeleteJson,
-					DeviceDeleteFormat.class);
-		} catch (Exception e) {
-			throw new InvalidJsonException(e.getMessage());
-		}
-
-		if (null == deviceDeleteFormat) {
-			throw new InvalidJsonException(Const.EMPTY_JSON);
-		}
-		return deviceDeleteFormat;
-	}
-
-	/**
-	 * Validates the device delete request format attributes. If validation
-	 * fails, sends corresponding failure message to the caller.
-	 * 
-	 * @param deviceDeleteRequest
-	 *            Delete device request format object
-	 */
-	protected void validateRequest(final DeviceDeleteFormat deviceDeleteRequest) {
-
-		validator.validateSecretKey(deviceDeleteRequest.secretkey);
-		validator.validateDeviceName(deviceDeleteRequest.devicename);
-
-	}
+public class DeviceTemplateDelete extends DeviceDelete {
 
 	/**
 	 * Services the device/delete API.
@@ -79,35 +37,36 @@ public class DeviceDelete extends SensorActAPI {
 		try {
 
 			DeviceDeleteFormat deviceDeleteRequest = convertToDeviceDeleteFormat(deviceDeleteJson);
-			
+
 			validateRequest(deviceDeleteRequest);
 			if (validator.hasErrors()) {
-				response.sendFailure(Const.API_DEVICE_DELETE,
+				response.sendFailure(Const.API_DEVICE_TEMPLATE_DELETE,
 						ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
 			}
 
+
 			if (!UserProfile
 					.isRegisteredSecretkey(deviceDeleteRequest.secretkey)) {
-				response.sendFailure(Const.API_DEVICE_DELETE,
+				response.sendFailure(Const.API_DEVICE_TEMPLATE_DELETE,
 						ErrorType.UNREGISTERED_SECRETKEY,
 						deviceDeleteRequest.secretkey);
 			}
 
-			if (!DeviceProfile.deleteDeviceProfile(
+			if (!DeviceProfile.deleteDeviceTemplate(
 					deviceDeleteRequest.secretkey,
 					deviceDeleteRequest.devicename)) {
-				response.sendFailure(Const.API_DEVICE_DELETE,
+				response.sendFailure(Const.API_DEVICE_TEMPLATE_DELETE,
 						ErrorType.DEVICE_NOTFOUND,
 						deviceDeleteRequest.devicename);
 			}
-			response.SendSuccess(Const.API_DEVICE_DELETE, Const.DEVICE_DELETED,
+			response.SendSuccess(Const.API_DEVICE_TEMPLATE_DELETE, Const.DEVICE_DELETED,
 					deviceDeleteRequest.devicename);
 
 		} catch (InvalidJsonException e) {
-			response.sendFailure(Const.API_DEVICE_DELETE,
+			response.sendFailure(Const.API_DEVICE_TEMPLATE_DELETE,
 					ErrorType.INVALID_JSON, e.getMessage());
 		} catch (Exception e) {
-			response.sendFailure(Const.API_DEVICE_DELETE,
+			response.sendFailure(Const.API_DEVICE_TEMPLATE_DELETE,
 					ErrorType.SYSTEM_ERROR, e.getMessage());
 		}
 

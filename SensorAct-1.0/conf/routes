@@ -11,7 +11,7 @@ GET     /repo/info                              Application.repoInfo
 
 POST    /user/register                          Application.userRegister
 POST    /user/login                             Application.userLogin
-POST    /user/generate/secretkey                Application.userGenerateSecretkey
+POST    /user/generate/repokey                  Application.userGenerateRepokey
 
 POST    /device/add                             Application.deviceAdd
 POST    /device/delete                          Application.deviceDelete
@@ -19,6 +19,11 @@ POST    /device/get                             Application.deviceGet
 POST    /device/list                            Application.deviceList
 POST    /device/share                           Application.deviceShare
 POST    /device/search                          Application.deviceSearch
+
+POST    /device/template/add                    Application.deviceTemplateAdd
+POST    /device/template/delete                 Application.deviceTemplateDelete
+POST    /device/template/get                    Application.deviceTemplateGet
+POST    /device/template/list                   Application.deviceTemplateList
 
 POST    /guardrule/add                          Application.guardRuleAdd
 POST    /guardrule/delete                       Application.guardRuleDelete

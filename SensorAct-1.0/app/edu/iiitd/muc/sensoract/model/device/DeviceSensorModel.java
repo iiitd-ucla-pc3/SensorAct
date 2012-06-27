@@ -30,6 +30,7 @@ public class DeviceSensorModel extends Model {
 	public DeviceSensorModel(final DeviceAddFormat.DeviceSensor sensor) {
 
 		name = sensor.name;
+		id = sensor.id.toString();
 
 		if(null == sensor.channels) {
 			return;

@@ -26,8 +26,12 @@ import edu.iiitd.muc.sensoract.api.request.DeviceAddFormat;
 @Entity(value = "DeviceProfile", noClassnameStored = true)
 public class DeviceProfileModel extends Model {
 
+	//public boolean istemplate = false;
 	public String secretkey = null;
+	// TODO: name is included for output format.. will be changed
 	public String name = null;
+	public String devicename = null;
+	public String templatename = null;
 	public String IP = null;
 	public String location = null;
 	public String tags = null;
@@ -43,8 +47,11 @@ public class DeviceProfileModel extends Model {
 		}
 		
 		secretkey = newDevice.secretkey;
+		//devicename = newDevice.deviceprofile.name;
+		//templatename = newDevice.deviceprofile.name;
+		
 		IP = newDevice.deviceprofile.IP;
-		name = newDevice.deviceprofile.name;
+		
 		location = newDevice.deviceprofile.location;
 		tags = newDevice.deviceprofile.tags;
 		latitude = newDevice.deviceprofile.latitude;

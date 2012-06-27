@@ -104,8 +104,8 @@ public class UserProfile {
 	 */
 	public static String getSecretkey(final String username) {
 
-		List<UserProfileModel> userList = UserProfileModel.find(
-				"byUsername", username).fetchAll();
+		List<UserProfileModel> userList = UserProfileModel.find("byUsername",
+				username).fetchAll();
 		if (null != userList && userList.size() > 0) {
 			return userList.get(0).secretkey;
 		}
@@ -163,18 +163,18 @@ public class UserProfile {
 	/**
 	 * Updates the broker key list of a user profile.
 	 * 
-	 * @param username
+	 * @param newSecretkey
 	 *            User name
-	 * @param secretkey
+	 * @param newSecretkey
 	 *            Secretkey of the user or broker (generated)
 	 * @return True, if the broker key list is successfully updated, otherwise
 	 *         false.
 	 */
-	public static boolean updateBrokerKeys(final String username,
-			final String secretkey) {
+	public static boolean updateBrokerKeys(final String secretkey,
+			final String newSecretkey) {
 
-		List<UserProfileModel> userList = UserProfileModel.find("byUsername",
-				username).fetchAll();
+		List<UserProfileModel> userList = UserProfileModel.find("bySecretkey",
+				newSecretkey).fetchAll();
 
 		if (null == userList || 0 == userList.size()) {
 			return false;
@@ -184,7 +184,7 @@ public class UserProfile {
 		if (null == keyList) {
 			keyList = new ArrayList<String>();
 		}
-		keyList.add(secretkey);
+		keyList.add(newSecretkey);
 
 		userList.get(0).brokerkeys = keyList;
 		userList.get(0).save();

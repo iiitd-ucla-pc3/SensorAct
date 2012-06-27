@@ -29,7 +29,7 @@ public class SensorActAPI extends Application {
 	public static UserRegister userRegister = new UserRegister();
 //	public static UserRemove userRemove = new UserRemove();
 	public static UserLogin userLogin = new UserLogin();
-	public static UserGenerateSecretkey userGenerateSecretkey = new UserGenerateSecretkey();
+	public static UserGenerateRepokey userGenerateRepokey = new UserGenerateRepokey();
 	
 	public static DeviceAdd deviceAdd = new DeviceAdd();
 	public static DeviceDelete deviceDelete = new DeviceDelete();
@@ -37,7 +37,12 @@ public class SensorActAPI extends Application {
 	public static DeviceList deviceList = new DeviceList();
 	public static DeviceShare deviceShare = new DeviceShare();
 	public static DeviceSearch deviceSearch = new DeviceSearch();
-	
+
+	public static DeviceTemplateAdd deviceTemplateAdd = new DeviceTemplateAdd();
+	public static DeviceTemplateDelete deviceTemplateDelete = new DeviceTemplateDelete();
+	public static DeviceTemplateGet deviceTemplateGet = new DeviceTemplateGet();
+	public static DeviceTemplateList deviceTemplateList = new DeviceTemplateList();
+
 	public static GuardRuleAdd guardRuleAdd = new GuardRuleAdd();
 	public static GuardRuleDelete guardRuleDelete = new GuardRuleDelete();
 	public static GuardRuleGet guardRuleGet = new GuardRuleGet();
