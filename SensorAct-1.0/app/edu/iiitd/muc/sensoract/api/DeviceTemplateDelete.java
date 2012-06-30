@@ -36,14 +36,15 @@ public class DeviceTemplateDelete extends DeviceDelete {
 
 		try {
 
-			DeviceDeleteFormat deviceDeleteRequest = convertToDeviceDeleteFormat(deviceDeleteJson);
+			DeviceDeleteFormat deviceDeleteRequest = convertToRequestFormat(
+					deviceDeleteJson, DeviceDeleteFormat.class);
 
 			validateRequest(deviceDeleteRequest);
 			if (validator.hasErrors()) {
 				response.sendFailure(Const.API_DEVICE_TEMPLATE_DELETE,
-						ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
+						ErrorType.VALIDATION_FAILED,
+						validator.getErrorMessages());
 			}
-
 
 			if (!UserProfile
 					.isRegisteredSecretkey(deviceDeleteRequest.secretkey)) {
@@ -59,8 +60,8 @@ public class DeviceTemplateDelete extends DeviceDelete {
 						ErrorType.DEVICE_NOTFOUND,
 						deviceDeleteRequest.devicename);
 			}
-			response.SendSuccess(Const.API_DEVICE_TEMPLATE_DELETE, Const.DEVICE_DELETED,
-					deviceDeleteRequest.devicename);
+			response.SendSuccess(Const.API_DEVICE_TEMPLATE_DELETE,
+					Const.DEVICE_DELETED, deviceDeleteRequest.devicename);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_DEVICE_TEMPLATE_DELETE,

@@ -22,34 +22,6 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
 public class TaskDelete extends SensorActAPI {
 
 	/**
-	 * Converts task/delete request attributes in Json string to object.
-	 * 
-	 * @param taskDeleteJson
-	 *            Task delete request attributes in Json string
-	 * @return Converted task delete request format object
-	 * @throws InvalidJsonException
-	 *             If the Json string is not valid or not in the required
-	 *             request format
-	 * @see TaskDeleteFormat
-	 */
-	private TaskDeleteFormat convertToTaskDeleteFormat(
-			final String taskDeleteJson) throws InvalidJsonException {
-
-		TaskDeleteFormat taskDeleteFormat = null;
-		try {
-			taskDeleteFormat = gson.fromJson(taskDeleteJson,
-					TaskDeleteFormat.class);
-		} catch (Exception e) {
-			throw new InvalidJsonException(e.getMessage());
-		}
-
-		if (null == taskDeleteFormat) {
-			throw new InvalidJsonException(Const.EMPTY_JSON);
-		}
-		return taskDeleteFormat;
-	}
-
-	/**
 	 * Validates the task delete request format attributes. If validation fails,
 	 * sends corresponding failure message to the caller.
 	 * 
@@ -77,7 +49,8 @@ public class TaskDelete extends SensorActAPI {
 
 		try {
 
-			TaskDeleteFormat taskDeleteRequest = convertToTaskDeleteFormat(taskDeleteJson);
+			TaskDeleteFormat taskDeleteRequest = convertToRequestFormat(
+					taskDeleteJson, TaskDeleteFormat.class);
 			validateRequest(taskDeleteRequest);
 
 			if (!UserProfile.isRegisteredSecretkey(taskDeleteRequest.secretkey)) {

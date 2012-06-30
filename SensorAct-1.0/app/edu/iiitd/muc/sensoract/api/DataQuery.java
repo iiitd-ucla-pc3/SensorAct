@@ -19,39 +19,13 @@ import edu.iiitd.muc.sensoract.model.data.WaveSegmentModel;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
 
 /**
- * data/query API: Retrieves wavesegmetns from the repository based upong the given query.
+ * data/query API: Retrieves wavesegmetns from the repository based upong the
+ * given query.
  * 
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
 public class DataQuery extends SensorActAPI {
-
-	/**
-	 * Converts the data request query in Json string to object.
-	 * 
-	 * @param queryJson
-	 *            Query in Json string
-	 * @return Converted query format object
-	 * @throws InvalidJsonException
-	 *             If the Json string is not valid or not in the required
-	 *             request format
-	 * @see DataQueryFormat
-	 */
-	private DataQueryFormat convertToQueryFormat(final String queryJson)
-			throws InvalidJsonException {
-
-		DataQueryFormat queryFormat = null;
-		try {
-			queryFormat = gson.fromJson(queryJson, DataQueryFormat.class);
-		} catch (Exception e) {
-			throw new InvalidJsonException(e.getMessage());
-		}
-
-		if (null == queryFormat) {
-			throw new InvalidJsonException(Const.EMPTY_JSON);
-		}
-		return queryFormat;
-	}
 
 	/**
 	 * Validates the query attributes. If validation fails, sends corresponding
@@ -88,7 +62,7 @@ public class DataQuery extends SensorActAPI {
 					ErrorType.UNREGISTERED_USERNAME, "");
 		}
 
-		log.info("QueryDAta : \n" + gson.toJson(queryObj));
+		log.info("QueryDAta : \n" + json.toJson(queryObj));
 
 		List<WaveSegmentModel> allWaveSegments = WaveSegmentModel
 				.q()
@@ -110,7 +84,7 @@ public class DataQuery extends SensorActAPI {
 
 			// ww.data.channels.removeAll(Collections.singleton(null));;
 			// ww.data.channels.removeAll(Arrays.asList(new Object[]{null}));
-			String data = gson.toJson(ww);
+			String data = json.toJson(ww);
 			outList.add(data);
 		}
 
@@ -133,7 +107,8 @@ public class DataQuery extends SensorActAPI {
 	public void doProcess(final String queryJson) {
 
 		try {
-			DataQueryFormat query = convertToQueryFormat(queryJson);
+			DataQueryFormat query = convertToRequestFormat(queryJson,
+					DataQueryFormat.class);
 			validateQueryDataFormat(query);
 			executeQuery(query);
 		} catch (InvalidJsonException e) {

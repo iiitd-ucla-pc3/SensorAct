@@ -22,34 +22,6 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
 public class GuardRuleAdd extends SensorActAPI {
 
 	/**
-	 * Converts guardrule/add request attributes in Json string to object.
-	 * 
-	 * @param guardRuleAddJson
-	 *            Guard rule add request attributes in Json string
-	 * @return Converted guard rule add request format object
-	 * @throws InvalidJsonException
-	 *             If the Json string is not valid or not in the required
-	 *             request format
-	 * @see GuardRuleAddFormat
-	 */
-	private GuardRuleAddFormat convertToGuardRuleAddFormat(
-			final String guardRuleAddJson) throws InvalidJsonException {
-
-		GuardRuleAddFormat guardRuleAddFormat = null;
-		try {
-			guardRuleAddFormat = gson.fromJson(guardRuleAddJson,
-					GuardRuleAddFormat.class);
-		} catch (Exception e) {
-			throw new InvalidJsonException(e.getMessage());
-		}
-
-		if (null == guardRuleAddFormat) {
-			throw new InvalidJsonException(Const.EMPTY_JSON);
-		}
-		return guardRuleAddFormat;
-	}
-
-	/**
 	 * Validates the guard rule add request format attributes. If validation
 	 * fails, sends corresponding failure message to the caller.
 	 * 
@@ -77,27 +49,25 @@ public class GuardRuleAdd extends SensorActAPI {
 
 		try {
 
-			GuardRuleAddFormat guardRule = convertToGuardRuleAddFormat(guardRuleAddJson);
+			GuardRuleAddFormat guardRule = convertToRequestFormat(
+					guardRuleAddJson, GuardRuleAddFormat.class);
 			validateRequest(guardRule);
 
-			if (!UserProfile
-					.isRegisteredSecretkey(guardRule.secretkey)) {
+			if (!UserProfile.isRegisteredSecretkey(guardRule.secretkey)) {
 				response.sendFailure(Const.API_GUARDRULE_ADD,
-						ErrorType.UNREGISTERED_SECRETKEY,
-						guardRule.secretkey);
+						ErrorType.UNREGISTERED_SECRETKEY, guardRule.secretkey);
 			}
 
 			// TODO: Add guard rule
 			response.SendSuccess(Const.API_GUARDRULE_ADD, Const.TODO);
 
 		} catch (InvalidJsonException e) {
-			response.sendFailure(Const.API_GUARDRULE_ADD, ErrorType.INVALID_JSON,
-					e.getMessage());
+			response.sendFailure(Const.API_GUARDRULE_ADD,
+					ErrorType.INVALID_JSON, e.getMessage());
 		} catch (Exception e) {
-			response.sendFailure(Const.API_GUARDRULE_ADD, ErrorType.SYSTEM_ERROR,
-					e.getMessage());
+			response.sendFailure(Const.API_GUARDRULE_ADD,
+					ErrorType.SYSTEM_ERROR, e.getMessage());
 		}
 	}
 
-	
 }

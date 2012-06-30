@@ -14,39 +14,12 @@ import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
 
 /**
- * task/add API: Adds a task 
+ * task/add API: Adds a task
  * 
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
 public class TaskAdd extends SensorActAPI {
-
-	/**
-	 * Converts task/add request attributes in Json string to object.
-	 * 
-	 * @param taskAddJson
-	 *            Task add request attributes in Json string
-	 * @return Converted task add request format object
-	 * @throws InvalidJsonException
-	 *             If the Json string is not valid or not in the required
-	 *             request format
-	 * @see TaskAddFormat
-	 */
-	private TaskAddFormat convertToTaskAddFormat(final String taskAddJson)
-			throws InvalidJsonException {
-
-		TaskAddFormat taskAddFormat = null;
-		try {
-			taskAddFormat = gson.fromJson(taskAddJson, TaskAddFormat.class);
-		} catch (Exception e) {
-			throw new InvalidJsonException(e.getMessage());
-		}
-
-		if (null == taskAddFormat) {
-			throw new InvalidJsonException(Const.EMPTY_JSON);
-		}
-		return taskAddFormat;
-	}
 
 	/**
 	 * Validates the task add request format attributes. If validation fails,
@@ -76,7 +49,8 @@ public class TaskAdd extends SensorActAPI {
 
 		try {
 
-			TaskAddFormat task = convertToTaskAddFormat(taskAddJson);
+			TaskAddFormat task = convertToRequestFormat(taskAddJson,
+					TaskAddFormat.class);
 			validateRequest(task);
 
 			if (!UserProfile.isRegisteredSecretkey(task.secretkey)) {
@@ -85,7 +59,7 @@ public class TaskAdd extends SensorActAPI {
 			}
 
 			// TODO: Add task
-			response.SendSuccess(Const.API_TASK_ADD, Const.TODO);			
+			response.SendSuccess(Const.API_TASK_ADD, Const.TODO);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_TASK_ADD, ErrorType.INVALID_JSON,

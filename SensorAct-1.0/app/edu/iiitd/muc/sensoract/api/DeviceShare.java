@@ -22,34 +22,6 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
 public class DeviceShare extends SensorActAPI {
 
 	/**
-	 * Converts device/share request attributes in Json string to object.
-	 * 
-	 * @param deviceShareJson
-	 *            Device share request attributes in Json string
-	 * @return Converted device share request format object
-	 * @throws InvalidJsonException
-	 *             If the Json string is not valid or not in the required
-	 *             request format
-	 * @see DeviceShareFormat
-	 */
-	private DeviceShareFormat convertToDeviceShareFormat(
-			final String deviceShareJson) throws InvalidJsonException {
-
-		DeviceShareFormat deviceShareFormat = null;
-		try {
-			deviceShareFormat = gson.fromJson(deviceShareJson,
-					DeviceShareFormat.class);
-		} catch (Exception e) {
-			throw new InvalidJsonException(e.getMessage());
-		}
-
-		if (null == deviceShareFormat) {
-			throw new InvalidJsonException(Const.EMPTY_JSON);
-		}
-		return deviceShareFormat;
-	}
-
-	/**
 	 * Validates the device share request format attributes. If validation
 	 * fails, sends corresponding failure message to the caller.
 	 * 
@@ -77,7 +49,8 @@ public class DeviceShare extends SensorActAPI {
 
 		try {
 
-			DeviceShareFormat deviceShareRequest = convertToDeviceShareFormat(deviceShareJson);
+			DeviceShareFormat deviceShareRequest = convertToRequestFormat(
+					deviceShareJson, DeviceShareFormat.class);
 			validateRequest(deviceShareRequest);
 
 			if (!UserProfile
@@ -91,11 +64,11 @@ public class DeviceShare extends SensorActAPI {
 			response.SendSuccess(Const.API_DEVICE_SHARE, Const.TODO);
 
 		} catch (InvalidJsonException e) {
-			response.sendFailure(Const.API_DEVICE_SHARE, ErrorType.INVALID_JSON,
-					e.getMessage());
+			response.sendFailure(Const.API_DEVICE_SHARE,
+					ErrorType.INVALID_JSON, e.getMessage());
 		} catch (Exception e) {
-			response.sendFailure(Const.API_DEVICE_SHARE, ErrorType.SYSTEM_ERROR,
-					e.getMessage());
+			response.sendFailure(Const.API_DEVICE_SHARE,
+					ErrorType.SYSTEM_ERROR, e.getMessage());
 		}
 	}
 

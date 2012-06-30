@@ -23,34 +23,6 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
 public class DeviceDelete extends SensorActAPI {
 
 	/**
-	 * Converts the device/delete request attributes in Json string to object.
-	 * 
-	 * @param deviceDeleteJson
-	 *            Device delete request attributes in Json string
-	 * @return Converted device delete request format object
-	 * @throws InvalidJsonException
-	 *             If the Json string is not valid or not in the required
-	 *             request format
-	 * @see DeviceDeleteFormat
-	 */
-	protected DeviceDeleteFormat convertToDeviceDeleteFormat(
-			final String deviceDeleteJson) throws InvalidJsonException {
-
-		DeviceDeleteFormat deviceDeleteFormat = null;
-		try {
-			deviceDeleteFormat = gson.fromJson(deviceDeleteJson,
-					DeviceDeleteFormat.class);
-		} catch (Exception e) {
-			throw new InvalidJsonException(e.getMessage());
-		}
-
-		if (null == deviceDeleteFormat) {
-			throw new InvalidJsonException(Const.EMPTY_JSON);
-		}
-		return deviceDeleteFormat;
-	}
-
-	/**
 	 * Validates the device delete request format attributes. If validation
 	 * fails, sends corresponding failure message to the caller.
 	 * 
@@ -78,12 +50,14 @@ public class DeviceDelete extends SensorActAPI {
 
 		try {
 
-			DeviceDeleteFormat deviceDeleteRequest = convertToDeviceDeleteFormat(deviceDeleteJson);
-			
+			DeviceDeleteFormat deviceDeleteRequest = convertToRequestFormat(
+					deviceDeleteJson, DeviceDeleteFormat.class);
+
 			validateRequest(deviceDeleteRequest);
 			if (validator.hasErrors()) {
 				response.sendFailure(Const.API_DEVICE_DELETE,
-						ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
+						ErrorType.VALIDATION_FAILED,
+						validator.getErrorMessages());
 			}
 
 			if (!UserProfile

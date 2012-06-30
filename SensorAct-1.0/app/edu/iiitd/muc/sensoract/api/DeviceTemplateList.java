@@ -71,13 +71,14 @@ public class DeviceTemplateList extends DeviceList {
 
 		try {
 
-			DeviceListFormat deviceListRequest = convertToDeviceListFormat(deviceListJson);
+			DeviceListFormat deviceListRequest = convertToRequestFormat(
+					deviceListJson, DeviceListFormat.class);
 			validateRequest(deviceListRequest);
 			if (validator.hasErrors()) {
 				response.sendFailure(Const.API_DEVICE_LIST,
-						ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
+						ErrorType.VALIDATION_FAILED,
+						validator.getErrorMessages());
 			}
-
 
 			if (!UserProfile.isRegisteredSecretkey(deviceListRequest.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_LIST,

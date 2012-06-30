@@ -24,33 +24,6 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
 public class UserGenerateRepokey extends SensorActAPI {
 
 	/**
-	 * Converts the request format in Json string to object.
-	 * 
-	 * @param repokeyJson
-	 *            Generate new repo key request in Json string
-	 * @return Converted login credentials object
-	 * @throws InvalidJsonException
-	 *             If the Json string is not valid or not in the required
-	 *             request format
-	 * @see UserGenerateRepokeyFormat
-	 */
-	private UserGenerateRepokeyFormat convertToUserGenerateRepokeyFormat(
-			final String repokeyJson) throws InvalidJsonException {
-		UserGenerateRepokeyFormat repokeyFormat = null;
-		try {
-			repokeyFormat = gson.fromJson(repokeyJson,
-					UserGenerateRepokeyFormat.class);
-		} catch (Exception e) {
-			throw new InvalidJsonException(e.getMessage());
-		}
-
-		if (null == repokeyFormat) {
-			throw new InvalidJsonException(Const.EMPTY_JSON);
-		}
-		return repokeyFormat;
-	}
-
-	/**
 	 * Validates request parameters. If validation fails, sends corresponding
 	 * failure message to the caller.
 	 * 
@@ -76,7 +49,8 @@ public class UserGenerateRepokey extends SensorActAPI {
 	public final void doProcess(final String loginJson) {
 
 		try {
-			UserGenerateRepokeyFormat repokeyFormat = convertToUserGenerateRepokeyFormat(loginJson);
+			UserGenerateRepokeyFormat repokeyFormat = convertToRequestFormat(
+					loginJson, UserGenerateRepokeyFormat.class);
 			validateRequest(repokeyFormat);
 
 			if (!UserProfile.isRegisteredSecretkey(repokeyFormat.secretkey)) {

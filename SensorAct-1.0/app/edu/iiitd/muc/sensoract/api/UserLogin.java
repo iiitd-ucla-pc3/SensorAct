@@ -24,34 +24,8 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
 public class UserLogin extends SensorActAPI {
 
 	/**
-	 * Converts the user login credentials in Json string to object.
-	 * 
-	 * @param loginJson
-	 *            Login credentials in Json string
-	 * @return Converted login credentials object
-	 * @throws InvalidJsonException
-	 *             If the Json string is not valid or not in the required
-	 *             request format
-	 * @see UserLoginFormat
-	 */
-	private UserLoginFormat convertToUserLoginFormat(final String loginJson)
-			throws InvalidJsonException {
-		UserLoginFormat newLogin = null;
-		try {
-			newLogin = gson.fromJson(loginJson, UserLoginFormat.class);
-		} catch (Exception e) {
-			throw new InvalidJsonException(e.getMessage());
-		}
-
-		if (null == newLogin) {
-			throw new InvalidJsonException(Const.EMPTY_JSON);
-		}
-		return newLogin;
-	}
-
-	/**
-	 * Validates login credentials. If validation fails, sends
-	 * corresponding failure message to the caller.
+	 * Validates login credentials. If validation fails, sends corresponding
+	 * failure message to the caller.
 	 * 
 	 * @param newLogin
 	 *            Login credentials object to validate
@@ -64,7 +38,7 @@ public class UserLogin extends SensorActAPI {
 		if (validator.hasErrors()) {
 
 			String errMsg = validator.getErrorMessages();
-			if(errMsg.contains(Const.MSG_REQUIRED)) {
+			if (errMsg.contains(Const.MSG_REQUIRED)) {
 				response.sendFailure(Const.API_USER_LOGIN,
 						ErrorType.VALIDATION_FAILED, errMsg);
 			} else {
@@ -74,7 +48,7 @@ public class UserLogin extends SensorActAPI {
 			}
 		}
 	}
-	
+
 	/**
 	 * Services the user/login API.
 	 * 
@@ -84,7 +58,8 @@ public class UserLogin extends SensorActAPI {
 	public final void doProcess(final String loginJson) {
 
 		try {
-			UserLoginFormat newLogin = convertToUserLoginFormat(loginJson);
+			UserLoginFormat newLogin = convertToRequestFormat(loginJson,
+					UserLoginFormat.class);
 			validateRequest(newLogin);
 
 			newLogin.password = UserProfile.getHashCode(newLogin.password);

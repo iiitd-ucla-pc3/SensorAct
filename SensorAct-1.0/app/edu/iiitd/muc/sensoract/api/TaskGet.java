@@ -22,34 +22,6 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
 public class TaskGet extends SensorActAPI {
 
 	/**
-	 * Converts task/get request attributes in Json string to object.
-	 * 
-	 * @param taskGetJson
-	 *            Task get request attributes in Json string
-	 * @return Converted task get request format object
-	 * @throws InvalidJsonException
-	 *             If the Json string is not valid or not in the required
-	 *             request format
-	 * @see TaskGetFormat
-	 */
-	private TaskGetFormat convertToTaskGetFormat(
-			final String taskGetJson) throws InvalidJsonException {
-
-		TaskGetFormat taskGetFormat = null;
-		try {
-			taskGetFormat = gson.fromJson(taskGetJson,
-					TaskGetFormat.class);
-		} catch (Exception e) {
-			throw new InvalidJsonException(e.getMessage());
-		}
-
-		if (null == taskGetFormat) {
-			throw new InvalidJsonException(Const.EMPTY_JSON);
-		}
-		return taskGetFormat;
-	}
-
-	/**
 	 * Validates the task get request format attributes. If validation fails,
 	 * sends corresponding failure message to the caller.
 	 * 
@@ -77,7 +49,8 @@ public class TaskGet extends SensorActAPI {
 
 		try {
 
-			TaskGetFormat taskGetRequest = convertToTaskGetFormat(taskGetJson);
+			TaskGetFormat taskGetRequest = convertToRequestFormat(taskGetJson,
+					TaskGetFormat.class);
 			validateRequest(taskGetRequest);
 
 			if (!UserProfile.isRegisteredSecretkey(taskGetRequest.secretkey)) {

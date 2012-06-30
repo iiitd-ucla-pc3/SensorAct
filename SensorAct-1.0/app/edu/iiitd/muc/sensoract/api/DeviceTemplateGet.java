@@ -66,14 +66,15 @@ public class DeviceTemplateGet extends DeviceGet {
 
 		try {
 
-			DeviceGetFormat deviceGetRequest = convertToDeviceGetFormat(deviceGetJson);
+			DeviceGetFormat deviceGetRequest = convertToRequestFormat(
+					deviceGetJson, DeviceGetFormat.class);
 
 			validateRequest(deviceGetRequest);
 			if (validator.hasErrors()) {
 				response.sendFailure(Const.API_DEVICE_GET,
-						ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
+						ErrorType.VALIDATION_FAILED,
+						validator.getErrorMessages());
 			}
-
 
 			if (!UserProfile.isRegisteredSecretkey(deviceGetRequest.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_GET,

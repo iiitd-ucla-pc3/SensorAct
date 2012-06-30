@@ -30,33 +30,6 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
 public class DeviceAdd extends SensorActAPI {
 
 	/**
-	 * Converts the device profile request in Json string to object.
-	 * 
-	 * @param deviceJson
-	 *            Device profile in Json format
-	 * @return Converted device profile format object
-	 * @throws InvalidJsonException
-	 *             If the Json string is not valid or not in the required
-	 *             request format
-	 * @see DeviceAddFormat
-	 */
-	protected DeviceAddFormat convertToDeviceAddFormat(final String deviceJson)
-			throws InvalidJsonException {
-
-		DeviceAddFormat deviceAddFormat = null;
-		try {
-			deviceAddFormat = gson.fromJson(deviceJson, DeviceAddFormat.class);
-		} catch (Exception e) {
-			throw new InvalidJsonException(e.getMessage());
-		}
-
-		if (null == deviceAddFormat) {
-			throw new InvalidJsonException(Const.EMPTY_JSON);
-		}
-		return deviceAddFormat;
-	}
-
-	/**
 	 * Validates device profile's channel attributes. If validation fails, sends
 	 * corresponding failure message to the caller.
 	 * 
@@ -195,10 +168,10 @@ public class DeviceAdd extends SensorActAPI {
 			}
 		}
 
-//		if (validator.hasErrors()) {
-//			response.sendFailure(Const.API_DEVICE_ADD,
-//					ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
-//		}
+		// if (validator.hasErrors()) {
+		// response.sendFailure(Const.API_DEVICE_ADD,
+		// ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
+		// }
 	}
 
 	/**
@@ -225,14 +198,15 @@ public class DeviceAdd extends SensorActAPI {
 	public void doProcess(final String deviceAddJson) {
 
 		try {
-			DeviceAddFormat newDevice = convertToDeviceAddFormat(deviceAddJson);
-			
+			DeviceAddFormat newDevice = convertToRequestFormat(deviceAddJson,
+					DeviceAddFormat.class);
+
 			validateRequest(newDevice);
 			if (validator.hasErrors()) {
 				response.sendFailure(Const.API_DEVICE_ADD,
-						ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
+						ErrorType.VALIDATION_FAILED,
+						validator.getErrorMessages());
 			}
-
 
 			if (!UserProfile.isRegisteredSecretkey(newDevice.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_ADD,

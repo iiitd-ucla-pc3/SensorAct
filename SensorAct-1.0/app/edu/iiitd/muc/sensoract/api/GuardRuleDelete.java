@@ -22,41 +22,14 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
 public class GuardRuleDelete extends SensorActAPI {
 
 	/**
-	 * Converts guardrule/delete request attributes in Json string to object.
-	 * 
-	 * @param guardRuleDeleteJson
-	 *            Guard rule delete request attributes in Json string
-	 * @return Converted guard rule delete request format object
-	 * @throws InvalidJsonException
-	 *             If the Json string is not valid or not in the required
-	 *             request format
-	 * @see GuardRuleDeleteFormat
-	 */
-	private GuardRuleDeleteFormat convertToGuardRuleDeleteFormat(
-			final String guardRuleDeleteJson) throws InvalidJsonException {
-
-		GuardRuleDeleteFormat guardRuleDeleteFormat = null;
-		try {
-			guardRuleDeleteFormat = gson.fromJson(guardRuleDeleteJson,
-					GuardRuleDeleteFormat.class);
-		} catch (Exception e) {
-			throw new InvalidJsonException(e.getMessage());
-		}
-
-		if (null == guardRuleDeleteFormat) {
-			throw new InvalidJsonException(Const.EMPTY_JSON);
-		}
-		return guardRuleDeleteFormat;
-	}
-
-	/**
 	 * Validates the guard rule delete request format attributes. If validation
 	 * fails, sends corresponding failure message to the caller.
 	 * 
 	 * @param guardRuleDeleteRequest
 	 *            Guard rule delete request format object
 	 */
-	private void validateRequest(final GuardRuleDeleteFormat guardRuleDeleteRequest) {
+	private void validateRequest(
+			final GuardRuleDeleteFormat guardRuleDeleteRequest) {
 
 		validator.validateSecretKey(guardRuleDeleteRequest.secretkey);
 		// TODO: add validation for other parameters
@@ -77,7 +50,8 @@ public class GuardRuleDelete extends SensorActAPI {
 
 		try {
 
-			GuardRuleDeleteFormat guardRuleDeleteRequest = convertToGuardRuleDeleteFormat(guardRuleDeleteJson);
+			GuardRuleDeleteFormat guardRuleDeleteRequest = convertToRequestFormat(
+					guardRuleDeleteJson, GuardRuleDeleteFormat.class);
 			validateRequest(guardRuleDeleteRequest);
 
 			if (!UserProfile
@@ -91,13 +65,12 @@ public class GuardRuleDelete extends SensorActAPI {
 			response.SendSuccess(Const.API_GUARDRULE_DELETE, Const.TODO);
 
 		} catch (InvalidJsonException e) {
-			response.sendFailure(Const.API_GUARDRULE_DELETE, ErrorType.INVALID_JSON,
-					e.getMessage());
+			response.sendFailure(Const.API_GUARDRULE_DELETE,
+					ErrorType.INVALID_JSON, e.getMessage());
 		} catch (Exception e) {
-			response.sendFailure(Const.API_GUARDRULE_DELETE, ErrorType.SYSTEM_ERROR,
-					e.getMessage());
+			response.sendFailure(Const.API_GUARDRULE_DELETE,
+					ErrorType.SYSTEM_ERROR, e.getMessage());
 		}
 	}
 
-	
 }

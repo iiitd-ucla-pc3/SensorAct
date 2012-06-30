@@ -23,37 +23,11 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
 public class UserRegister extends SensorActAPI {
 
 	/**
-	 * Converts the user profile attributes in Json string to object.
-	 * 
-	 * @param userJson
-	 *            User profile in Json string
-	 * @return Converted user profile object
-	 * @throws InvalidJsonException
-	 *             If the Json string is not valid or not in the required
-	 *             request format
-	 * @see UserRegisterFormat
-	 */
-	private UserRegisterFormat convertToUserRegisterFormat(final String userJson)
-			throws InvalidJsonException {
-
-		UserRegisterFormat userProfile = null;
-		try {
-			userProfile = gson.fromJson(userJson, UserRegisterFormat.class);
-		} catch (Exception e) {
-			throw new InvalidJsonException(e.getMessage());
-		}
-
-		if (null == userProfile) {
-			throw new InvalidJsonException(Const.EMPTY_JSON);
-		}
-		return userProfile;
-	}
-
-	/**
 	 * Validates new user profile attributes. If validation fails, sends
 	 * corresponding failure message to the caller.
 	 * 
-	 * @param userProfile User profile object to validate
+	 * @param userProfile
+	 *            User profile object to validate
 	 */
 	private void validateUserProfile(final UserRegisterFormat userProfile) {
 
@@ -63,8 +37,7 @@ public class UserRegister extends SensorActAPI {
 
 		if (validator.hasErrors()) {
 			response.sendFailure(Const.API_USER_REGISTER,
-					ErrorType.VALIDATION_FAILED,
-					validator.getErrorMessages());
+					ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
 		}
 	}
 
@@ -80,10 +53,11 @@ public class UserRegister extends SensorActAPI {
 	public final void doProcess(final String userProfileJson) {
 
 		try {
-			UserRegisterFormat newUser = convertToUserRegisterFormat(userProfileJson);
+			UserRegisterFormat newUser = convertToRequestFormat(
+					userProfileJson, UserRegisterFormat.class);
 			validateUserProfile(newUser);
 
-			if(UserProfile.isUserProfileExists(newUser)) {
+			if (UserProfile.isUserProfileExists(newUser)) {
 				response.sendFailure(Const.API_USER_REGISTER,
 						ErrorType.USER_ALREADYEXISTS, newUser.username);
 			}
@@ -91,8 +65,9 @@ public class UserRegister extends SensorActAPI {
 			newUser.password = UserProfile.getHashCode(newUser.password);
 			String secretkey = UserProfile.generateSecretKey();
 
-			UserProfile.addUserProfile(newUser, secretkey);			
-			response.SendSuccess(Const.API_USER_REGISTER, Const.USER_REGISTERED, newUser.username);
+			UserProfile.addUserProfile(newUser, secretkey);
+			response.SendSuccess(Const.API_USER_REGISTER,
+					Const.USER_REGISTERED, newUser.username);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_USER_REGISTER,

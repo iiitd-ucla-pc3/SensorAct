@@ -24,34 +24,6 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
 public class DeviceGet extends SensorActAPI {
 
 	/**
-	 * Converts the device/get request attributes in Json string to object.
-	 * 
-	 * @param deviceGetJson
-	 *            Device get request attributes in Json string
-	 * @return Converted device add request format object
-	 * @throws InvalidJsonException
-	 *             If the Json string is not valid or not in the required
-	 *             request format
-	 * @see DeviceGetFormat
-	 */
-	protected DeviceGetFormat convertToDeviceGetFormat(final String deviceGetJson)
-			throws InvalidJsonException {
-
-		DeviceGetFormat deviceGetFormat = null;
-		try {
-			deviceGetFormat = gson.fromJson(deviceGetJson,
-					DeviceGetFormat.class);
-		} catch (Exception e) {
-			throw new InvalidJsonException(e.getMessage());
-		}
-
-		if (null == deviceGetFormat) {
-			throw new InvalidJsonException(Const.EMPTY_JSON);
-		}
-		return deviceGetFormat;
-	}
-
-	/**
 	 * Validates the device get request format attributes. If validation fails,
 	 * sends corresponding failure message to the caller.
 	 * 
@@ -108,13 +80,14 @@ public class DeviceGet extends SensorActAPI {
 
 		try {
 
-			DeviceGetFormat deviceGetRequest = convertToDeviceGetFormat(deviceGetJson);
+			DeviceGetFormat deviceGetRequest = convertToRequestFormat(
+					deviceGetJson, DeviceGetFormat.class);
 			validateRequest(deviceGetRequest);
 			if (validator.hasErrors()) {
 				response.sendFailure(Const.API_DEVICE_GET,
-						ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
+						ErrorType.VALIDATION_FAILED,
+						validator.getErrorMessages());
 			}
-
 
 			if (!UserProfile.isRegisteredSecretkey(deviceGetRequest.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_GET,

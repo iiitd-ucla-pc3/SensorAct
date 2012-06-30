@@ -29,34 +29,6 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
 public class DeviceList extends SensorActAPI {
 
 	/**
-	 * Converts device/list request attributes in Json string to object.
-	 * 
-	 * @param deviceListJson
-	 *            Device list request attributes in Json string
-	 * @return Converted device list request format object
-	 * @throws InvalidJsonException
-	 *             If the Json string is not valid or not in the required
-	 *             request format
-	 * @see DeviceListFormat
-	 */
-	protected DeviceListFormat convertToDeviceListFormat(
-			final String deviceListJson) throws InvalidJsonException {
-
-		DeviceListFormat deviceListFormat = null;
-		try {
-			deviceListFormat = gson.fromJson(deviceListJson,
-					DeviceListFormat.class);
-		} catch (Exception e) {
-			throw new InvalidJsonException(e.getMessage());
-		}
-
-		if (null == deviceListFormat) {
-			throw new InvalidJsonException(Const.EMPTY_JSON);
-		}
-		return deviceListFormat;
-	}
-
-	/**
 	 * Validates the device list request format attributes. If validation fails,
 	 * sends corresponding failure message to the caller.
 	 * 
@@ -112,7 +84,8 @@ public class DeviceList extends SensorActAPI {
 
 		try {
 
-			DeviceListFormat deviceListRequest = convertToDeviceListFormat(deviceListJson);
+			DeviceListFormat deviceListRequest = convertToRequestFormat(
+					deviceListJson, DeviceListFormat.class);
 			validateRequest(deviceListRequest);
 			if (validator.hasErrors()) {
 				response.sendFailure(Const.API_DEVICE_LIST,

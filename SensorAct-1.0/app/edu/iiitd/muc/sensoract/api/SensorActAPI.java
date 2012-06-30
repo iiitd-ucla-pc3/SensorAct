@@ -10,7 +10,10 @@ package edu.iiitd.muc.sensoract.api;
 import com.google.gson.Gson;
 
 import controllers.Application;
+import edu.iiitd.muc.sensoract.api.request.DeviceAddFormat;
 import edu.iiitd.muc.sensoract.api.response.ResponseFormat;
+import edu.iiitd.muc.sensoract.constants.Const;
+import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
 import edu.iiitd.muc.sensoract.util.ParamValidator;
 import edu.iiitd.muc.sensoract.util.SensorActLogger;
 
@@ -27,10 +30,10 @@ public class SensorActAPI extends Application {
 	 */
 	public static RepoInfo repoInfo = new RepoInfo();
 	public static UserRegister userRegister = new UserRegister();
-//	public static UserRemove userRemove = new UserRemove();
+	// public static UserRemove userRemove = new UserRemove();
 	public static UserLogin userLogin = new UserLogin();
 	public static UserGenerateRepokey userGenerateRepokey = new UserGenerateRepokey();
-	
+
 	public static DeviceAdd deviceAdd = new DeviceAdd();
 	public static DeviceDelete deviceDelete = new DeviceDelete();
 	public static DeviceGet deviceGet = new DeviceGet();
@@ -55,13 +58,41 @@ public class SensorActAPI extends Application {
 
 	public static DataUploadWaveSegment dataUploadWaveseg = new DataUploadWaveSegment();
 	public static DataQuery dataQuery = new DataQuery();
-	
+
 	/*
 	 * API helper references
 	 */
 	public static ResponseFormat response = new ResponseFormat();
 	public static ParamValidator validator = new ParamValidator();
-	public static Gson gson = new Gson();
+	public static Gson json = new Gson();
 	public static SensorActLogger log = new SensorActLogger();
+
+	/**
+	 * Converts the API request json string to corresponding request format
+	 * object.
+	 * 
+	 * @param requestJson
+	 *            Request format Json string
+	 * @param classOfT
+	 * @return Converted API request format object.
+	 * @throws InvalidJsonException
+	 *             If the Json string is not valid or not in the required
+	 *             request format
+	 */
+	protected <T> T convertToRequestFormat(final String requestJson,
+			Class<T> classOfT) throws InvalidJsonException {
+
+		T reqObj = null;
+		try {
+			reqObj = json.fromJson(requestJson, classOfT);
+		} catch (Exception e) {
+			throw new InvalidJsonException(e.getMessage());
+		}
+
+		if (null == reqObj) {
+			throw new InvalidJsonException(Const.EMPTY_JSON);
+		}
+		return reqObj;
+	}
 
 }

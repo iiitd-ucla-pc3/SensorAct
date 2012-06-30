@@ -29,7 +29,6 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
  */
 public class DeviceTemplateAdd extends DeviceAdd {
 
-
 	/**
 	 * Services the device/add API.
 	 * <p>
@@ -54,12 +53,14 @@ public class DeviceTemplateAdd extends DeviceAdd {
 	public void doProcess(final String deviceAddJson) {
 
 		try {
-			DeviceAddFormat newDevice = convertToDeviceAddFormat(deviceAddJson);
+			DeviceAddFormat newDevice = convertToRequestFormat(deviceAddJson,
+					DeviceAddFormat.class);
 
 			validateRequest(newDevice);
 			if (validator.hasErrors()) {
 				response.sendFailure(Const.API_DEVICE_TEMPLATE_ADD,
-						ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
+						ErrorType.VALIDATION_FAILED,
+						validator.getErrorMessages());
 			}
 
 			if (!UserProfile.isRegisteredSecretkey(newDevice.secretkey)) {
@@ -73,18 +74,18 @@ public class DeviceTemplateAdd extends DeviceAdd {
 						ErrorType.DEVICE_ALREADYEXISTS,
 						newDevice.deviceprofile.name);
 			}
-			
+
 			DeviceProfile.addDeviceTemplate(newDevice);
-			response.SendSuccess(Const.API_DEVICE_TEMPLATE_ADD, Const.DEVICE_ADDED,
-					newDevice.deviceprofile.name);
+			response.SendSuccess(Const.API_DEVICE_TEMPLATE_ADD,
+					Const.DEVICE_ADDED, newDevice.deviceprofile.name);
 
 		} catch (InvalidJsonException e) {
-			response.sendFailure(Const.API_DEVICE_TEMPLATE_ADD, ErrorType.INVALID_JSON,
-					e.getMessage());
+			response.sendFailure(Const.API_DEVICE_TEMPLATE_ADD,
+					ErrorType.INVALID_JSON, e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.sendFailure(Const.API_DEVICE_TEMPLATE_ADD, ErrorType.SYSTEM_ERROR,
-					e.getMessage());
+			response.sendFailure(Const.API_DEVICE_TEMPLATE_ADD,
+					ErrorType.SYSTEM_ERROR, e.getMessage());
 		}
 	}
 }

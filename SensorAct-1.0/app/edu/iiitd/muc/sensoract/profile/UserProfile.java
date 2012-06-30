@@ -174,7 +174,7 @@ public class UserProfile {
 			final String newSecretkey) {
 
 		List<UserProfileModel> userList = UserProfileModel.find("bySecretkey",
-				newSecretkey).fetchAll();
+				secretkey).fetchAll();
 
 		if (null == userList || 0 == userList.size()) {
 			return false;

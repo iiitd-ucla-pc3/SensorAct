@@ -22,34 +22,6 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
 public class DeviceSearch extends SensorActAPI {
 
 	/**
-	 * Converts device/search request attributes in Json string to object.
-	 * 
-	 * @param deviceSearchJson
-	 *            Device search request attributes in Json string
-	 * @return Converted device search request format object
-	 * @throws InvalidJsonException
-	 *             If the Json string is not valid or not in the required
-	 *             request format
-	 * @see DeviceSearchFormat
-	 */
-	private DeviceSearchFormat convertToDeviceSearchFormat(
-			final String deviceSearchJson) throws InvalidJsonException {
-
-		DeviceSearchFormat deviceSearchFormat = null;
-		try {
-			deviceSearchFormat = gson.fromJson(deviceSearchJson,
-					DeviceSearchFormat.class);
-		} catch (Exception e) {
-			throw new InvalidJsonException(e.getMessage());
-		}
-
-		if (null == deviceSearchFormat) {
-			throw new InvalidJsonException(Const.EMPTY_JSON);
-		}
-		return deviceSearchFormat;
-	}
-
-	/**
 	 * Validates the device search request format attributes. If validation
 	 * fails, sends corresponding failure message to the caller.
 	 * 
@@ -77,7 +49,8 @@ public class DeviceSearch extends SensorActAPI {
 
 		try {
 
-			DeviceSearchFormat deviceSearchRequest = convertToDeviceSearchFormat(deviceSearchJson);
+			DeviceSearchFormat deviceSearchRequest = convertToRequestFormat(
+					deviceSearchJson, DeviceSearchFormat.class);
 			validateRequest(deviceSearchRequest);
 
 			if (!UserProfile
@@ -90,13 +63,12 @@ public class DeviceSearch extends SensorActAPI {
 			// TODO: Search device
 			response.SendSuccess(Const.API_DEVICE_SEARCH, Const.TODO);
 
-
 		} catch (InvalidJsonException e) {
-			response.sendFailure(Const.API_DEVICE_SEARCH, ErrorType.INVALID_JSON,
-					e.getMessage());
+			response.sendFailure(Const.API_DEVICE_SEARCH,
+					ErrorType.INVALID_JSON, e.getMessage());
 		} catch (Exception e) {
-			response.sendFailure(Const.API_DEVICE_SEARCH, ErrorType.SYSTEM_ERROR,
-					e.getMessage());
+			response.sendFailure(Const.API_DEVICE_SEARCH,
+					ErrorType.SYSTEM_ERROR, e.getMessage());
 		}
 	}
 

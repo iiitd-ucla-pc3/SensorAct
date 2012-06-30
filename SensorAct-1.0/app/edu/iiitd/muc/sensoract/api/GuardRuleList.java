@@ -22,34 +22,6 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
 public class GuardRuleList extends SensorActAPI {
 
 	/**
-	 * Converts guardrule/list request attributes in Json string to object.
-	 * 
-	 * @param guardRuleListJson
-	 *            Guard rule list request attributes in Json string
-	 * @return Converted guard rule list request format object
-	 * @throws InvalidJsonException
-	 *             If the Json string is not valid or not in the required
-	 *             request format
-	 * @see GuardRuleListFormat
-	 */
-	private GuardRuleListFormat convertToGuardRuleListFormat(
-			final String guardRuleListJson) throws InvalidJsonException {
-
-		GuardRuleListFormat guardRuleListFormat = null;
-		try {
-			guardRuleListFormat = gson.fromJson(guardRuleListJson,
-					GuardRuleListFormat.class);
-		} catch (Exception e) {
-			throw new InvalidJsonException(e.getMessage());
-		}
-
-		if (null == guardRuleListFormat) {
-			throw new InvalidJsonException(Const.EMPTY_JSON);
-		}
-		return guardRuleListFormat;
-	}
-
-	/**
 	 * Validates the guard rule list request format attributes. If validation
 	 * fails, sends corresponding failure message to the caller.
 	 * 
@@ -77,7 +49,8 @@ public class GuardRuleList extends SensorActAPI {
 
 		try {
 
-			GuardRuleListFormat guardRuleListRequest = convertToGuardRuleListFormat(guardRuleListJson);
+			GuardRuleListFormat guardRuleListRequest = convertToRequestFormat(
+					guardRuleListJson, GuardRuleListFormat.class);
 			validateRequest(guardRuleListRequest);
 
 			if (!UserProfile

@@ -29,14 +29,15 @@ public class DataUploadWaveSegment extends SensorActAPI {
 	private static int WaveSegmentSize = 5;
 	private static boolean isSendResponseEnabled = false;
 
-	private HashMap<String, ArrayList<WaveSegmentFormat>> hashmapWaveSegments = 
-			new HashMap<String, ArrayList<WaveSegmentFormat>>();
+	private HashMap<String, ArrayList<WaveSegmentFormat>> hashmapWaveSegments = new HashMap<String, ArrayList<WaveSegmentFormat>>();
 
 	/**
 	 * Sends error message to the callel.
 	 * 
-	 * @param errorType ErrorType object contains the status code and message
-	 * @param msg Error message
+	 * @param errorType
+	 *            ErrorType object contains the status code and message
+	 * @param msg
+	 *            Error message
 	 */
 	private void sendError(ErrorType errorType, String msg) {
 		if (isSendResponseEnabled) {
@@ -45,34 +46,6 @@ public class DataUploadWaveSegment extends SensorActAPI {
 		} else {
 			response.sendEmpty(); // to complete the request
 		}
-	}
-
-	/**
-	 * Converts the wavesegment in Json string to object.
-	 * 
-	 * @param waveSegmentJson
-	 *            Wave segment of a sensor sent by a device in json string
-	 * @return Converted wave segment object
-	 * @throws InvalidJsonException
-	 *             If the Json string is not valid or not in the required
-	 *             request format
-	 * @see WaveSegmentFormat
-	 */
-	public WaveSegmentFormat convertToUploadWaveSegmentFormat(
-			final String waveSegmentJson) throws InvalidJsonException {
-
-		WaveSegmentFormat waveSegment = null;
-		try {
-			waveSegment = gson.fromJson(waveSegmentJson,
-					WaveSegmentFormat.class);
-		} catch (Exception e) {
-			throw new InvalidJsonException(e.getMessage());
-		}
-
-		if (null == waveSegment) {
-			throw new InvalidJsonException(Const.EMPTY_JSON);
-		}
-		return waveSegment;
 	}
 
 	/**
@@ -161,7 +134,7 @@ public class DataUploadWaveSegment extends SensorActAPI {
 
 		log.info(Const.API_DATA_UPLOAD_WAVESEGMENT, hashKey + " "
 				+ currentTimestamp + " " + Const.UPLOAD_WAVESEGMENT_SUCCESS
-				+ "\n" + gson.toJson(waveSegment) + "\n");
+				+ "\n" + json.toJson(waveSegment) + "\n");
 
 		if (isSendResponseEnabled) {
 			response.SendSuccess(Const.API_DATA_UPLOAD_WAVESEGMENT,
@@ -182,7 +155,8 @@ public class DataUploadWaveSegment extends SensorActAPI {
 	public final void doProcess(final String waveSegmentJson) {
 
 		try {
-			WaveSegmentFormat newWaveSegment = convertToUploadWaveSegmentFormat(waveSegmentJson);
+			WaveSegmentFormat newWaveSegment = convertToRequestFormat(
+					waveSegmentJson, WaveSegmentFormat.class);
 			validateWaveSegment(newWaveSegment);
 			// userProfile.checkRegisteredSecretkey(newWaveSegment.secretkey,
 			// Const.API_UPLOAD_WAVESEGMENT);
