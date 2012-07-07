@@ -28,6 +28,7 @@ public enum ErrorType {
 	// User profile management
 	USER_ALREADYEXISTS	        (20, Const.USER_ALREADYEXISTS),
 	LOGIN_FAILED	            (21, Const.LOGIN_FAILED),
+	KEY_NOTFOUND	            (22, Const.KEY_NOTFOUND),
 
 	// Repo profile management
 	REPOPROFILE_ALREADYEXISTS	(26, null),

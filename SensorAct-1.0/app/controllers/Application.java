@@ -37,8 +37,25 @@ public class Application extends Controller {
 		SensorActAPI.userRegister.doProcess(request.params.get("body"));
 	}
 
-	public static void userGenerateRepokey() {
-		SensorActAPI.userGenerateRepokey.doProcess(request.params.get("body"));
+	// User key management
+	public static void keyGenerate() {
+		SensorActAPI.keyGenerate.doProcess(request.params.get("body"));
+	}
+
+	public static void keyDelete() {
+		SensorActAPI.keyDelete.doProcess(request.params.get("body"));
+	}
+	
+	public static void keyList() {
+		SensorActAPI.keyList.doProcess(request.params.get("body"));
+	}
+	
+	public static void keyEnable() {
+		SensorActAPI.keyEnable.doProcess(request.params.get("body"));
+	}
+	
+	public static void keyDisable() {
+		SensorActAPI.keyDisable.doProcess(request.params.get("body"));
 	}
 
 	// Device profile management

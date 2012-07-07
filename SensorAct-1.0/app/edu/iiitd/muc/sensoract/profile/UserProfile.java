@@ -10,10 +10,12 @@ package edu.iiitd.muc.sensoract.profile;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
 import edu.iiitd.muc.sensoract.api.request.UserRegisterFormat;
+import edu.iiitd.muc.sensoract.model.user.UserKeyModel;
 import edu.iiitd.muc.sensoract.model.user.UserProfileModel;
 
 /**
@@ -30,7 +32,7 @@ public class UserProfile {
 	 * 
 	 * @return Unique Id
 	 */
-	public static String generateSecretKey() {
+	public static String generateNewKey() {
 		return UUID.randomUUID().toString().replace("-", "");
 	}
 
@@ -122,17 +124,26 @@ public class UserProfile {
 	 */
 	public static boolean isRegisteredSecretkey(final String secretkey) {
 
-		boolean isRegisteredSecretkey = true;
-		boolean isRegisteredBrokerkey = true;
+		List<UserProfileModel> userList = UserProfileModel.find("bySecretkey",
+				secretkey).fetchAll();
 
-		if (0 == UserProfileModel.count("bySecretkey", secretkey)) {
-			isRegisteredSecretkey = false;
-		}
-		if (0 == UserProfileModel.count("byBrokerkeys", secretkey)) {
-			isRegisteredBrokerkey = false;
+		if (null == userList || 1 != userList.size()) {
+			return false; // something went wrong if size > 1
 		}
 
-		return (isRegisteredSecretkey || isRegisteredBrokerkey);
+		// TODO: Search in keylist also - morphia does not support this!
+		/*
+		 * List<UserProfileModel> userList1 =
+		 * UserProfileModel.q().filter("keylist.key", secretkey)
+		 * .filter("keylist.isEnabled", true) .fetchAll();
+		 */
+		// List<UserProfileModel> m =
+		// UserProfile.getUserProfile(keyGenerateFormat.secretkey);
+		// renderJSON(m, new
+		// play.modules.morphia.utils.ModelFactoryGsonAdapter());
+		// //m.setId(null);
+
+		return true;
 	}
 
 	/**
@@ -170,26 +181,121 @@ public class UserProfile {
 	 * @return True, if the broker key list is successfully updated, otherwise
 	 *         false.
 	 */
-	public static boolean updateBrokerKeys(final String secretkey,
-			final String newSecretkey) {
 
-		List<UserProfileModel> userList = UserProfileModel.find("bySecretkey",
-				secretkey).fetchAll();
+	/*
+	 * public static boolean updateBrokerKeys1(final String secretkey, final
+	 * String newSecretkey) {
+	 * 
+	 * List<UserProfileModel> userList = UserProfileModel.find("bySecretkey",
+	 * secretkey).fetchAll();
+	 * 
+	 * if (null == userList || 0 == userList.size()) { return false; }
+	 * 
+	 * List<String> keyList = userList.get(0).brokerkeys; if (null == keyList) {
+	 * keyList = new ArrayList<String>(); } keyList.add(newSecretkey);
+	 * 
+	 * userList.get(0).brokerkeys = keyList; userList.get(0).save();
+	 * 
+	 * return true; }
+	 */
 
-		if (null == userList || 0 == userList.size()) {
+	/**
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public static UserProfileModel getUserProfile(String key) {
+
+		List<UserProfileModel> userList = UserProfileModel.find("Secretkey",
+				key).fetchAll();
+
+		// TODO: if we want to check all the keys
+		// List<UserProfileModel> userList =
+		// UserProfileModel.find("keylist.key",
+		// key).fetchAll();
+
+		if (null == userList || 1 != userList.size()) {
+			return null; // something went wrong if userList.size > 1
+		}
+		return userList.get(0);
+	}
+
+	/**
+	 * 
+	 * @param userProfile
+	 * @param key
+	 * @return
+	 */
+	public static boolean addKey(final UserProfileModel userProfile, final String key) {
+
+		if (null == userProfile) {
 			return false;
 		}
 
-		List<String> keyList = userList.get(0).brokerkeys;
-		if (null == keyList) {
-			keyList = new ArrayList<String>();
+		if(null == userProfile.keylist) {
+			userProfile.keylist = new ArrayList<UserKeyModel>();
 		}
-		keyList.add(newSecretkey);
 
-		userList.get(0).brokerkeys = keyList;
-		userList.get(0).save();
-
+		userProfile.keylist.add(new UserKeyModel(key, true));
+		userProfile.save();
+			
 		return true;
+	}
+
+	/**
+	 * 
+	 * @param userProfile
+	 * @param key
+	 * @return
+	 */
+	// public static boolean deleteKey(final String secretkey, final String key)
+	// {
+	// return deleteKey(getUserProfile(secretkey),key);
+	// }
+	public static boolean deleteKey(final UserProfileModel userProfile,
+			final String key) {
+
+		if (null == userProfile || null == userProfile.keylist) {
+			return false;
+		}
+
+		Iterator<UserKeyModel> keyList = userProfile.keylist.iterator();
+		while (keyList.hasNext()) {
+			UserKeyModel keyModel = keyList.next();
+			if (keyModel.key.equalsIgnoreCase(key)) {
+				keyList.remove();
+				userProfile.save();
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 
+	 * @param userProfile
+	 * @param key
+	 * @return
+	 */
+	public static boolean setKeyStatus(final UserProfileModel userProfile,
+			final String key, boolean status) {
+
+		if (null == userProfile || null == userProfile.keylist) {
+			return false;
+		}
+
+		Iterator<UserKeyModel> keyList = userProfile.keylist.iterator();
+		while (keyList.hasNext()) {
+			UserKeyModel keyModel = keyList.next();
+			if (keyModel.key.equalsIgnoreCase(key)) {
+				keyList.remove();
+				keyModel.isEnabled = status;
+				userProfile.keylist.add(keyModel);				
+				userProfile.save();
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

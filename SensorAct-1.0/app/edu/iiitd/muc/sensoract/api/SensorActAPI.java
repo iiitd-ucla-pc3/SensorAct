@@ -32,7 +32,12 @@ public class SensorActAPI extends Application {
 	public static UserRegister userRegister = new UserRegister();
 	// public static UserRemove userRemove = new UserRemove();
 	public static UserLogin userLogin = new UserLogin();
-	public static UserGenerateRepokey userGenerateRepokey = new UserGenerateRepokey();
+	
+	public static KeyGenerate keyGenerate = new KeyGenerate();
+	public static KeyDelete keyDelete = new KeyDelete();
+	public static KeyList keyList = new KeyList();
+	public static KeyEnable keyEnable = new KeyEnable();
+	public static KeyDisable keyDisable = new KeyDisable();
 
 	public static DeviceAdd deviceAdd = new DeviceAdd();
 	public static DeviceDelete deviceDelete = new DeviceDelete();

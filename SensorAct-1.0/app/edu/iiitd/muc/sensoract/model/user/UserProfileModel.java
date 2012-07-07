@@ -26,15 +26,15 @@ public class UserProfileModel extends Model {
 	public String password = null;
 	public String email = null;
 	public String secretkey = null;
-	public List<String> brokerkeys = null;
-
+	public List<UserKeyModel> keylist = null;
+	
 	public UserProfileModel(final String username, final String password,
 			final String email, final String secretkey) {
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.secretkey = secretkey;
-		this.brokerkeys = new ArrayList<String>();
+		this.keylist = new ArrayList<UserKeyModel>();
 	}
 	
 	UserProfileModel() {

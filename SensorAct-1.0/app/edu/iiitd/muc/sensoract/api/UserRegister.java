@@ -63,7 +63,7 @@ public class UserRegister extends SensorActAPI {
 			}
 
 			newUser.password = UserProfile.getHashCode(newUser.password);
-			String secretkey = UserProfile.generateSecretKey();
+			String secretkey = UserProfile.generateNewKey();
 
 			UserProfile.addUserProfile(newUser, secretkey);
 			response.SendSuccess(Const.API_USER_REGISTER,

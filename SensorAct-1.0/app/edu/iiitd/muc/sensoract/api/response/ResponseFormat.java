@@ -98,4 +98,14 @@ public class ResponseFormat extends SensorActAPI {
 	public void sendJSON(final Object object) {
 		renderJSON(object);
 	}
+	
+	/**
+	 * Sends response as a Json object.
+	 * 
+	 * @param str
+	 */
+	public void sendJSON(final String str) {
+		renderJSON(str);
+	}
+
 }

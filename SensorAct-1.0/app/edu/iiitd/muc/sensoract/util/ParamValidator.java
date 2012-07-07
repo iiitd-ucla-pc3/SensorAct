@@ -154,6 +154,18 @@ public class ParamValidator extends SensorActAPI {
 	}
 
 	/**
+	 * Validates ke parameter and sets the corresponding error message, if
+	 * validation fails.
+	 * 
+	 * @param key
+	 *            Key to validate
+	 */
+	public void validateKey(final String key) {
+		validateString(key, Const.PARAM_KEY, Const.SECRETKEY_MIN_LENGTH,
+				Const.SECRETKEY_MAX_LENGTH);
+	}
+
+	/**
 	 * Validates devicename parameter and sets the corresponding error message,
 	 * if validation fails.
 	 * 

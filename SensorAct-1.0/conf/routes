@@ -13,6 +13,12 @@ POST    /user/register                          Application.userRegister
 POST    /user/login                             Application.userLogin
 POST    /user/generate/repokey                  Application.userGenerateRepokey
 
+POST    /key/generate                           Application.keyGenerate
+POST    /key/delete                             Application.keyDelete
+POST    /key/list                               Application.keyList
+POST    /key/enable                             Application.keyEnable
+POST    /key/disable                            Application.keyDisable
+
 POST    /device/add                             Application.deviceAdd
 POST    /device/delete                          Application.deviceDelete
 POST    /device/get                             Application.deviceGet

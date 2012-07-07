@@ -44,7 +44,13 @@ public class Const {
 	public static final String API_REPO_INFO = "repo/info";
 	public static final String API_USER_LOGIN = "user/login";
 	public static final String API_USER_REGISTER = "user/register";
-	public static final String API_USER_GENERATE_REPOKEY = "user/generate/repokey";
+	
+	//public static final String API_USER_GENERATE_REPOKEY = "user/generate/repokey";
+	public static final String API_KEY_GENERATE = "key/generate";
+	public static final String API_KEY_DELETE = "key/delete";
+	public static final String API_KEY_LIST = "key/list";
+	public static final String API_KEY_ENABLE = "key/enable";
+	public static final String API_KEY_DISABLE = "key/disable";
 
 	public static final String API_DEVICE_ADD = "device/add";
 	public static final String API_DEVICE_DELETE = "device/delete";
@@ -78,6 +84,7 @@ public class Const {
 	public static final String PARAM_PASSWORD = "password";
 	public static final String PARAM_EMAIL = "email";
 	public static final String PARAM_SECRETKEY = "secretkey";
+	public static final String PARAM_KEY = "key";
 
 	public static final String PARAM_DEVICEPROFILE = "deviceprofile";
 	public static final String PARAM_NAME = "name";
@@ -181,6 +188,12 @@ public class Const {
 	public static final String LOGIN_FAILED = "Login failed";
 	public static final String USER_REGISTERED = "New Userprofile registered";
 	public static final String USER_ALREADYEXISTS = "Userprofile already exists";
+	
+	public static final String KEY_NOTFOUND = "Key not found";
+	public static final String KEY_DELETED = "Key deleted";
+	public static final String KEY_ENABLED = "Key enabled";
+	public static final String KEY_DISABLED = "Key disabled";
+	
 
 	public static final String DEVICE_ADDED = "New device added";
 	public static final String DEVICE_ALREADYEXISTS = "Device already exists";
