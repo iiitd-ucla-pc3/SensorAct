@@ -37,6 +37,7 @@ public class SensorActAPI extends Application {
 	public static UserRegister userRegister = new UserRegister();
 	// public static UserRemove userRemove = new UserRemove();
 	public static UserLogin userLogin = new UserLogin();
+	public static UserList userList = new UserList();
 
 	public static KeyGenerate keyGenerate = new KeyGenerate();
 	public static KeyDelete keyDelete = new KeyDelete();

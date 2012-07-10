@@ -44,6 +44,7 @@ public class Const {
 	public static final String API_REPO_INFO = "repo/info";
 	public static final String API_USER_LOGIN = "user/login";
 	public static final String API_USER_REGISTER = "user/register";
+	public static final String API_USER_LIST = "user/list";
 	
 	//public static final String API_USER_GENERATE_REPOKEY = "user/generate/repokey";
 	public static final String API_KEY_GENERATE = "key/generate";

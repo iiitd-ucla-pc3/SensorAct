@@ -200,6 +200,28 @@ public class UserProfile {
 	 */
 
 	/**
+	 * Retrieves all the registered users in the repository.
+	 * 
+	 * @return List of user names
+	 */
+	public static List<String> getUserNameList() {
+
+		List<String> userNameList = new ArrayList<String>();
+		List<UserProfileModel> userList = UserProfileModel.findAll();
+
+		if (null == userList) {
+			return null;
+		}
+
+		Iterator<UserProfileModel> userListIterator = userList.iterator();
+		while (userListIterator.hasNext()) {
+			userNameList.add(userListIterator.next().username);
+		}
+
+		return userNameList;
+	}
+
+	/**
 	 * 
 	 * @param key
 	 * @return
@@ -226,19 +248,20 @@ public class UserProfile {
 	 * @param key
 	 * @return
 	 */
-	public static boolean addKey(final UserProfileModel userProfile, final String key) {
+	public static boolean addKey(final UserProfileModel userProfile,
+			final String key) {
 
 		if (null == userProfile) {
 			return false;
 		}
 
-		if(null == userProfile.keylist) {
+		if (null == userProfile.keylist) {
 			userProfile.keylist = new ArrayList<UserKeyModel>();
 		}
 
 		userProfile.keylist.add(new UserKeyModel(key, true));
 		userProfile.save();
-			
+
 		return true;
 	}
 
@@ -290,7 +313,7 @@ public class UserProfile {
 			if (keyModel.key.equalsIgnoreCase(key)) {
 				keyList.remove();
 				keyModel.isEnabled = status;
-				userProfile.keylist.add(keyModel);				
+				userProfile.keylist.add(keyModel);
 				userProfile.save();
 				return true;
 			}

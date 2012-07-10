@@ -39,6 +39,10 @@ public class Application extends Controller {
 		SensorActAPI.userRegister.doProcess(request.params.get("body"));
 	}
 
+	public static void userList() {
+		SensorActAPI.userList.doProcess(request.params.get("body"));
+	}
+	
 	// User key management
 	public static void keyGenerate() {
 		SensorActAPI.keyGenerate.doProcess(request.params.get("body"));

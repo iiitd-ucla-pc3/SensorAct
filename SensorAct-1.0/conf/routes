@@ -12,6 +12,7 @@ GET     /repo/info                              Application.repoInfo
 POST    /user/register                          Application.userRegister
 POST    /user/login                             Application.userLogin
 POST    /user/generate/repokey                  Application.userGenerateRepokey
+POST    /user/list                              Application.userList
 
 POST    /key/generate                           Application.keyGenerate
 POST    /key/delete                             Application.keyDelete
