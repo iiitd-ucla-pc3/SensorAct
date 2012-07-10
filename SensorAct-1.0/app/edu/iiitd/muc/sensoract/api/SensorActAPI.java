@@ -106,11 +106,11 @@ public class SensorActAPI extends Application {
 	}
 
 	/**
-	 * Morhphia models keep _id attributes internally. Removes those unncessary
+	 * Morhphia models keep _id attributes internally. Removes those unnecessary
 	 * _id attributes for printing.
 	 * 
-	 * @param obj
-	 * @return
+	 * @param obj Object which contains the _id attribute.
+	 * @return Json string with _id attribute removed.
 	 */
 	protected String remove_Id(final Object obj) {
 
@@ -124,6 +124,14 @@ public class SensorActAPI extends Application {
 		return json.toJson(obj);
 	}
 
+	/**
+	 * Morhphia models keep _id attributes internally. Removes those unnecessary
+	 * _id attributes for printing.
+	 * 
+	 * @param obj Object which contains the _id attribute.
+	 * @param name Name of the array list.
+	 * @return Json string with _id attribute removed.
+	 */
 	protected String remove_Id(final Object obj, final String name) {
 
 		try {

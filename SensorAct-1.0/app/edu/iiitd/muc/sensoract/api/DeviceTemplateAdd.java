@@ -1,5 +1,5 @@
 /*
- * Name: DeviceAdd.java
+ * Name: DeviceTemplateAdd.java
  * Project: SensorAct, MUC@IIIT-Delhi
  * Version: 1.0
  * Date: 2012-04-14

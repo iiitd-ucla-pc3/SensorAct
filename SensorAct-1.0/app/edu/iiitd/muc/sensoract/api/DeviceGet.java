@@ -61,12 +61,7 @@ public class DeviceGet extends SensorActAPI {
 
 		// TODO: Remove unnecessary _id attributes thrown by morphia
 		oneDevice.secretkey = null;
-		DeviceModel to = json.fromJson(json.toJson(oneDevice),DeviceModel.class);
-		
-		Method[] x = SensorActAPI.class.getDeclaredMethods();
-		
-		System.out.println( "method name : " + x[0].getName() );
-		//response.sendJSON(to);
+		//response.sendJSON(oneDevice);
 		response.sendJSON(remove_Id(oneDevice));
 		
 	}
