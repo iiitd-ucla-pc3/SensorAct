@@ -29,11 +29,15 @@ public class DeviceDelete extends SensorActAPI {
 	 * @param deviceDeleteRequest
 	 *            Delete device request format object
 	 */
-	protected void validateRequest(final DeviceDeleteFormat deviceDeleteRequest) {
+	private void validateRequest(final DeviceDeleteFormat deviceDeleteRequest) {
 
 		validator.validateSecretKey(deviceDeleteRequest.secretkey);
 		validator.validateDeviceName(deviceDeleteRequest.devicename);
 
+		if (validator.hasErrors()) {
+			response.sendFailure(Const.API_DEVICE_DELETE,
+					ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
+		}
 	}
 
 	/**
@@ -54,11 +58,6 @@ public class DeviceDelete extends SensorActAPI {
 					deviceDeleteJson, DeviceDeleteFormat.class);
 
 			validateRequest(deviceDeleteRequest);
-			if (validator.hasErrors()) {
-				response.sendFailure(Const.API_DEVICE_DELETE,
-						ErrorType.VALIDATION_FAILED,
-						validator.getErrorMessages());
-			}
 
 			if (!UserProfile
 					.isRegisteredSecretkey(deviceDeleteRequest.secretkey)) {
@@ -67,15 +66,14 @@ public class DeviceDelete extends SensorActAPI {
 						deviceDeleteRequest.secretkey);
 			}
 
-			if (!DeviceProfile.deleteDeviceProfile(
-					deviceDeleteRequest.secretkey,
-					deviceDeleteRequest.devicename)) {
+			if (!DeviceProfile.deleteDevice(deviceDeleteRequest.secretkey,
+					deviceDeleteRequest.templatename)) {
 				response.sendFailure(Const.API_DEVICE_DELETE,
 						ErrorType.DEVICE_NOTFOUND,
-						deviceDeleteRequest.devicename);
+						deviceDeleteRequest.templatename);
 			}
 			response.SendSuccess(Const.API_DEVICE_DELETE, Const.DEVICE_DELETED,
-					deviceDeleteRequest.devicename);
+					deviceDeleteRequest.templatename);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_DEVICE_DELETE,

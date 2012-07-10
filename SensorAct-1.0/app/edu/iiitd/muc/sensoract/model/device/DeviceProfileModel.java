@@ -23,15 +23,11 @@ import edu.iiitd.muc.sensoract.api.request.DeviceAddFormat;
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
-@Entity(value = "DeviceProfile", noClassnameStored = true)
+//@Entity(value = "DeviceProfile", noClassnameStored = true)
 public class DeviceProfileModel extends Model {
 
-	//public boolean istemplate = false;
 	public String secretkey = null;
-	// TODO: name is included for output format.. will be changed
-	public String name = null;
-	public String devicename = null;
-	public String templatename = null;
+	public boolean shared = false;
 	public String IP = null;
 	public String location = null;
 	public String tags = null;
@@ -47,9 +43,8 @@ public class DeviceProfileModel extends Model {
 		}
 		
 		secretkey = newDevice.secretkey;
-		//devicename = newDevice.deviceprofile.name;
-		//templatename = newDevice.deviceprofile.name;
 		
+		shared = newDevice.deviceprofile.shared;		
 		IP = newDevice.deviceprofile.IP;
 		
 		location = newDevice.deviceprofile.location;

@@ -30,62 +30,43 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
 public class DeviceTemplateAdd extends DeviceAdd {
 
 	/**
-	 * Services the device/add API.
-	 * <p>
-	 * Followings are the steps to be followed to add a new device profile
-	 * successfully to the repository.
-	 * <ol>
-	 * <li>Converts the request Json string to the corresponding required device
-	 * profile format.
-	 * <li>Validates each attribute in the request.
-	 * <li>Checks the secretkey in the request is from the registered user or
-	 * not.
-	 * <li>Checks whether this is a duplicate device
-	 * <li>On successful completion of all the above steps, requested new device
-	 * profile will be created in the repository. Otherwise, corresponding error
-	 * message will be sent to the caller.
-	 * </ol>
-	 * <p>
+	 * Services the device/template/add API.
 	 * 
-	 * @param deviceAddJson
-	 *            Device profile in Json
+	 * Adds a new device template to the repository. Sends success or failure,
+	 * in case of any error, response message in Json to the caller.
+	 * 
+	 * @param templateAddJson
+	 *            Device add request attributes in Json string
 	 */
-	public void doProcess(final String deviceAddJson) {
+	public void doProcess(final String templateAddJson) {
 
 		try {
-			DeviceAddFormat newDevice = convertToRequestFormat(deviceAddJson,
+			DeviceAddFormat newDevice = convertToRequestFormat(templateAddJson,
 					DeviceAddFormat.class);
 
-			validateRequest(newDevice);
-			if (validator.hasErrors()) {
-				response.sendFailure(Const.API_DEVICE_TEMPLATE_ADD,
-						ErrorType.VALIDATION_FAILED,
-						validator.getErrorMessages());
-			}
+			validateRequest(newDevice, Const.API_DEVICE_TEMPLATE_ADD);
 
 			if (!UserProfile.isRegisteredSecretkey(newDevice.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_TEMPLATE_ADD,
 						ErrorType.UNREGISTERED_SECRETKEY, newDevice.secretkey);
 			}
 
-			// TODO: check only the templates
 			if (DeviceProfile.isDeviceTemplateExists(newDevice)) {
 				response.sendFailure(Const.API_DEVICE_TEMPLATE_ADD,
-						ErrorType.DEVICE_ALREADYEXISTS,
+						ErrorType.DEVICE_TEMPLATE_ALREADYEXISTS,
 						newDevice.deviceprofile.name);
 			}
-
-			DeviceProfile.addDeviceTemplate(newDevice);
+			DeviceProfile.addDevice(newDevice);
 			response.SendSuccess(Const.API_DEVICE_TEMPLATE_ADD,
-					Const.DEVICE_ADDED, newDevice.deviceprofile.name);
+					Const.DEVICE_TEMPLATE_ADDED, newDevice.deviceprofile.name);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_DEVICE_TEMPLATE_ADD,
 					ErrorType.INVALID_JSON, e.getMessage());
 		} catch (Exception e) {
-			e.printStackTrace();
 			response.sendFailure(Const.API_DEVICE_TEMPLATE_ADD,
 					ErrorType.SYSTEM_ERROR, e.getMessage());
 		}
+
 	}
 }

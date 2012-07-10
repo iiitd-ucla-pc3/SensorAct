@@ -12,6 +12,7 @@ import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
 import edu.iiitd.muc.sensoract.model.device.DeviceProfileModel;
+import edu.iiitd.muc.sensoract.model.device.DeviceTemplateModel;
 import edu.iiitd.muc.sensoract.profile.DeviceProfile;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
 
@@ -21,34 +22,39 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
-public class DeviceTemplateGet extends DeviceGet {
+public class DeviceTemplateGet extends SensorActAPI {
 
 	/**
-	 * Sends the requested device profile object to caller in Json
+	 * Validates the device get request format attributes. If validation fails,
+	 * sends corresponding failure message to the caller.
 	 * 
-	 * @param oneDevice
+	 * @param deviceGetRequest
+	 *            Device get request format object
+	 */
+	protected void validateRequest(final DeviceGetFormat deviceGetRequest) {
+
+		validator.validateSecretKey(deviceGetRequest.secretkey);
+		validator.validateTemplateName(deviceGetRequest.templatename);
+		
+		if (validator.hasErrors()) {
+			response.sendFailure(Const.API_DEVICE_TEMPLATE_GET,
+					ErrorType.VALIDATION_FAILED,
+					validator.getErrorMessages());
+		}
+	}
+
+	
+	/**
+	 * Sends the requested device template object to caller as Json
+	 * 
+	 * @param oneTemplate
 	 *            Device profile object to send
 	 */
-	private void sendDeviceProfile(final DeviceProfileModel oneDevice) {
+	private void sendDeviceTemplate(final DeviceProfileModel oneTemplate) {
 
 		// TODO: Remove unnecessary _id attributes thrown by morphia
-		oneDevice.secretkey = null;
-		oneDevice.name = oneDevice.templatename;
-		oneDevice.devicename = null;
-		oneDevice.templatename = null;
-		response.sendJSON(oneDevice);
-
-		// alternate way
-		// response.SendSuccess(Const.API_DEVICE_GET, gson.toJson(oneDevice));
-		// String json =
-		// "{\"name\":\"device1\",\"IP\":\"192.168.0.7\",\"location\":\"PhD Lab\",\"tags\":\"3rd floor; IIIT Delhi\",\"latitude\":0.0,\"longitude\":0.0,\"sensors\":[{\"name\":\"temperature\",\"channels\":[{\"name\":\"channel1\",\"type\":\"Double\",\"unit\":\"Celsius\"}]},{\"name\":\"Accelerometer\",\"channels\":[{\"name\":\"X\",\"type\":\"Int\",\"unit\":\"None\"},{\"name\":\"Y\",\"type\":\"Int\",\"unit\":\"None\"},{\"name\":\"Z\",\"type\":\"Int\",\"unit\":\"None\"}]}],\"actuators\":[{\"name\":\"actuator2\"}],\"_id\":{\"_time\":1336549919,\"_machine\":1152272867,\"_inc\":1290458281,\"_new\":false}}";
-		// try {
-		// DeviceGetFormat getDevice = convertToDeleteDeviceRequestFormat(json);
-		// } catch (InvalidJsonException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-
+		oneTemplate.secretkey = null;
+		response.sendJSON(oneTemplate);
 	}
 
 	/**
@@ -71,31 +77,31 @@ public class DeviceTemplateGet extends DeviceGet {
 
 			validateRequest(deviceGetRequest);
 			if (validator.hasErrors()) {
-				response.sendFailure(Const.API_DEVICE_GET,
+				response.sendFailure(Const.API_DEVICE_TEMPLATE_GET,
 						ErrorType.VALIDATION_FAILED,
 						validator.getErrorMessages());
 			}
 
 			if (!UserProfile.isRegisteredSecretkey(deviceGetRequest.secretkey)) {
-				response.sendFailure(Const.API_DEVICE_GET,
+				response.sendFailure(Const.API_DEVICE_TEMPLATE_GET,
 						ErrorType.UNREGISTERED_SECRETKEY,
 						deviceGetRequest.secretkey);
 			}
 
-			DeviceProfileModel oneDevice = DeviceProfile.getDeviceTemplate(
+			DeviceTemplateModel oneTemplate = DeviceProfile.getDeviceTemplate(
 					deviceGetRequest.secretkey, deviceGetRequest.devicename);
-			if (null == oneDevice) {
-				response.sendFailure(Const.API_DEVICE_GET,
-						ErrorType.DEVICE_NOTFOUND, deviceGetRequest.devicename);
+			if (null == oneTemplate) {
+				response.sendFailure(Const.API_DEVICE_TEMPLATE_GET,
+						ErrorType.DEVICE_TEMPLATE_NOTFOUND, deviceGetRequest.devicename);
 			}
 
-			sendDeviceProfile(oneDevice);
+			sendDeviceTemplate(oneTemplate);
 
 		} catch (InvalidJsonException e) {
-			response.sendFailure(Const.API_DEVICE_GET, ErrorType.INVALID_JSON,
+			response.sendFailure(Const.API_DEVICE_TEMPLATE_GET, ErrorType.INVALID_JSON,
 					e.getMessage());
 		} catch (Exception e) {
-			response.sendFailure(Const.API_DEVICE_GET, ErrorType.SYSTEM_ERROR,
+			response.sendFailure(Const.API_DEVICE_TEMPLATE_GET, ErrorType.SYSTEM_ERROR,
 					e.getMessage());
 		}
 	}

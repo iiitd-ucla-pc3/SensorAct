@@ -7,6 +7,8 @@
  */
 package controllers;
 
+import com.google.gson.Gson;
+
 import play.mvc.Controller;
 import edu.iiitd.muc.sensoract.api.SensorActAPI;
 
@@ -142,5 +144,4 @@ public class Application extends Controller {
 	public static void dataUploadWaveSegment() {
 		SensorActAPI.dataUploadWaveseg.doProcess(request.params.get("body"));
 	}
-
 }

@@ -20,7 +20,26 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
-public class DeviceTemplateDelete extends DeviceDelete {
+public class DeviceTemplateDelete extends SensorActAPI {
+
+	/**
+	 * Validates the device template delete request format attributes. If
+	 * validation fails, sends corresponding failure message to the caller.
+	 * 
+	 * @param deviceDeleteRequest
+	 *            Delete device request format object
+	 */
+	private void validateRequest(final DeviceDeleteFormat deviceDeleteRequest) {
+
+		validator.validateSecretKey(deviceDeleteRequest.secretkey);
+		validator.validateTemplateName(deviceDeleteRequest.templatename);
+
+		if (validator.hasErrors()) {
+			response.sendFailure(Const.API_DEVICE_TEMPLATE_DELETE,
+					ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
+		}
+
+	}
 
 	/**
 	 * Services the device/delete API.
@@ -40,11 +59,6 @@ public class DeviceTemplateDelete extends DeviceDelete {
 					deviceDeleteJson, DeviceDeleteFormat.class);
 
 			validateRequest(deviceDeleteRequest);
-			if (validator.hasErrors()) {
-				response.sendFailure(Const.API_DEVICE_TEMPLATE_DELETE,
-						ErrorType.VALIDATION_FAILED,
-						validator.getErrorMessages());
-			}
 
 			if (!UserProfile
 					.isRegisteredSecretkey(deviceDeleteRequest.secretkey)) {
@@ -55,13 +69,14 @@ public class DeviceTemplateDelete extends DeviceDelete {
 
 			if (!DeviceProfile.deleteDeviceTemplate(
 					deviceDeleteRequest.secretkey,
-					deviceDeleteRequest.devicename)) {
+					deviceDeleteRequest.templatename)) {
 				response.sendFailure(Const.API_DEVICE_TEMPLATE_DELETE,
-						ErrorType.DEVICE_NOTFOUND,
-						deviceDeleteRequest.devicename);
+						ErrorType.DEVICE_TEMPLATE_NOTFOUND,
+						deviceDeleteRequest.templatename);
 			}
 			response.SendSuccess(Const.API_DEVICE_TEMPLATE_DELETE,
-					Const.DEVICE_DELETED, deviceDeleteRequest.devicename);
+					Const.DEVICE_TEMPLATE_DELETED,
+					deviceDeleteRequest.templatename);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_DEVICE_TEMPLATE_DELETE,

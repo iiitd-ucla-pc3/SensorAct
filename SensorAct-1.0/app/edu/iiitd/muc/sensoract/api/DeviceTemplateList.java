@@ -7,6 +7,7 @@
  */
 package edu.iiitd.muc.sensoract.api;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
 import edu.iiitd.muc.sensoract.model.device.DeviceProfileModel;
+import edu.iiitd.muc.sensoract.model.device.DeviceTemplateModel;
 import edu.iiitd.muc.sensoract.profile.DeviceProfile;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
 
@@ -26,35 +28,47 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
-public class DeviceTemplateList extends DeviceList {
+public class DeviceTemplateList extends SensorActAPI {
+
+	/**
+	 * Validates the device list request format attributes. If validation fails,
+	 * sends corresponding failure message to the caller.
+	 * 
+	 * @param templateListRequest
+	 *            List all devices request format object
+	 */
+	private void validateRequest(final DeviceListFormat templateListRequest) {
+
+		validator.validateSecretKey(templateListRequest.secretkey);
+
+		if (validator.hasErrors()) {
+			response.sendFailure(Const.API_DEVICE_TEMPLATE_LIST,
+					ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
+		}
+	}
 
 	/**
 	 * Sends the list of requested device profile object to caller in Json
 	 * array.
 	 * 
-	 * @param devicesList
+	 * @param templateList
 	 *            List of device profile objects to send.
 	 */
 	private void sendDeviceTemplateList(
-			final List<DeviceProfileModel> devicesList) {
+			final List<DeviceTemplateModel> templateList) {
 
 		DeviceListResponseFormat outList = new DeviceListResponseFormat();
-		Iterator<DeviceProfileModel> devicesListIterator = devicesList
+		Iterator<DeviceTemplateModel> templateListIterator = templateList
 				.iterator();
 
-		while (devicesListIterator.hasNext()) {
-			DeviceProfileModel device = devicesListIterator.next();
-			if (device.templatename != null) {
-				device.secretkey = null;
-				device.name = device.templatename;
-				device.devicename = null;
-				device.templatename = null;
-				outList.devicelist.add(device);
-			}
+		while (templateListIterator.hasNext()) {
+			DeviceTemplateModel template = templateListIterator.next();
+			template.secretkey = null;
 		}
 
-		response.sendJSON(outList);
-
+		outList.setTemplateList(templateList);		
+		//response.sendJSON(outList);
+		response.sendJSON(remove_Id(outList,"templatelist"));
 	}
 
 	/**
@@ -64,42 +78,42 @@ public class DeviceTemplateList extends DeviceList {
 	 * all device profiles in Json array to the caller on success, otherwise,
 	 * corresponding failure message.
 	 * 
-	 * @param deviceListJson
+	 * @param templateListJson
 	 *            Device list request attributes in Json string
 	 */
-	public void doProcess(final String deviceListJson) {
+	public void doProcess(final String templateListJson) {
 
 		try {
 
-			DeviceListFormat deviceListRequest = convertToRequestFormat(
-					deviceListJson, DeviceListFormat.class);
-			validateRequest(deviceListRequest);
+			DeviceListFormat templateListRequest = convertToRequestFormat(
+					templateListJson, DeviceListFormat.class);
+			validateRequest(templateListRequest);
 			if (validator.hasErrors()) {
-				response.sendFailure(Const.API_DEVICE_LIST,
+				response.sendFailure(Const.API_DEVICE_TEMPLATE_LIST,
 						ErrorType.VALIDATION_FAILED,
 						validator.getErrorMessages());
 			}
 
-			if (!UserProfile.isRegisteredSecretkey(deviceListRequest.secretkey)) {
-				response.sendFailure(Const.API_DEVICE_LIST,
+			if (!UserProfile.isRegisteredSecretkey(templateListRequest.secretkey)) {
+				response.sendFailure(Const.API_DEVICE_TEMPLATE_LIST,
 						ErrorType.UNREGISTERED_SECRETKEY,
-						deviceListRequest.secretkey);
+						templateListRequest.secretkey);
 			}
 
-			List<DeviceProfileModel> devicesList = DeviceProfile
-					.getAllDeviceTemplateList(deviceListRequest.secretkey);
-			if (null == devicesList || 0 == devicesList.size()) {
-				response.sendFailure(Const.API_DEVICE_LIST,
-						ErrorType.DEVICE_NODEVICE_FOUND, Const.MSG_NONE);
+			List<DeviceTemplateModel> templateList = DeviceProfile
+					.getDeviceTemplateList(templateListRequest.secretkey);
+			if (null == templateList || 0 == templateList.size()) {
+				response.sendFailure(Const.API_DEVICE_TEMPLATE_LIST,
+						ErrorType.DEVICE_TEMPLATE_NOTEMPLATE_FOUND, Const.MSG_NONE);
 			}
 
-			sendDeviceTemplateList(devicesList);
+			sendDeviceTemplateList(templateList);
 
 		} catch (InvalidJsonException e) {
-			response.sendFailure(Const.API_DEVICE_LIST, ErrorType.INVALID_JSON,
+			response.sendFailure(Const.API_DEVICE_TEMPLATE_LIST, ErrorType.INVALID_JSON,
 					e.getMessage());
 		} catch (Exception e) {
-			response.sendFailure(Const.API_DEVICE_LIST, ErrorType.SYSTEM_ERROR,
+			response.sendFailure(Const.API_DEVICE_TEMPLATE_LIST, ErrorType.SYSTEM_ERROR,
 					e.getMessage());
 		}
 	}

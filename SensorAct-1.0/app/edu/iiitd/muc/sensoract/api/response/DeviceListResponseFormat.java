@@ -10,7 +10,9 @@ package edu.iiitd.muc.sensoract.api.response;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.iiitd.muc.sensoract.model.device.DeviceModel;
 import edu.iiitd.muc.sensoract.model.device.DeviceProfileModel;
+import edu.iiitd.muc.sensoract.model.device.DeviceTemplateModel;
 
 /**
  * Defines the response format for device/list API.
@@ -20,9 +22,18 @@ import edu.iiitd.muc.sensoract.model.device.DeviceProfileModel;
  */
 public class DeviceListResponseFormat {
 
-	public List<DeviceProfileModel> devicelist = null;
+	private List<DeviceModel> devicelist = null;
+	private List<DeviceTemplateModel> templatelist = null;
 
-	public DeviceListResponseFormat () {
-		devicelist = new ArrayList<DeviceProfileModel>();
+	public void setDeviceList(List<DeviceModel> deviceList) {
+		devicelist = new ArrayList<DeviceModel>();
+		devicelist.addAll(deviceList);
+		templatelist = null;
+	}
+	
+	public void setTemplateList(List<DeviceTemplateModel> templateList) {
+		templatelist = new ArrayList<DeviceTemplateModel>();
+		templatelist.addAll(templateList);
+		devicelist = null;
 	}
 }

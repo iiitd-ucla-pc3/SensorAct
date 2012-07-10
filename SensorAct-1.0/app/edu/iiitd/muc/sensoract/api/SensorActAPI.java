@@ -7,7 +7,12 @@
  */
 package edu.iiitd.muc.sensoract.api;
 
+import java.util.Iterator;
+
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import controllers.Application;
 import edu.iiitd.muc.sensoract.api.request.DeviceAddFormat;
@@ -32,7 +37,7 @@ public class SensorActAPI extends Application {
 	public static UserRegister userRegister = new UserRegister();
 	// public static UserRemove userRemove = new UserRemove();
 	public static UserLogin userLogin = new UserLogin();
-	
+
 	public static KeyGenerate keyGenerate = new KeyGenerate();
 	public static KeyDelete keyDelete = new KeyDelete();
 	public static KeyList keyList = new KeyList();
@@ -100,4 +105,41 @@ public class SensorActAPI extends Application {
 		return reqObj;
 	}
 
+	/**
+	 * Morhphia models keep _id attributes internally. Removes those unncessary
+	 * _id attributes for printing.
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	protected String remove_Id(final Object obj) {
+
+		try {
+			return json.toJsonTree(obj).getAsJsonObject().remove("_id")
+					.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return json.toJson(obj);
+	}
+
+	protected String remove_Id(final Object obj, final String name) {
+
+		try {
+			JsonObject jo = json.toJsonTree(obj).getAsJsonObject();
+			JsonArray ja = jo.getAsJsonArray(name);
+			if (null != ja) {
+				Iterator<JsonElement> itr = ja.iterator();
+				while (itr.hasNext()) {
+					itr.next().getAsJsonObject().remove("_id");
+				}
+				return jo.toString();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return json.toJson(obj);
+	}
 }

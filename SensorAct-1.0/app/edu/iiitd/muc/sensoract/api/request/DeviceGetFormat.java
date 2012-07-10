@@ -8,7 +8,7 @@
 package edu.iiitd.muc.sensoract.api.request;
 
 /**
- * Defines the request format for device/get API.
+ * Defines the request format for device/get device/template/get API.
  *
  * @author Pandarasamy Arjunan
  * @version 1.0
@@ -16,6 +16,7 @@ package edu.iiitd.muc.sensoract.api.request;
 public class DeviceGetFormat {
 
 	public String secretkey = null;
-	public String devicename = null;
+	public String devicename = null;  	// for device
+	public String templatename = null; 	// for template
 
 }

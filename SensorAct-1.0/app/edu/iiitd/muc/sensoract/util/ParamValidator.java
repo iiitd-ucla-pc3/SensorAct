@@ -166,12 +166,25 @@ public class ParamValidator extends SensorActAPI {
 	}
 
 	/**
+	 * Validates templatename parameter and sets the corresponding error message,
+	 * if validation fails.
+	 * 
+	 * @param templatename
+	 *            Template name to validate
+	 */
+	public void validateTemplateName(final String templatename) {
+		validateString(templatename, Const.PARAM_TEMPLATENAME,
+				Const.TEMPLATENAME_MIN_LENGTH, Const.TEMPLATENAME_MAX_LENGTH);
+	}
+
+	/**
 	 * Validates devicename parameter and sets the corresponding error message,
 	 * if validation fails.
 	 * 
 	 * @param devicename
 	 *            Device name to validate
 	 */
+
 	public void validateDeviceName(final String devicename) {
 		validateString(devicename, Const.PARAM_DEVICENAME,
 				Const.DEVICENAME_MIN_LENGTH, Const.DEVICENAME_MAX_LENGTH);
@@ -181,7 +194,7 @@ public class ParamValidator extends SensorActAPI {
 	 * Validates deviceprofile.name parameter and sets the corresponding error
 	 * message, validation if fails.
 	 * 
-	 * @param devicename
+	 * @param templatename
 	 *            Device name to validate
 	 */
 	public void validateDeviceProfileName(final String name) {

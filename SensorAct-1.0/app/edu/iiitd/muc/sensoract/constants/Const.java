@@ -106,6 +106,7 @@ public class Const {
 	public static final String PARAM_EPOCTIME = "epoctime";
 	public static final String PARAM_READINGS = "readings";
 	public static final String PARAM_DEVICENAME = "devicename";
+	public static final String PARAM_TEMPLATENAME = "templatename";
 
 	/*
 	 * API parameter validation limits
@@ -124,6 +125,9 @@ public class Const {
 
 	public static final int DEVICENAME_MIN_LENGTH = 2;
 	public static final int DEVICENAME_MAX_LENGTH = 20;
+
+	public static final int TEMPLATENAME_MIN_LENGTH = 2;
+	public static final int TEMPLATENAME_MAX_LENGTH = 20;
 
 	public static final int LOCATION_MIN_LENGTH = 2;
 	public static final int LOCATION_MAX_LENGTH = 50;
@@ -200,6 +204,12 @@ public class Const {
 	public static final String DEVICE_DELETED = "Device successfully deleted";
 	public static final String DEVICE_NOTFOUND = "Device not found";	
 	public static final String DEVICE_NODEVICE_FOUND = "No device found";
+
+	public static final String DEVICE_TEMPLATE_ADDED = "New device template added";
+	public static final String DEVICE_TEMPLATE_ALREADYEXISTS = "Device template already exists";
+	public static final String DEVICE_TEMPLATE_DELETED = "Device template successfully deleted";
+	public static final String DEVICE_TEMPLATE_NOTFOUND = "Device template not found";	
+	public static final String DEVICE_TEMPLATE_NOTEMPLATE_FOUND = "No device template found";
 
 	public static final String UNREGISTERED_SECRETKEY = "Unregistered secretkey";
 	public static final String UNREGISTERED_USERNAME = "Unregistered username";

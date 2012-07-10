@@ -7,10 +7,20 @@
  */
 package edu.iiitd.muc.sensoract.api;
 
+import java.lang.reflect.Method;
+
+import play.mvc.results.RenderJson;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.mongodb.util.JSON;
+
 import edu.iiitd.muc.sensoract.api.request.DeviceGetFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
+import edu.iiitd.muc.sensoract.model.device.DeviceModel;
 import edu.iiitd.muc.sensoract.model.device.DeviceProfileModel;
 import edu.iiitd.muc.sensoract.profile.DeviceProfile;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
@@ -30,39 +40,35 @@ public class DeviceGet extends SensorActAPI {
 	 * @param deviceGetRequest
 	 *            Device get request format object
 	 */
-	protected void validateRequest(final DeviceGetFormat deviceGetRequest) {
+	private void validateRequest(final DeviceGetFormat deviceGetRequest) {
 
 		validator.validateSecretKey(deviceGetRequest.secretkey);
 		validator.validateDeviceName(deviceGetRequest.devicename);
 
+		if (validator.hasErrors()) {
+			response.sendFailure(Const.API_DEVICE_GET,
+					ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
+		}
 	}
 
 	/**
-	 * Sends the requested device profile object to caller in Json
+	 * Sends the requested device profile object to caller as Json
 	 * 
 	 * @param oneDevice
 	 *            Device profile object to send
 	 */
-	private void sendDeviceProfile(final DeviceProfileModel oneDevice) {
+	private void sendDeviceProfile(final DeviceModel oneDevice) {
 
 		// TODO: Remove unnecessary _id attributes thrown by morphia
 		oneDevice.secretkey = null;
-		oneDevice.name = oneDevice.devicename;
-		oneDevice.devicename = null;
-		oneDevice.templatename = null;
-		response.sendJSON(oneDevice);
-
-		// alternate way
-		// response.SendSuccess(Const.API_DEVICE_GET, gson.toJson(oneDevice));
-		// String json =
-		// "{\"name\":\"device1\",\"IP\":\"192.168.0.7\",\"location\":\"PhD Lab\",\"tags\":\"3rd floor; IIIT Delhi\",\"latitude\":0.0,\"longitude\":0.0,\"sensors\":[{\"name\":\"temperature\",\"channels\":[{\"name\":\"channel1\",\"type\":\"Double\",\"unit\":\"Celsius\"}]},{\"name\":\"Accelerometer\",\"channels\":[{\"name\":\"X\",\"type\":\"Int\",\"unit\":\"None\"},{\"name\":\"Y\",\"type\":\"Int\",\"unit\":\"None\"},{\"name\":\"Z\",\"type\":\"Int\",\"unit\":\"None\"}]}],\"actuators\":[{\"name\":\"actuator2\"}],\"_id\":{\"_time\":1336549919,\"_machine\":1152272867,\"_inc\":1290458281,\"_new\":false}}";
-		// try {
-		// DeviceGetFormat getDevice = convertToDeleteDeviceRequestFormat(json);
-		// } catch (InvalidJsonException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-
+		DeviceModel to = json.fromJson(json.toJson(oneDevice),DeviceModel.class);
+		
+		Method[] x = SensorActAPI.class.getDeclaredMethods();
+		
+		System.out.println( "method name : " + x[0].getName() );
+		//response.sendJSON(to);
+		response.sendJSON(remove_Id(oneDevice));
+		
 	}
 
 	/**
@@ -82,12 +88,8 @@ public class DeviceGet extends SensorActAPI {
 
 			DeviceGetFormat deviceGetRequest = convertToRequestFormat(
 					deviceGetJson, DeviceGetFormat.class);
+
 			validateRequest(deviceGetRequest);
-			if (validator.hasErrors()) {
-				response.sendFailure(Const.API_DEVICE_GET,
-						ErrorType.VALIDATION_FAILED,
-						validator.getErrorMessages());
-			}
 
 			if (!UserProfile.isRegisteredSecretkey(deviceGetRequest.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_GET,
@@ -95,7 +97,7 @@ public class DeviceGet extends SensorActAPI {
 						deviceGetRequest.secretkey);
 			}
 
-			DeviceProfileModel oneDevice = DeviceProfile.getDeviceProfile(
+			DeviceModel oneDevice = DeviceProfile.getDevice(
 					deviceGetRequest.secretkey, deviceGetRequest.devicename);
 			if (null == oneDevice) {
 				response.sendFailure(Const.API_DEVICE_GET,

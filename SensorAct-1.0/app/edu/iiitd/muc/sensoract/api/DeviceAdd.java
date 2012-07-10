@@ -22,7 +22,7 @@ import edu.iiitd.muc.sensoract.profile.DeviceProfile;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
 
 /**
- * device/add API: Adds a new device profile in the repository.
+ * device/add API: Adds a new device to the repository.
  * 
  * @author Pandarasamy Arjunan
  * @version 1.0
@@ -129,8 +129,12 @@ public class DeviceAdd extends SensorActAPI {
 	 * 
 	 * @param newDevice
 	 *            Device profile object to validate
+	 * 
+	 * @param apiname
+	 *            Name of the API
 	 */
-	protected void validateRequest(final DeviceAddFormat newDevice) {
+	protected void validateRequest(final DeviceAddFormat newDevice,
+			final String apiname) {
 
 		validator.validateSecretKey(newDevice.secretkey);
 
@@ -168,32 +172,21 @@ public class DeviceAdd extends SensorActAPI {
 			}
 		}
 
-		// if (validator.hasErrors()) {
-		// response.sendFailure(Const.API_DEVICE_ADD,
-		// ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
-		// }
+		if (validator.hasErrors()) {
+			response.sendFailure(apiname, ErrorType.VALIDATION_FAILED,
+					validator.getErrorMessages());
+		}
+
 	}
 
 	/**
 	 * Services the device/add API.
-	 * <p>
-	 * Followings are the steps to be followed to add a new device profile
-	 * successfully to the repository.
-	 * <ol>
-	 * <li>Converts the request Json string to the corresponding required device
-	 * profile format.
-	 * <li>Validates each attribute in the request.
-	 * <li>Checks the secretkey in the request is from the registered user or
-	 * not.
-	 * <li>Checks whether this is a duplicate device
-	 * <li>On successful completion of all the above steps, requested new device
-	 * profile will be created in the repository. Otherwise, corresponding error
-	 * message will be sent to the caller.
-	 * </ol>
-	 * <p>
+	 * 
+	 * Adds a new device to the repository. Sends success or failure, in case of
+	 * any error, response message in Json to the caller.
 	 * 
 	 * @param deviceAddJson
-	 *            Device profile in Json
+	 *            Device add request attributes in Json string
 	 */
 	public void doProcess(final String deviceAddJson) {
 
@@ -201,25 +194,19 @@ public class DeviceAdd extends SensorActAPI {
 			DeviceAddFormat newDevice = convertToRequestFormat(deviceAddJson,
 					DeviceAddFormat.class);
 
-			validateRequest(newDevice);
-			if (validator.hasErrors()) {
-				response.sendFailure(Const.API_DEVICE_ADD,
-						ErrorType.VALIDATION_FAILED,
-						validator.getErrorMessages());
-			}
+			validateRequest(newDevice, Const.API_DEVICE_ADD);
 
 			if (!UserProfile.isRegisteredSecretkey(newDevice.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_ADD,
 						ErrorType.UNREGISTERED_SECRETKEY, newDevice.secretkey);
 			}
 
-			if (DeviceProfile.isDeviceProfileExists(newDevice)) {
+			if (DeviceProfile.isDeviceExists(newDevice)) {
 				response.sendFailure(Const.API_DEVICE_ADD,
 						ErrorType.DEVICE_ALREADYEXISTS,
 						newDevice.deviceprofile.name);
 			}
-
-			DeviceProfile.addDeviceProfile(newDevice);
+			DeviceProfile.addDevice(newDevice);
 			response.SendSuccess(Const.API_DEVICE_ADD, Const.DEVICE_ADDED,
 					newDevice.deviceprofile.name);
 
@@ -227,9 +214,9 @@ public class DeviceAdd extends SensorActAPI {
 			response.sendFailure(Const.API_DEVICE_ADD, ErrorType.INVALID_JSON,
 					e.getMessage());
 		} catch (Exception e) {
-			e.printStackTrace();
 			response.sendFailure(Const.API_DEVICE_ADD, ErrorType.SYSTEM_ERROR,
 					e.getMessage());
 		}
+
 	}
 }
