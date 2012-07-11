@@ -203,6 +203,27 @@ public class DeviceProfile {
 	}
 
 	/**
+	 * Retrieves all device templates from the data repository corresponding to
+	 * the secretkey.
+	 * 
+	 * @param secretkey
+	 *            Secret key of the registered user associated with the devices.
+	 * @return List of device templates in DeviceTemplateModel object.
+	 * @see DeviceTemplateModel
+	 */
+	public static List<DeviceTemplateModel> getGlobalDeviceTemplateList() {
+
+		// TODO: Inconsistent way with play's jpa Model
+		List<DeviceTemplateModel> templateList = DeviceTemplateModel.find(
+				"isglobal", false).fetchAll();
+		if (null == templateList || 0 == templateList.size()) {
+			return null;
+		}
+
+		return templateList;
+	}
+
+	/**
 	 * Checks for duplicate devices. If device already exists in the repository,
 	 * sends corresponding failure message to the caller.
 	 * 

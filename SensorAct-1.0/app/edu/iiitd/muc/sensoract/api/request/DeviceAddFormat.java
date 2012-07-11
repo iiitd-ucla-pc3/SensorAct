@@ -47,7 +47,7 @@ public class DeviceAddFormat {
 	 * Defines the format of the device profile
 	 */
 	public class DeviceFormat {
-		public boolean shared = false; 
+		public boolean isglobal = false; 
 		public String name = null;
 		public String IP = null;
 		public String location = null;

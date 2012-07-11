@@ -22,30 +22,13 @@ import edu.iiitd.muc.sensoract.profile.DeviceProfile;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
 
 /**
- * device/list API: Retries all device profiles associated to an user from the
- * repository.
+ * device/template/list API: Retries all device profiles associated to an user
+ * from the repository.
  * 
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
-public class DeviceTemplateList extends SensorActAPI {
-
-	/**
-	 * Validates the device list request format attributes. If validation fails,
-	 * sends corresponding failure message to the caller.
-	 * 
-	 * @param templateListRequest
-	 *            List all devices request format object
-	 */
-	private void validateRequest(final DeviceListFormat templateListRequest) {
-
-		validator.validateSecretKey(templateListRequest.secretkey);
-
-		if (validator.hasErrors()) {
-			response.sendFailure(Const.API_DEVICE_TEMPLATE_LIST,
-					ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
-		}
-	}
+public class DeviceTemplateList extends DeviceList {
 
 	/**
 	 * Sends the list of requested device profile object to caller in Json
@@ -54,7 +37,7 @@ public class DeviceTemplateList extends SensorActAPI {
 	 * @param templateList
 	 *            List of device profile objects to send.
 	 */
-	private void sendDeviceTemplateList(
+	protected void sendDeviceTemplateList(
 			final List<DeviceTemplateModel> templateList) {
 
 		DeviceListResponseFormat outList = new DeviceListResponseFormat();
@@ -66,9 +49,9 @@ public class DeviceTemplateList extends SensorActAPI {
 			template.secretkey = null;
 		}
 
-		outList.setTemplateList(templateList);		
-		//response.sendJSON(outList);
-		response.sendJSON(remove_Id(outList,"templatelist"));
+		outList.setTemplateList(templateList);
+		// response.sendJSON(outList);
+		response.sendJSON(remove_Id(outList, "templatelist"));
 	}
 
 	/**
@@ -87,14 +70,11 @@ public class DeviceTemplateList extends SensorActAPI {
 
 			DeviceListFormat templateListRequest = convertToRequestFormat(
 					templateListJson, DeviceListFormat.class);
-			validateRequest(templateListRequest);
-			if (validator.hasErrors()) {
-				response.sendFailure(Const.API_DEVICE_TEMPLATE_LIST,
-						ErrorType.VALIDATION_FAILED,
-						validator.getErrorMessages());
-			}
 
-			if (!UserProfile.isRegisteredSecretkey(templateListRequest.secretkey)) {
+			validateRequest(templateListRequest, Const.API_DEVICE_TEMPLATE_LIST);
+
+			if (!UserProfile
+					.isRegisteredSecretkey(templateListRequest.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_TEMPLATE_LIST,
 						ErrorType.UNREGISTERED_SECRETKEY,
 						templateListRequest.secretkey);
@@ -104,17 +84,18 @@ public class DeviceTemplateList extends SensorActAPI {
 					.getDeviceTemplateList(templateListRequest.secretkey);
 			if (null == templateList || 0 == templateList.size()) {
 				response.sendFailure(Const.API_DEVICE_TEMPLATE_LIST,
-						ErrorType.DEVICE_TEMPLATE_NOTEMPLATE_FOUND, Const.MSG_NONE);
+						ErrorType.DEVICE_TEMPLATE_NOTEMPLATE_FOUND,
+						Const.MSG_NONE);
 			}
 
 			sendDeviceTemplateList(templateList);
 
 		} catch (InvalidJsonException e) {
-			response.sendFailure(Const.API_DEVICE_TEMPLATE_LIST, ErrorType.INVALID_JSON,
-					e.getMessage());
+			response.sendFailure(Const.API_DEVICE_TEMPLATE_LIST,
+					ErrorType.INVALID_JSON, e.getMessage());
 		} catch (Exception e) {
-			response.sendFailure(Const.API_DEVICE_TEMPLATE_LIST, ErrorType.SYSTEM_ERROR,
-					e.getMessage());
+			response.sendFailure(Const.API_DEVICE_TEMPLATE_LIST,
+					ErrorType.SYSTEM_ERROR, e.getMessage());
 		}
 	}
 

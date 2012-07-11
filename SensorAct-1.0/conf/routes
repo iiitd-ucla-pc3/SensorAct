@@ -31,6 +31,7 @@ POST    /device/template/add                    Application.deviceTemplateAdd
 POST    /device/template/delete                 Application.deviceTemplateDelete
 POST    /device/template/get                    Application.deviceTemplateGet
 POST    /device/template/list                   Application.deviceTemplateList
+POST    /device/template/public/list            Application.deviceTemplateGlobalList
 
 POST    /guardrule/add                          Application.guardRuleAdd
 POST    /guardrule/delete                       Application.guardRuleDelete

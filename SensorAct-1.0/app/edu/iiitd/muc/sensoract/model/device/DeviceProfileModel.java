@@ -27,7 +27,7 @@ import edu.iiitd.muc.sensoract.api.request.DeviceAddFormat;
 public class DeviceProfileModel extends Model {
 
 	public String secretkey = null;
-	public boolean shared = false;
+	public boolean isglobal = false;
 	public String IP = null;
 	public String location = null;
 	public String tags = null;
@@ -44,7 +44,7 @@ public class DeviceProfileModel extends Model {
 		
 		secretkey = newDevice.secretkey;
 		
-		shared = newDevice.deviceprofile.shared;		
+		isglobal = newDevice.deviceprofile.isglobal;		
 		IP = newDevice.deviceprofile.IP;
 		
 		location = newDevice.deviceprofile.location;

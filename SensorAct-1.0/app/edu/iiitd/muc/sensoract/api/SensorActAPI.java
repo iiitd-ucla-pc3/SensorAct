@@ -56,7 +56,9 @@ public class SensorActAPI extends Application {
 	public static DeviceTemplateDelete deviceTemplateDelete = new DeviceTemplateDelete();
 	public static DeviceTemplateGet deviceTemplateGet = new DeviceTemplateGet();
 	public static DeviceTemplateList deviceTemplateList = new DeviceTemplateList();
-
+	public static DeviceTemplateGlobalList deviceTemplateGlobalList = new DeviceTemplateGlobalList();
+	
+	
 	public static GuardRuleAdd guardRuleAdd = new GuardRuleAdd();
 	public static GuardRuleDelete guardRuleDelete = new GuardRuleDelete();
 	public static GuardRuleGet guardRuleGet = new GuardRuleGet();

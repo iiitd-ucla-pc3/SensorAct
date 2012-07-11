@@ -106,6 +106,10 @@ public class Application extends Controller {
 		SensorActAPI.deviceTemplateList.doProcess(request.params.get("body"));
 	}
 
+	public static void deviceTemplateGlobalList() {
+		SensorActAPI.deviceTemplateGlobalList.doProcess(request.params.get("body"));
+	}
+	
 	// Guard rule management
 	public static void guardRuleAdd() {
 		SensorActAPI.guardRuleAdd.doProcess(request.params.get("body"));

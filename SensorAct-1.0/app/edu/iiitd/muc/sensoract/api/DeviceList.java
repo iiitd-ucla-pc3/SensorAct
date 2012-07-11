@@ -37,13 +37,14 @@ public class DeviceList extends SensorActAPI {
 	 * @param deviceListRequest
 	 *            List all devices request format object
 	 */
-	private void validateRequest(final DeviceListFormat deviceListRequest) {
+	protected void validateRequest(final DeviceListFormat deviceListRequest,
+			final String apiname) {
 
 		validator.validateSecretKey(deviceListRequest.secretkey);
 
 		if (validator.hasErrors()) {
-			response.sendFailure(Const.API_DEVICE_LIST,
-					ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
+			response.sendFailure(apiname, ErrorType.VALIDATION_FAILED,
+					validator.getErrorMessages());
 		}
 	}
 
@@ -63,10 +64,10 @@ public class DeviceList extends SensorActAPI {
 			DeviceModel device = deviceListIterator.next();
 			device.secretkey = null;
 		}
-		
+
 		outList.setDeviceList(deviceList);
-		//response.sendJSON(outList);
-		response.sendJSON(remove_Id(outList,"devicelist"));
+		// response.sendJSON(outList);
+		response.sendJSON(remove_Id(outList, "devicelist"));
 	}
 
 	/**
@@ -85,7 +86,8 @@ public class DeviceList extends SensorActAPI {
 
 			DeviceListFormat deviceListRequest = convertToRequestFormat(
 					deviceListJson, DeviceListFormat.class);
-			validateRequest(deviceListRequest);
+			
+			validateRequest(deviceListRequest, Const.API_DEVICE_LIST);
 
 			if (!UserProfile.isRegisteredSecretkey(deviceListRequest.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_LIST,
