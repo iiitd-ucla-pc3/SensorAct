@@ -16,6 +16,6 @@ package edu.iiitd.muc.sensoract.api.request;
 public class TaskDeleteFormat {
 
 	public String secretkey = null;
-	// TODO: add other parameters
-
+	public String taskname = null;
+	
 }

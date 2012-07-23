@@ -7,6 +7,9 @@
  */
 package edu.iiitd.muc.sensoract.api.request;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Defines the request format for task/add API.
  *
@@ -16,6 +19,17 @@ package edu.iiitd.muc.sensoract.api.request;
 public class TaskAddFormat {
 
 	public String secretkey = null;
-	// TODO: add other parameters
-
+	
+	public String taskname = null;
+	public String desc = null;
+	
+	public List<Variable> params = null;
+	public List<Variable> inputs = null;
+	public String when = null;
+	public String execute = null;
+	
+	public class Variable {
+		public String name = null;
+		public String type = null;		
+	}
 }
