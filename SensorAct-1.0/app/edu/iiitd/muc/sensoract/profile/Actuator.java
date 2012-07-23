@@ -7,20 +7,6 @@
  */
 package edu.iiitd.muc.sensoract.profile;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-
-import edu.iiitd.muc.sensoract.api.request.DataQueryFormat;
-import edu.iiitd.muc.sensoract.api.request.UserRegisterFormat;
-import edu.iiitd.muc.sensoract.constants.Const;
-import edu.iiitd.muc.sensoract.enums.ErrorType;
-import edu.iiitd.muc.sensoract.model.data.WaveSegmentModel;
-import edu.iiitd.muc.sensoract.model.user.UserKeyModel;
-import edu.iiitd.muc.sensoract.model.user.UserProfileModel;
 
 /**
  * For actuation
