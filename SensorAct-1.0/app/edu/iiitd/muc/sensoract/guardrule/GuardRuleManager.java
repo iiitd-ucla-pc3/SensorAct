@@ -151,34 +151,30 @@ public class GuardRuleManager {
 			SensorActLogger.error(String.format("Couldn't find secretkey for username: %s", username));
 			return null;
 		}
+
+		List<GuardRuleModel> ruleList = getRelevantReadGuardRules(secretkey, devicename, sensorname, sensorid);
+
+		if (ruleList == null || ruleList.size() == 0) {
+			// No rules for this device.
+			return null;
+		}
 		
 		List<WaveSegmentModel> wwList = WaveSegmentData.read(username, devicename, sensorname, sensorid, fromtime, totime);
 
-		List<GuardRuleModel> ruleList = getRelevantGuardRules(secretkey, "read", devicename, sensorname, sensorid);
-		
 		engine.put("USER", requestingUser);
 		
-		// initialize decision variable
+		// Initialize decision variable
 		DecisionResult decisionResult = new DecisionResult(wwList);
 		
-		// process each guard rule
+		// Process each guard rule
+		// TODO Process based on priority.
 		for (GuardRuleModel rule: ruleList) {
 
-			String function = "function evaluate() {\n" 
-					+ "  if (" + rule.condition + ") {\n"
-					+ "    return true;\n"
-					+ "  } else {\n"
-					+ "    return false\n"
-					+ "  }\n"
-					+ "}";
-			
-			try {
-				engine.eval(function);
-			} catch (ScriptException e) {
-				e.printStackTrace();
+			if (!putRuleConditionIntoScriptEngine(rule)) {
+				SensorActLogger.error("putRuleConditionIntoScruiptEngine() returned false");
 				return null;
 			}
-			
+
 			Decision ruleDecision;
 			if (rule.action.equalsIgnoreCase("allow")) {
 				ruleDecision = Decision.ALLOWED;
@@ -221,9 +217,67 @@ public class GuardRuleManager {
 	 */
 	public static boolean write(final String username, final RequestingUser requestingUser, 
 			final String devicename, final String actuatorname,
-			final String actuatorid, final boolean status ) {
+			final String actuatorid, final double value ) {
 
-		return Actuator.write(username, devicename, actuatorname, actuatorid, status);
+		String secretkey = UserProfile.getSecretkey(username);
+		if (null == secretkey) {
+			SensorActLogger.error(String.format("Couldn't find secretkey for username: %s", username));
+			return false;
+		}
+		
+		List<GuardRuleModel> ruleList = getRelevantWriteGuardRules(secretkey, devicename, actuatorname, actuatorid);
+
+		if (ruleList == null || ruleList.size() == 0) {
+			// No rules for this device.
+			return false;
+		}
+
+		engine.put("USER", requestingUser);
+		
+		// Process each guard rule
+		// TODO Process based on priority
+		Decision decision = Decision.NOT_DECIDED;
+		for (GuardRuleModel rule: ruleList) {
+			engine.put("VALUE", value);
+			
+			// TODO Put current time or requested time into engine with TIME
+			// TODO Get device profile and set LOCATION_TAG
+			
+			if (!putRuleConditionIntoScriptEngine(rule)) {
+				SensorActLogger.error("putRuleConditionIntoScriptEngine() returned false");
+				return false;
+			}
+
+			Decision ruleDecision;
+			if (rule.action.equalsIgnoreCase("allow")) {
+				ruleDecision = Decision.ALLOWED;
+			} else if (rule.action.equalsIgnoreCase("deny")) {
+				ruleDecision = Decision.DENIED;
+			} else {
+				SensorActLogger.error(String.format("Unsupported action: %s", rule.action));
+				return false;
+			}
+			
+			Boolean result;
+			try {
+				result = (Boolean) inv.invokeFunction("evaluate");
+				if (result) {
+					decision = ruleDecision;
+				}
+			} catch (ScriptException e) {
+				e.printStackTrace();
+				return false;
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		
+		if (decision == Decision.ALLOWED) {
+			return Actuator.write(username, devicename, actuatorname, actuatorid, value);	
+		}
+		
+		return false;
 	}
 
 	/**
@@ -306,16 +360,13 @@ public class GuardRuleManager {
 	}
 	
 	/**
-	 * Retrieve guard rules according to guard rule associations.
+	 * Retrieve read guard rules according to guard rule associations.
 	 * 
 	 * @param 
 	 * @return 
 	 */
-	private static List<GuardRuleModel> getRelevantGuardRules(String secretkey,
-			String targetOperation, String devicename, String sensorname, 
-			String sensorid) {
-		
-		//TODO: support for actuator guard rules.
+	private static List<GuardRuleModel> getRelevantReadGuardRules(String secretkey,
+			String devicename, String sensorname, String sensorid) {
 		
 		List<GuardRuleAssociationModel> gramList = GuardRuleAssociationModel
 				.find("bySecretkeyAndDevicenameAndSensornameAndSensorid"
@@ -329,13 +380,41 @@ public class GuardRuleManager {
 		
 		List<GuardRuleModel> grmList = GuardRuleModel
 				.filter("secretkey =", secretkey)
-				.filter("targetOperation =", targetOperation)
+				.filter("targetOperation =", "read")
 				.filter("name in", ruleNameList)
 				.fetchAll();
 		
 		return grmList;
 	}
-	
+
+	/**
+	 * Retrieve write guard rules according to guard rule associations.
+	 * 
+	 * @param 
+	 * @return 
+	 */
+	private static List<GuardRuleModel> getRelevantWriteGuardRules(String secretkey,
+			String devicename, String actuatorname, String actuatorid) {
+		
+		List<GuardRuleAssociationModel> gramList = GuardRuleAssociationModel
+				.find("bySecretkeyAndDevicenameAndActuatornameAndActuatorid"
+						, secretkey, devicename, actuatorname, actuatorid).fetchAll();
+		
+		List<String> ruleNameList = new ArrayList<String>();
+		
+		for (GuardRuleAssociationModel gram: gramList) {
+			ruleNameList.add(gram.rulename);
+		}
+		
+		List<GuardRuleModel> grmList = GuardRuleModel
+				.filter("secretkey =", secretkey)
+				.filter("targetOperation =", "write")
+				.filter("name in", ruleNameList)
+				.fetchAll();
+		
+		return grmList;
+	}
+
 	/**
 	 * Modify wave segment according to the decision result.
 	 * Denied values are replaced with Double.NaN.
@@ -373,5 +452,30 @@ public class GuardRuleManager {
 			}
 		}
 		return wsResult;
+	}
+	
+	/**
+	 * Make rule condition as a script function and put it into script engine.
+	 * 
+	 * @param 
+	 * @return 
+	 */
+	private static boolean putRuleConditionIntoScriptEngine(GuardRuleModel rule) {
+		String function = "function evaluate() {\n" 
+				+ "  if (" + rule.condition + ") {\n"
+				+ "    return true;\n"
+				+ "  } else {\n"
+				+ "    return false\n"
+				+ "  }\n"
+				+ "}";
+		
+		try {
+			engine.eval(function);
+		} catch (ScriptException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
 	}
 }

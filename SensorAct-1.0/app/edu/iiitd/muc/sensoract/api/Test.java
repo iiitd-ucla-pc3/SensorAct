@@ -19,8 +19,17 @@ import edu.iiitd.muc.sensoract.guardrule.RequestingUser;
  */
 public class Test extends SensorActAPI {
 	public void doProcess(final String testJson) {
+		
 		RequestingUser requestingUser = new RequestingUser("janet@ucla.edu");
-		GuardRuleManager.read("haksoochoi", requestingUser, "Lab1", "Motion", "1", 0, 1200);
-		renderText("Hello there");
+		
+		//GuardRuleManager.read("haksoochoi", requestingUser, "Lab1", "Motion", "1", 0, 1200);
+		//renderText("Hello there");
+		
+		boolean ret = GuardRuleManager.write("haksoochoi", requestingUser, "Lab1", "Thermostat", "1", 90);
+		if (ret) {
+			renderText("write() allowed.");
+		} else {
+			renderText("write() denied.");
+		}
 	}
 }

@@ -21,7 +21,7 @@ public class Actuator {
 
 	public static boolean write(final String username,
 			final String devicename, final String actuatorname,
-			final String actuatorid, final boolean status ) {
+			final String actuatorid, final double value ) {
 
 		// TODO: add params validations
 		String secretkey = UserProfile.getSecretkey(username);
