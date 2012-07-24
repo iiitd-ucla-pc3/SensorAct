@@ -50,7 +50,7 @@ public class GuardRuleManager {
 	 * Class containing guard rule decisions for a single channel.
 	 */
 	private static class ChannelDecisionResult {
-		public Decision decision[];
+		protected Decision decision[];
 		
 		public ChannelDecisionResult(WaveSegmentChannelModel wc) {
 			decision = new Decision[wc.readings.size()];
@@ -65,8 +65,8 @@ public class GuardRuleManager {
 	 */
 	private static class WaveSegDecisionResult {
 		private boolean isEachValueDecision = false;
-		public Decision decision = Decision.NOT_DECIDED;
-		public ChannelDecisionResult channelDecisionResult[];
+		protected Decision decision = Decision.NOT_DECIDED;
+		protected ChannelDecisionResult channelDecisionResult[];
 		
 		public WaveSegDecisionResult(WaveSegmentModel ww) {
 			channelDecisionResult = new ChannelDecisionResult[ww.data.channels.size()];
@@ -94,7 +94,7 @@ public class GuardRuleManager {
 	 * Class containing guard rule decisions for a list of wave segments.
 	 */
 	private static class DecisionResult {
-		public WaveSegDecisionResult wavesegDecision[];
+		protected WaveSegDecisionResult wavesegDecision[];
 		
 		public DecisionResult(List<WaveSegmentModel> wwList) {
 			wavesegDecision = new WaveSegDecisionResult[wwList.size()];
@@ -148,6 +148,7 @@ public class GuardRuleManager {
 
 		String secretkey = UserProfile.getSecretkey(username);
 		if (null == secretkey) {
+			SensorActLogger.error(String.format("Couldn't find secretkey for username: %s", username));
 			return null;
 		}
 		
@@ -162,11 +163,43 @@ public class GuardRuleManager {
 		
 		// process each guard rule
 		for (GuardRuleModel rule: ruleList) {
-			//if (rule.condition.contains("VALUE") || rule.condition.contains("TIME")) {
-				processGuardRuleForEachValue(rule, wwList, decisionResult);
-			//} else {
-			//	processGuardRuleForEachWaveSegment(rule, wwList);
-			//}
+
+			String function = "function evaluate() {\n" 
+					+ "  if (" + rule.condition + ") {\n"
+					+ "    return true;\n"
+					+ "  } else {\n"
+					+ "    return false\n"
+					+ "  }\n"
+					+ "}";
+			
+			try {
+				engine.eval(function);
+			} catch (ScriptException e) {
+				e.printStackTrace();
+				return null;
+			}
+			
+			Decision ruleDecision;
+			if (rule.action.equalsIgnoreCase("allow")) {
+				ruleDecision = Decision.ALLOWED;
+			} else if (rule.action.equalsIgnoreCase("deny")) {
+				ruleDecision = Decision.DENIED;
+			} else {
+				SensorActLogger.error(String.format("Unsupported action: %s", rule.action));
+				return null;
+			}
+
+			boolean result; 
+			if (rule.condition.contains("VALUE") || rule.condition.contains("TIME")) {
+				result = processGuardRuleForEachValue(rule, wwList, ruleDecision, decisionResult);
+			} else {
+				result = processGuardRuleForEachWaveSegment(rule, wwList, ruleDecision, decisionResult);
+			}
+			
+			if (!result) {
+				SensorActLogger.error("processGuardRule...() returned false.");
+				return null;
+			}
 		}
 		
 		List<WaveSegmentModel> wsResult = processWaveSegmentDecision(wwList, decisionResult);
@@ -199,11 +232,31 @@ public class GuardRuleManager {
 	 * @param 
 	 * @return 
 	 */
-	private static List<WaveSegmentModel> processGuardRuleForEachWaveSegment(
+	private static boolean processGuardRuleForEachWaveSegment(
 			GuardRuleModel rule, List<WaveSegmentModel> wwList,
-			DecisionResult decisionResult) {
+			Decision ruleDecision, DecisionResult decisionResult) {
+
+		for (int wsi = 0; wsi < wwList.size(); wsi++) {
+			engine.put("LOCATION_TAG", wwList.get(wsi).data.loc);
+
+			Boolean result;
+			try {
+				result = (Boolean) inv.invokeFunction("evaluate");
+				if (result) {
+					decisionResult.wavesegDecision[wsi].setEachValueDecision(false);
+					decisionResult.wavesegDecision[wsi].decision = ruleDecision; 
+				}
+			} catch (ScriptException e) {
+				e.printStackTrace();
+				return false;
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+				return false;
+			}
+			
+		}
 		
-		return null;
+		return true;
 	}
 
 	/**
@@ -212,33 +265,9 @@ public class GuardRuleManager {
 	 * @param 
 	 * @return 
 	 */
-	private static List<WaveSegmentModel> processGuardRuleForEachValue(
+	private static boolean processGuardRuleForEachValue(
 			GuardRuleModel rule, List<WaveSegmentModel> wwList, 
-			DecisionResult decisionResult) {
-		
-		String function = "function evaluate() {\n" 
-				+ "  if (" + rule.condition + ") {\n"
-				+ "    return true;\n"
-				+ "  } else {\n"
-				+ "    return false\n"
-				+ "  }\n"
-				+ "}";
-		try {
-			engine.eval(function);
-		} catch (ScriptException e) {
-			e.printStackTrace();
-			return null;
-		}
-		
-		Decision ruleDecision;
-		if (rule.action.equalsIgnoreCase("allow")) {
-			ruleDecision = Decision.ALLOWED;
-		} else if (rule.action.equalsIgnoreCase("deny")) {
-			ruleDecision = Decision.DENIED;
-		} else {
-			SensorActLogger.error(String.format("Unsupported action: %s", rule.action));
-			return null;
-		}
+			Decision ruleDecision, DecisionResult decisionResult) {
 		
 		for (int wsi = 0; wsi < wwList.size(); wsi++) {
 			engine.put("LOCATION_TAG", wwList.get(wsi).data.loc);
@@ -261,13 +290,11 @@ public class GuardRuleManager {
 							decisionResult.wavesegDecision[wsi].channelDecisionResult[wci].decision[cri] = ruleDecision; 
 						}
 					} catch (ScriptException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
-						return null;
+						return false;
 					} catch (NoSuchMethodException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
-						return null;
+						return false;
 					}
 
 					timestamp += sinterval;
@@ -275,7 +302,7 @@ public class GuardRuleManager {
 			}
 		}
 		
-		return null;
+		return true;
 	}
 	
 	/**
