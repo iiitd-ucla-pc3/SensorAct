@@ -21,12 +21,12 @@ import edu.iiitd.muc.sensoract.api.request.GuardRuleAddFormat;
  * @version 1.0
  */
 @Entity(value = "GuardRule", noClassnameStored = true)
-public class GuardRuleModel extends Model {
+public class GuardRuleModel extends Model implements Comparable {
 	public String secretkey = null;
 	public String name = null;
 	public String description = null;
 	public String targetOperation = null;
-	public int priority = -1;
+	public int priority = Integer.MAX_VALUE; // lowest priority.
 	public String condition = null;
 	public String action = null;
 
@@ -44,5 +44,15 @@ public class GuardRuleModel extends Model {
 	}
 	
 	GuardRuleModel() {
+	}
+
+	@Override
+	public int compareTo(Object obj) {
+		// Descending order sort.
+		GuardRuleModel rule = (GuardRuleModel)obj;
+		if (this.priority == rule.priority) {
+			return 0;
+		}
+		return this.priority > rule.priority ? -1 : 1; 
 	}
 }

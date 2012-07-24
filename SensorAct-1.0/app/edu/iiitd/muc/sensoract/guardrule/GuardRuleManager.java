@@ -9,6 +9,8 @@
 package edu.iiitd.muc.sensoract.guardrule;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.script.Invocable;
@@ -20,6 +22,7 @@ import edu.iiitd.muc.sensoract.api.request.GuardRuleAddFormat;
 import edu.iiitd.muc.sensoract.api.request.GuardRuleAssociationFormat;
 import edu.iiitd.muc.sensoract.model.data.WaveSegmentChannelModel;
 import edu.iiitd.muc.sensoract.model.data.WaveSegmentModel;
+import edu.iiitd.muc.sensoract.model.device.DeviceModel;
 import edu.iiitd.muc.sensoract.model.guardrule.GuardRuleAssociationModel;
 import edu.iiitd.muc.sensoract.model.guardrule.GuardRuleModel;
 import edu.iiitd.muc.sensoract.profile.Actuator;
@@ -165,9 +168,11 @@ public class GuardRuleManager {
 		
 		// Initialize decision variable
 		DecisionResult decisionResult = new DecisionResult(wwList);
+
+		// Sort rule based on priority (descending order)
+		Collections.sort(ruleList);
 		
 		// Process each guard rule
-		// TODO Process based on priority.
 		for (GuardRuleModel rule: ruleList) {
 
 			if (!putRuleConditionIntoScriptEngine(rule)) {
@@ -186,7 +191,7 @@ public class GuardRuleManager {
 			}
 
 			boolean result; 
-			if (rule.condition.contains("VALUE") || rule.condition.contains("TIME")) {
+			if (rule.condition != null && (rule.condition.contains("VALUE") || rule.condition.contains("TIME"))) {
 				result = processGuardRuleForEachValue(rule, wwList, ruleDecision, decisionResult);
 			} else {
 				result = processGuardRuleForEachWaveSegment(rule, wwList, ruleDecision, decisionResult);
@@ -233,16 +238,26 @@ public class GuardRuleManager {
 		}
 
 		engine.put("USER", requestingUser);
+		engine.put("VALUE", value);
+		
+		// TODO Put requested time into engine with TIME
+		long epoch = System.currentTimeMillis()/1000;
+		engine.put("TIME", epoch);
+		
+		List<DeviceModel> devices = DeviceModel.find("byDevicename", devicename).fetchAll();
+		if (devices == null || devices.size() <= 0) {
+			SensorActLogger.error("No such device: " + devicename);
+			return false;
+		} 
+		engine.put("LOCATION_TAG", devices.get(0).location);
+		
+		// Sort rule based on priority (descending order)
+		Collections.sort(ruleList);
 		
 		// Process each guard rule
-		// TODO Process based on priority
 		Decision decision = Decision.NOT_DECIDED;
 		for (GuardRuleModel rule: ruleList) {
-			engine.put("VALUE", value);
-			
-			// TODO Put current time or requested time into engine with TIME
-			// TODO Get device profile and set LOCATION_TAG
-			
+
 			if (!putRuleConditionIntoScriptEngine(rule)) {
 				SensorActLogger.error("putRuleConditionIntoScriptEngine() returned false");
 				return false;
@@ -461,13 +476,20 @@ public class GuardRuleManager {
 	 * @return 
 	 */
 	private static boolean putRuleConditionIntoScriptEngine(GuardRuleModel rule) {
-		String function = "function evaluate() {\n" 
+		String function;
+		if (rule.condition == null || rule.condition.equals("")) {
+			function = "function evaluate() {\n" 
+				+ "  return true;\n"
+				+ "}";
+		} else {
+			function = "function evaluate() {\n" 
 				+ "  if (" + rule.condition + ") {\n"
 				+ "    return true;\n"
 				+ "  } else {\n"
 				+ "    return false\n"
 				+ "  }\n"
 				+ "}";
+		}
 		
 		try {
 			engine.eval(function);

@@ -10,12 +10,12 @@ package edu.iiitd.muc.sensoract.api;
 import java.util.Iterator;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import controllers.Application;
-import edu.iiitd.muc.sensoract.api.request.DeviceAddFormat;
 import edu.iiitd.muc.sensoract.api.response.ResponseFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
@@ -80,7 +80,7 @@ public class SensorActAPI extends Application {
 	 */
 	public static ResponseFormat response = new ResponseFormat();
 	public static ParamValidator validator = new ParamValidator();
-	public static Gson json = new Gson();
+	public static Gson json = new GsonBuilder().serializeSpecialFloatingPointValues().create();
 	public static SensorActLogger log = new SensorActLogger();
 
 	/**
