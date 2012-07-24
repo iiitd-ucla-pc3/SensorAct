@@ -1,0 +1,7 @@
+# Eclipse configurations files
+.checkstyle
+.classpath
+.project
+.settings
+eclipse
+tmp
