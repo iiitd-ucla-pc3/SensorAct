@@ -3,7 +3,7 @@
  * Project: SensorAct, MUC@IIIT-Delhi
  * Version: 1.0
  * Date: 2012-05-14
- * Author: Pandarasamy Arjunan
+ * Author: Pandarasamy Arjunan, Haksoo Choi
  */
 package edu.iiitd.muc.sensoract.api;
 
@@ -11,12 +11,13 @@ import edu.iiitd.muc.sensoract.api.request.GuardRuleAddFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
+import edu.iiitd.muc.sensoract.guardrule.GuardRuleManager;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
 
 /**
  * guardrule/add API: Adds a guard rule to a device
  * 
- * @author Pandarasamy Arjunan
+ * @author Pandarasamy Arjunan, Haksoo Choi
  * @version 1.0
  */
 public class GuardRuleAdd extends SensorActAPI {
@@ -58,7 +59,7 @@ public class GuardRuleAdd extends SensorActAPI {
 						ErrorType.UNREGISTERED_SECRETKEY, guardRule.secretkey);
 			}
 
-			// TODO: Add guard rule
+			GuardRuleManager.addGuardRule(guardRule);
 			response.SendSuccess(Const.API_GUARDRULE_ADD, Const.TODO);
 
 		} catch (InvalidJsonException e) {

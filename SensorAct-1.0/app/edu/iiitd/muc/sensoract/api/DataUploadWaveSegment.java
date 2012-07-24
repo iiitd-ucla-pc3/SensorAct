@@ -27,7 +27,7 @@ import edu.iiitd.muc.sensoract.model.data.WaveSegmentModel;
 public class DataUploadWaveSegment extends SensorActAPI {
 
 	private static int WaveSegmentSize = 5;
-	private static boolean isSendResponseEnabled = false;
+	private static boolean isSendResponseEnabled = true;
 
 	private HashMap<String, ArrayList<WaveSegmentFormat>> hashmapWaveSegments = new HashMap<String, ArrayList<WaveSegmentFormat>>();
 
@@ -160,8 +160,8 @@ public class DataUploadWaveSegment extends SensorActAPI {
 			validateWaveSegment(newWaveSegment);
 			// userProfile.checkRegisteredSecretkey(newWaveSegment.secretkey,
 			// Const.API_UPLOAD_WAVESEGMENT);
-			// persistWaveSegment(newWaveSegment);
-			applyPreInsertMerge(newWaveSegment);
+			persistWaveSegment(newWaveSegment);
+			//applyPreInsertMerge(newWaveSegment);
 		} catch (InvalidJsonException e) {
 			sendError(ErrorType.INVALID_JSON, e.getMessage());
 		} catch (Exception e) {

@@ -3,7 +3,7 @@
  * Project: SensorAct, MUC@IIIT-Delhi
  * Version: 1.0
  * Date: 2012-04-14
- * Author: Pandarasamy Arjunan
+ * Author: Pandarasamy Arjunan, Haksoo Choi
  */
 package controllers;
 
@@ -15,7 +15,7 @@ import edu.iiitd.muc.sensoract.api.SensorActAPI;
 /**
  * Application class, entry point for all APIs.
  * 
- * @author Pandarasamy Arjunan
+ * @author Pandarasamy Arjunan, Haksoo Choi
  * @version 1.0
  */
 
@@ -126,6 +126,10 @@ public class Application extends Controller {
 	public static void guardRuleList() {
 		SensorActAPI.guardRuleList.doProcess(request.params.get("body"));
 	}
+	
+	public static void guardRuleAssociate() {
+		SensorActAPI.guardRuleAssociate.doProcess(request.params.get("body"));
+	}
 
 	// Task management
 	public static void taskAdd() {
@@ -151,5 +155,10 @@ public class Application extends Controller {
 
 	public static void dataUploadWaveSegment() {
 		SensorActAPI.dataUploadWaveseg.doProcess(request.params.get("body"));
+	}
+
+	// For development test purpose.
+	public static void test() {
+		SensorActAPI.test.doProcess(request.params.get("body"));
 	}
 }

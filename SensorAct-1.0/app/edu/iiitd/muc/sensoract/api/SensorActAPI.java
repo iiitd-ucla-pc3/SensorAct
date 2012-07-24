@@ -3,7 +3,7 @@
  * Project: SensorAct, MUC@IIIT-Delhi
  * Version: 1.0
  * Date: 2012-04-14
- * Author: Pandarasamy Arjunan
+ * Author: Pandarasamy Arjunan, Haksoo Choi
  */
 package edu.iiitd.muc.sensoract.api;
 
@@ -25,7 +25,7 @@ import edu.iiitd.muc.sensoract.util.SensorActLogger;
 /**
  * Super class for all SensorAct Apis.
  * 
- * @author Pandarasamy Arjunan
+ * @author Pandarasamy Arjunan, Haksoo Choi
  * @version 1.0
  */
 public class SensorActAPI extends Application {
@@ -63,6 +63,7 @@ public class SensorActAPI extends Application {
 	public static GuardRuleDelete guardRuleDelete = new GuardRuleDelete();
 	public static GuardRuleGet guardRuleGet = new GuardRuleGet();
 	public static GuardRuleList guardRuleList = new GuardRuleList();
+	public static GuardRuleAssociate guardRuleAssociate = new GuardRuleAssociate();
 
 	public static TaskAdd taskAdd = new TaskAdd();
 	public static TaskDelete taskDelete = new TaskDelete();
@@ -71,6 +72,8 @@ public class SensorActAPI extends Application {
 
 	public static DataUploadWaveSegment dataUploadWaveseg = new DataUploadWaveSegment();
 	public static DataQuery dataQuery = new DataQuery();
+
+	public static Test test = new Test();
 
 	/*
 	 * API helper references

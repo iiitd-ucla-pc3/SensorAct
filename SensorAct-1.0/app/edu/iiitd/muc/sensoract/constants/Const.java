@@ -3,14 +3,14 @@
  * Project: SensorAct, MUC@IIIT-Delhi
  * Version: 1.0
  * Date: 2012-04-14
- * Author: Pandarasamy Arjunan
+ * Author: Pandarasamy Arjunan, Haksoo Choi
  */
 package edu.iiitd.muc.sensoract.constants;
 
 /**
  * Defines various constants. 
  * 
- * @author Pandarasamy Arjunan
+ * @author Pandarasamy Arjunan, Haksoo Choi
  * @version 1.0
  */
 
@@ -70,7 +70,8 @@ public class Const {
 	public static final String API_GUARDRULE_DELETE = "guardrule/delete";
 	public static final String API_GUARDRULE_GET = "guardrule/get";
 	public static final String API_GUARDRULE_LIST = "guardrule/list";
-	
+	public static final String API_GUARDRULE_ASSOCIATE = "guardrule/associate";
+
 	public static final String API_TASK_ADD = "task/add";
 	public static final String API_TASK_DELETE = "task/delete";
 	public static final String API_TASK_GET = "task/get";

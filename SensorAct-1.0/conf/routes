@@ -37,6 +37,7 @@ POST    /guardrule/add                          Application.guardRuleAdd
 POST    /guardrule/delete                       Application.guardRuleDelete
 POST    /guardrule/get                          Application.guardRuleGet
 POST    /guardrule/list                         Application.guardRuleList
+POST    /guardrule/associate                    Application.guardRuleAssociate
 
 POST    /task/add                               Application.taskAdd     
 POST    /task/delete                            Application.taskDelete
@@ -46,6 +47,9 @@ POST    /task/list                              Application.taskList
 POST    /data/query                             Application.dataQuery
 POST    /upload/wavesegment                     Application.dataUploadWaveSegment
 POST    /data/upload/wavesegment                Application.dataUploadWaveSegment
+
+# for test
+*       /test                                   Application.test
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
