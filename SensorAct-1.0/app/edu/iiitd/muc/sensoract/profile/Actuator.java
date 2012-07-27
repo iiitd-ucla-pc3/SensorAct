@@ -23,7 +23,7 @@ public class Actuator {
 			final String devicename, final String actuatorname,
 			final String actuatorid, final double value ) {
 
-		// TODO: add params validations
+		//TODO: add params validations
 		String secretkey = UserProfile.getSecretkey(username);
 		if (null == secretkey) {
 			return false;
