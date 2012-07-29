@@ -27,8 +27,16 @@ public class Test extends SensorActAPI {
 		
 		RequestingUser requestingUser = new RequestingUser("janet@ucla.edu");
 		
+		/*long beforeTime = System.currentTimeMillis();
 		List<WaveSegmentModel> allWaveSegments = GuardRuleManager.read("haksoochoi", requestingUser, "Lab1", "Motion", "1", 0, 1200);
-
+		long afterTime = System.currentTimeMillis();
+		
+		String report = String.format("Time taken: %d ms\n\n", afterTime - beforeTime);
+		
+		if (allWaveSegments == null) {
+			renderText("No data");
+		}
+		
 		Iterator<WaveSegmentModel> iteratorData = allWaveSegments.iterator();
 		ArrayList<String> outList = new ArrayList<String>();
 
@@ -39,13 +47,18 @@ public class Test extends SensorActAPI {
 		}
 
 		System.out.println(outList.toString());
-		renderText("{\"wavesegmentArray\":\n\n" + outList.toString() + "}");
+		renderText(report + "{\"wavesegmentArray\":\n\n" + outList.toString() + "}");*/
 		
-		/*boolean ret = GuardRuleManager.write("haksoochoi", requestingUser, "Lab1", "Thermostat", "1", 90);
+		long beforeTime = System.currentTimeMillis();
+		boolean ret = GuardRuleManager.write("haksoochoi", requestingUser, "Lab1", "Thermostat", "1", 90);
+		long afterTime = System.currentTimeMillis();
+		
+		String report = String.format("Time taken: %d ms\n\n", afterTime - beforeTime);
+		
 		if (ret) {
-			renderText("write() allowed.");
+			renderText(report + "write() allowed.");
 		} else {
-			renderText("write() denied.");
-		}*/
+			renderText(report + "write() denied.");
+		}
 	}
 }

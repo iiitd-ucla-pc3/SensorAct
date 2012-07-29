@@ -484,6 +484,10 @@ public class GuardRuleManager {
 			ruleNameList.add(gram.rulename);
 		}
 		
+		if (ruleNameList.size() == 0) {
+			return null;
+		}
+		
 		List<GuardRuleModel> grmList = GuardRuleModel
 				.filter("secretkey =", secretkey)
 				.filter("targetOperation =", "read")
