@@ -60,7 +60,7 @@ public class GuardRuleAdd extends SensorActAPI {
 			}
 
 			GuardRuleManager.addGuardRule(guardRule);
-			response.SendSuccess(Const.API_GUARDRULE_ADD, Const.TODO);
+			response.SendSuccess(Const.API_GUARDRULE_ADD, Const.GUARDRULE_ADDED, guardRule.rule.name);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_GUARDRULE_ADD,

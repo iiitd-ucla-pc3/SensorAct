@@ -13,7 +13,7 @@ package edu.iiitd.muc.sensoract.api.request;
  * @author Haksoo Choi
  * @version 1.0
  */
-public class GuardRuleAssociationFormat {
+public class GuardRuleAssociationAddFormat {
 	public String secretkey = null;
 	
 	public String devicename = null;

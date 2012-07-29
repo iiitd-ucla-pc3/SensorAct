@@ -127,8 +127,20 @@ public class Application extends Controller {
 		SensorActAPI.guardRuleList.doProcess(request.params.get("body"));
 	}
 	
-	public static void guardRuleAssociate() {
-		SensorActAPI.guardRuleAssociate.doProcess(request.params.get("body"));
+	public static void guardRuleAssociationAdd() {
+		SensorActAPI.guardRuleAssociationAdd.doProcess(request.params.get("body"));
+	}
+
+	public static void guardRuleAssociationDelete() {
+		SensorActAPI.guardRuleAssociationDelete.doProcess(request.params.get("body"));
+	}
+
+	public static void guardRuleAssociationGet() {
+		SensorActAPI.guardRuleAssociationGet.doProcess(request.params.get("body"));
+	}
+
+	public static void guardRuleAssociationList() {
+		SensorActAPI.guardRuleAssociationList.doProcess(request.params.get("body"));
 	}
 
 	// Task management

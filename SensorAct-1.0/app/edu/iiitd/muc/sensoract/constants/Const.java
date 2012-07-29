@@ -70,7 +70,10 @@ public class Const {
 	public static final String API_GUARDRULE_DELETE = "guardrule/delete";
 	public static final String API_GUARDRULE_GET = "guardrule/get";
 	public static final String API_GUARDRULE_LIST = "guardrule/list";
-	public static final String API_GUARDRULE_ASSOCIATE = "guardrule/associate";
+	public static final String API_GUARDRULE_ASSOCIATION_ADD = "guardrule/association/add";
+	public static final String API_GUARDRULE_ASSOCIATION_DELETE = "guardrule/association/delete";
+	public static final String API_GUARDRULE_ASSOCIATION_GET = "guardrule/association/get";
+	public static final String API_GUARDRULE_ASSOCIATION_LIST = "guardrule/association/list";
 
 	public static final String API_TASK_ADD = "task/add";
 	public static final String API_TASK_DELETE = "task/delete";
@@ -219,6 +222,14 @@ public class Const {
 
 	public static final String UPLOAD_WAVESEGMENT_SUCCESS = "Wavesegment stored successfully";
 
+	public static final String GUARDRULE_ADDED = "New guard rule added";
+	public static final String GUARDRULE_DELETED = "Guard rule successfully deleted";
+	public static final String GUARDRULE_ASSOCIATION_ADDED = "Guard rule successfully associated";
+	public static final String GUARDRULE_ASSOCIATION_DELETED = "Guard rule successfully dissociated";
+	
+	public static final String GUARDRULE_NOTFOUND = "No guard rule found";
+	public static final String GUARDRULE_ASSOCIATION_NOTFOUND = "No guard rule association found";
+	
 	private Const() {
 	}
 }

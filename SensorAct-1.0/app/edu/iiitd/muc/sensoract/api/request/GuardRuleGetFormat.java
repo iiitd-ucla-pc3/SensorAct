@@ -16,6 +16,6 @@ package edu.iiitd.muc.sensoract.api.request;
 public class GuardRuleGetFormat {
 
 	public String secretkey = null;
-	// TODO: add other parameters
-
+	public String name = null;
+	
 }

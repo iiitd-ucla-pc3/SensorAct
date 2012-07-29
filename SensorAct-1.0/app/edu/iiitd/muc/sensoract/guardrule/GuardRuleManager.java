@@ -18,7 +18,13 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import edu.iiitd.muc.sensoract.api.request.GuardRuleAddFormat;
-import edu.iiitd.muc.sensoract.api.request.GuardRuleAssociationFormat;
+import edu.iiitd.muc.sensoract.api.request.GuardRuleAssociationAddFormat;
+import edu.iiitd.muc.sensoract.api.request.GuardRuleAssociationDeleteFormat;
+import edu.iiitd.muc.sensoract.api.request.GuardRuleAssociationGetFormat;
+import edu.iiitd.muc.sensoract.api.request.GuardRuleAssociationListFormat;
+import edu.iiitd.muc.sensoract.api.request.GuardRuleDeleteFormat;
+import edu.iiitd.muc.sensoract.api.request.GuardRuleGetFormat;
+import edu.iiitd.muc.sensoract.api.request.GuardRuleListFormat;
 import edu.iiitd.muc.sensoract.model.data.WaveSegmentChannelModel;
 import edu.iiitd.muc.sensoract.model.data.WaveSegmentModel;
 import edu.iiitd.muc.sensoract.model.device.DeviceModel;
@@ -110,26 +116,112 @@ public class GuardRuleManager {
 	 * Adds a new guard rule to the repository.
 	 * 
 	 * @param newRule
-	 * @return True
 	 */
-	public static boolean addGuardRule(final GuardRuleAddFormat newRule) {
+	public static void addGuardRule(final GuardRuleAddFormat newRule) {
 		//TODO: check duplicate rule name.
 		GuardRuleModel rule = new GuardRuleModel(newRule);
 		rule.save();
-		return true;
+	}
+
+	/**
+	 * Delete a guard rule from the repository.
+	 * 
+	 * @param guardRuleDeleteRequest
+	 */
+	public static void deleteGuardRule(final GuardRuleDeleteFormat guardRuleDeleteRequest) {
+		GuardRuleModel.find("bySecretkeyAndName", 
+				guardRuleDeleteRequest.secretkey, guardRuleDeleteRequest.name).delete();
+	}
+
+	/**
+	 * Retrieve a guard rule from the repository.
+	 * 
+	 * @param guardRuleGetRequest
+	 * @return a guard rule
+	 */
+	public static GuardRuleModel getGuardRule(GuardRuleGetFormat guardRuleGetRequest) {
+		List<GuardRuleModel> rules = GuardRuleModel.find("bySecretkeyAndName", 
+				guardRuleGetRequest.secretkey, guardRuleGetRequest.name).fetchAll();
+		if (rules == null || rules.size() == 0) {
+			return null;
+		}
+		return rules.get(0);
+	}
+
+	/**
+	 * Retrieve all guard rules from the repository.
+	 * 
+	 * @param guardRuleListRequest
+	 * @return list of guard rules
+	 */
+	public static List<GuardRuleModel> getGuardRuleList(GuardRuleListFormat guardRuleListRequest) {
+		List<GuardRuleModel> rules = GuardRuleModel.find("bySecretkey", 
+				guardRuleListRequest.secretkey).fetchAll();
+		if (rules == null || rules.size() == 0) {
+			return null;
+		}
+		return rules;
 	}
 
 	/**
 	 * Associate a guard rule to a device.
 	 * 
-	 * @param newAssociate
+	 * @param format
 	 * @return True
 	 */
-	public static boolean associateGuardRule(final GuardRuleAssociationFormat newAssociate) {
+	public static boolean addAssociation(final GuardRuleAssociationAddFormat format) {
 		//TODO: check existing association
-		GuardRuleAssociationModel associate = new GuardRuleAssociationModel(newAssociate);
+		GuardRuleAssociationModel associate = new GuardRuleAssociationModel(format);
 		associate.save();
 		return true;
+	}
+
+	/**
+	 * Delete associations.
+	 * 
+	 * @param format
+	 * @return True
+	 */
+	public static boolean deleteAssociation(final GuardRuleAssociationDeleteFormat format) {
+		if (format.sensorname != null) {
+			GuardRuleAssociationModel.find("bySecretkeyAndDevicenameAndSensornameAndSensoridAndRulename",
+					format.secretkey, format.devicename, format.sensorname, format.sensorid, format.rulename).delete();
+			return true;
+		} else if (format.actuatorname != null) {
+			GuardRuleAssociationModel.find("bySecretkeyAndDevicenameAndActuatornameAndActuatoridAndRulename",
+					format.secretkey, format.devicename, format.actuatorname, format.actuatorid, format.rulename).delete();
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Get associations.
+	 * 
+	 * @param format
+	 * @return True
+	 */
+	public static List<GuardRuleAssociationModel> getAssociation(final GuardRuleAssociationGetFormat format) {
+		if (format.rulename != null) {
+			return GuardRuleAssociationModel.find("bySecretkeyAndRulename", format.secretkey, format.rulename).fetchAll();
+		} else if (format.devicename != null) {
+			if (format.sensorname != null && format.sensorid != null) {
+				return GuardRuleAssociationModel.find("bySecretkeyAndSensornameAndSensorid", format.secretkey, format.sensorname, format.sensorid).fetchAll();
+			} else if (format.actuatorname != null && format.actuatorid != null) {
+				return GuardRuleAssociationModel.find("bySecretkeyAndActuatornameAndActuatorid", format.secretkey, format.actuatorname, format.actuatorid).fetchAll();
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * List all associations.
+	 * 
+	 * @param format
+	 * @return True
+	 */
+	public static List<GuardRuleAssociationModel> listAssociation(final GuardRuleAssociationListFormat format) {
+		return GuardRuleAssociationModel.find("bySecretkey", format.secretkey).fetchAll();
 	}
 
 	/**
@@ -499,4 +591,6 @@ public class GuardRuleManager {
 		
 		return true;
 	}
+
+
 }

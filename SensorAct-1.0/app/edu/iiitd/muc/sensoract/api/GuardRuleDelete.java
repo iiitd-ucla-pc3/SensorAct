@@ -3,7 +3,7 @@
  * Project: SensorAct, MUC@IIIT-Delhi
  * Version: 1.0
  * Date: 2012-05-14
- * Author: Pandarasamy Arjunan
+ * Author: Pandarasamy Arjunan, Haksoo Choi
  */
 package edu.iiitd.muc.sensoract.api;
 
@@ -11,12 +11,13 @@ import edu.iiitd.muc.sensoract.api.request.GuardRuleDeleteFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
+import edu.iiitd.muc.sensoract.guardrule.GuardRuleManager;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
 
 /**
  * guardrule/delete API: Deletes a guard rule
  * 
- * @author Pandarasamy Arjunan
+ * @author Pandarasamy Arjunan, Haksoo Choi
  * @version 1.0
  */
 public class GuardRuleDelete extends SensorActAPI {
@@ -61,8 +62,8 @@ public class GuardRuleDelete extends SensorActAPI {
 						guardRuleDeleteRequest.secretkey);
 			}
 
-			// TODO: delete guard rule
-			response.SendSuccess(Const.API_GUARDRULE_DELETE, Const.TODO);
+			GuardRuleManager.deleteGuardRule(guardRuleDeleteRequest);
+			response.SendSuccess(Const.API_GUARDRULE_DELETE, Const.GUARDRULE_DELETED, guardRuleDeleteRequest.name);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_GUARDRULE_DELETE,
@@ -72,5 +73,4 @@ public class GuardRuleDelete extends SensorActAPI {
 					ErrorType.SYSTEM_ERROR, e.getMessage());
 		}
 	}
-
 }

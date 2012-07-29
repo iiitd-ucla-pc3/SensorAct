@@ -12,7 +12,7 @@ import play.modules.morphia.Model;
 
 import com.google.code.morphia.annotations.Entity;
 
-import edu.iiitd.muc.sensoract.api.request.GuardRuleAssociationFormat;
+import edu.iiitd.muc.sensoract.api.request.GuardRuleAssociationAddFormat;
 
 /**
  * Model class for guard rule association management.
@@ -32,7 +32,7 @@ public class GuardRuleAssociationModel extends Model {
 	
 	public String rulename = null;
 
-	public GuardRuleAssociationModel(final GuardRuleAssociationFormat newAssociation) {
+	public GuardRuleAssociationModel(final GuardRuleAssociationAddFormat newAssociation) {
 		if (null == newAssociation)
 			return;
 		

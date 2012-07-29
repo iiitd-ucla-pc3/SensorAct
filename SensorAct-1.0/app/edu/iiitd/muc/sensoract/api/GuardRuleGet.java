@@ -3,7 +3,7 @@
  * Project: SensorAct, MUC@IIIT-Delhi
  * Version: 1.0
  * Date: 2012-05-14
- * Author: Pandarasamy Arjunan
+ * Author: Pandarasamy Arjunan, Haksoo Choi
  */
 package edu.iiitd.muc.sensoract.api;
 
@@ -11,12 +11,14 @@ import edu.iiitd.muc.sensoract.api.request.GuardRuleGetFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
+import edu.iiitd.muc.sensoract.guardrule.GuardRuleManager;
+import edu.iiitd.muc.sensoract.model.guardrule.GuardRuleModel;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
 
 /**
  * guardrule/get API: Gets a guard rule
  * 
- * @author Pandarasamy Arjunan
+ * @author Pandarasamy Arjunan, Haksoo Choi
  * @version 1.0
  */
 public class GuardRuleGet extends SensorActAPI {
@@ -60,8 +62,14 @@ public class GuardRuleGet extends SensorActAPI {
 						guardRuleGetRequest.secretkey);
 			}
 
-			// TODO: get guard rule
-			response.SendSuccess(Const.API_GUARDRULE_GET, Const.TODO);
+			GuardRuleModel guardRule = GuardRuleManager.getGuardRule(guardRuleGetRequest);
+			if (null == guardRule) {
+				response.sendFailure(Const.API_GUARDRULE_GET,
+						ErrorType.GUARDRULE_NOTFOUND, guardRuleGetRequest.name);
+			}
+
+			guardRule.secretkey = null;
+			renderText(remove_Id(guardRule));
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_GUARDRULE_GET,

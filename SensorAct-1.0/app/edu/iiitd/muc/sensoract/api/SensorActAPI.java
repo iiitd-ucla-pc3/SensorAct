@@ -8,6 +8,7 @@
 package edu.iiitd.muc.sensoract.api;
 
 import java.util.Iterator;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -63,7 +64,10 @@ public class SensorActAPI extends Application {
 	public static GuardRuleDelete guardRuleDelete = new GuardRuleDelete();
 	public static GuardRuleGet guardRuleGet = new GuardRuleGet();
 	public static GuardRuleList guardRuleList = new GuardRuleList();
-	public static GuardRuleAssociate guardRuleAssociate = new GuardRuleAssociate();
+	public static GuardRuleAssociationAdd guardRuleAssociationAdd = new GuardRuleAssociationAdd();
+	public static GuardRuleAssociationDelete guardRuleAssociationDelete = new GuardRuleAssociationDelete();
+	public static GuardRuleAssociationGet guardRuleAssociationGet = new GuardRuleAssociationGet();
+	public static GuardRuleAssociationList guardRuleAssociationList = new GuardRuleAssociationList();
 
 	public static TaskAdd taskAdd = new TaskAdd();
 	public static TaskDelete taskDelete = new TaskDelete();
@@ -80,7 +84,8 @@ public class SensorActAPI extends Application {
 	 */
 	public static ResponseFormat response = new ResponseFormat();
 	public static ParamValidator validator = new ParamValidator();
-	public static Gson json = new GsonBuilder().serializeSpecialFloatingPointValues().create();
+	//TODO Remove pretty printing in deployment.
+	public static Gson json = new GsonBuilder().serializeSpecialFloatingPointValues().setPrettyPrinting().create();
 	public static SensorActLogger log = new SensorActLogger();
 
 	/**
@@ -121,8 +126,9 @@ public class SensorActAPI extends Application {
 	protected String remove_Id(final Object obj) {
 
 		try {
-			return json.toJsonTree(obj).getAsJsonObject().remove("_id")
-					.toString();
+			JsonObject jo = json.toJsonTree(obj).getAsJsonObject();
+			jo.remove("_id");
+			return json.toJson(jo);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -155,5 +161,16 @@ public class SensorActAPI extends Application {
 		}
 
 		return json.toJson(obj);
+	}
+
+	protected <T> JsonArray convertFromListToJsonArrayRemovingSecretKeyAndId(List<T> objList) { 
+		JsonArray jsonArray = new JsonArray();
+		for (T obj: objList) {
+			JsonObject jsonObj = json.toJsonTree(obj).getAsJsonObject();
+			jsonObj.remove("secretkey");
+			jsonObj.remove("_id");
+			jsonArray.add(jsonObj);
+		}
+		return jsonArray;
 	}
 }

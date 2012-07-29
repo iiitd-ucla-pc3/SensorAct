@@ -37,7 +37,10 @@ POST    /guardrule/add                          Application.guardRuleAdd
 POST    /guardrule/delete                       Application.guardRuleDelete
 POST    /guardrule/get                          Application.guardRuleGet
 POST    /guardrule/list                         Application.guardRuleList
-POST    /guardrule/associate                    Application.guardRuleAssociate
+POST    /guardrule/association/add              Application.guardRuleAssociationAdd
+POST    /guardrule/association/delete           Application.guardRuleAssociationDelete
+POST    /guardrule/association/get              Application.guardRuleAssociationGet
+POST    /guardrule/association/list             Application.guardRuleAssociationList
 
 POST    /task/add                               Application.taskAdd     
 POST    /task/delete                            Application.taskDelete
