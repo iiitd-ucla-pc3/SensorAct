@@ -12,7 +12,7 @@ import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
-import edu.iiitd.muc.sensoract.tasks.TaskManager;
+import edu.iiitd.muc.sensoract.tasklet.TaskManager;
 
 /**
  * task/add API: Adds a task
@@ -58,7 +58,7 @@ public class TaskAdd extends SensorActAPI {
 				response.sendFailure(Const.API_TASK_ADD,
 						ErrorType.UNREGISTERED_SECRETKEY, task.secretkey);
 			}
-			
+
 			TaskManager.addTask(task);
 
 			// TODO: Add task

@@ -19,6 +19,7 @@ import java.util.List;
 public class TaskAddFormat {
 
 	public String secretkey = null;
+	public int taskcount = 0;
 	
 	public String taskname = null;
 	public String desc = null;

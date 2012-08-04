@@ -160,6 +160,10 @@ public class Application extends Controller {
 		SensorActAPI.taskList.doProcess(request.params.get("body"));
 	}
 
+	public static void taskExecute() {
+		SensorActAPI.taskExecute.doProcess(request.params.get("body"));
+	}
+
 	// Data management
 	public static void dataQuery() {
 		SensorActAPI.dataQuery.doProcess(request.params.get("body"));

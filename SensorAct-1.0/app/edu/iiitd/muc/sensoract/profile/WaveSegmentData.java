@@ -22,6 +22,33 @@ import edu.iiitd.muc.sensoract.model.data.WaveSegmentModel;
 
 public class WaveSegmentData {
 
+	public static List<WaveSegmentModel> readLatest(final String username,
+			final String devicename, final String sensorname,
+			final String sensorid) {
+
+		String secretkey = UserProfile.getSecretkey(username);
+		if (null == secretkey) {
+			return null;
+		}
+
+		List<WaveSegmentModel> listWaveSegment = WaveSegmentModel.q()
+				.filter("secretkey", secretkey)
+				.filter("data.dname", devicename)
+				.filter("data.sname", sensorname)
+				.filter("data.sid", sensorid) // TODO: to be done
+				.order("-data.timestamp")
+				.fetch(1);
+
+		if(null == listWaveSegment || 0 == listWaveSegment.size() ) {
+			return null;
+		}
+		
+		//Double d = listWaveSegment.get(0).data.channels.get(0).readings.get(0);
+		//return d;
+		return listWaveSegment;
+	}
+
+	
 	/**
 	 * Retrieves wavesegments from the repo
 	 * 

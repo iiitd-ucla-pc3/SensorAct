@@ -80,6 +80,8 @@ public class Const {
 	public static final String API_TASK_GET = "task/get";
 	public static final String API_TASK_LIST = "task/list";
 	
+	public static final String API_TASK_EXECUTE = "task/execute";
+	
 	public static final String API_DATA_UPLOAD_WAVESEGMENT = "data/upload/wavesegment";
 	public static final String API_DATA_QUERY = "data/query";
 

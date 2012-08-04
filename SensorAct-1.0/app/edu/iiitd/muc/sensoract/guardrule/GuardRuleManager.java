@@ -10,6 +10,7 @@ package edu.iiitd.muc.sensoract.guardrule;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.script.Invocable;
@@ -253,8 +254,17 @@ public class GuardRuleManager {
 			return null;
 		}
 		
-		List<WaveSegmentModel> wwList = WaveSegmentData.read(username, devicename, sensorname, sensorid, fromtime, totime);
+		long t1 = new Date().getTime();
+//		List<WaveSegmentModel> wwList = WaveSegmentData.read(username, devicename, sensorname, sensorid, fromtime, totime);
+		List<WaveSegmentModel> wwList = WaveSegmentData.readLatest(username,
+				devicename, sensorname, sensorid);
+		long t2 = new Date().getTime();
+		
+		SensorActLogger.info("WaveSegmentData.readLatest: " + (t2 - t1));
 
+		
+		//System.out.println("guarad size " + wwList.size());
+		
 		engine.put("USER", requestingUser);
 		
 		// Initialize decision variable
@@ -587,6 +597,7 @@ public class GuardRuleManager {
 		}
 		
 		try {
+			//System.out.println("rule.condition " + rule.condition);
 			engine.eval(function);
 		} catch (ScriptException e) {
 			e.printStackTrace();

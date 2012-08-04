@@ -46,6 +46,7 @@ POST    /task/add                               Application.taskAdd
 POST    /task/delete                            Application.taskDelete
 POST    /task/get                               Application.taskGet
 POST    /task/list                              Application.taskList
+POST    /task/execute                           Application.taskExecute
         
 POST    /data/query                             Application.dataQuery
 POST    /upload/wavesegment                     Application.dataUploadWaveSegment

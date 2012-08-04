@@ -73,6 +73,7 @@ public class SensorActAPI extends Application {
 	public static TaskDelete taskDelete = new TaskDelete();
 	public static TaskGet taskGet = new TaskGet();
 	public static TaskList taskList = new TaskList();
+	public static TaskExecute taskExecute = new TaskExecute();
 
 	public static DataUploadWaveSegment dataUploadWaveseg = new DataUploadWaveSegment();
 	public static DataQuery dataQuery = new DataQuery();
