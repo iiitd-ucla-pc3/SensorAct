@@ -8,7 +8,9 @@
 package edu.iiitd.muc.sensoract.api.request;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Defines the request format for task/add API.
@@ -18,6 +20,8 @@ import java.util.List;
  */
 public class TaskAddFormat {
 
+	public Map<String,Object> parm = null;//new HashMap();
+	
 	public String secretkey = null;
 	public int taskcount = 0;
 	
@@ -31,6 +35,6 @@ public class TaskAddFormat {
 	
 	public class Variable {
 		public String name = null;
-		public String type = null;		
+		public String value = null;		
 	}
 }

@@ -7,6 +7,8 @@
  */
 package edu.iiitd.muc.sensoract.model.task;
 
+import com.google.code.morphia.annotations.Entity;
+
 import play.modules.morphia.Model;
 import edu.iiitd.muc.sensoract.api.request.TaskAddFormat;
 
@@ -16,7 +18,7 @@ import edu.iiitd.muc.sensoract.api.request.TaskAddFormat;
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
-//@Entity(value = "TaskVariables", noClassnameStored = true)
+@Entity(value = "TaskVariables", noClassnameStored = true)
 public class TaskVariableModel extends Model {
 
 	public String name = null;
@@ -24,7 +26,7 @@ public class TaskVariableModel extends Model {
 
 	public TaskVariableModel(final TaskAddFormat.Variable variable) {
 		name = variable.name;
-		type = variable.type;
+		type = variable.value;
 	}
 
 	TaskVariableModel() {

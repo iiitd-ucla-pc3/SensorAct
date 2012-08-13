@@ -20,7 +20,7 @@ import edu.iiitd.muc.sensoract.api.request.GuardRuleAssociationAddFormat;
  * @author Haksoo Choi
  * @version 1.0
  */
-@Entity(value = "GuardRuleAssociation", noClassnameStored = true)
+@Entity(value = "GuardRuleAssociation11", noClassnameStored = true)
 public class GuardRuleAssociationModel extends Model {
 	public String secretkey = null;
 

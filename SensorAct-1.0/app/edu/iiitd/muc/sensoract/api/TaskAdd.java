@@ -7,6 +7,9 @@
  */
 package edu.iiitd.muc.sensoract.api;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import edu.iiitd.muc.sensoract.api.request.TaskAddFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
@@ -22,6 +25,8 @@ import edu.iiitd.muc.sensoract.tasklet.TaskManager;
  */
 public class TaskAdd extends SensorActAPI {
 
+	
+	
 	/**
 	 * Validates the task add request format attributes. If validation fails,
 	 * sends corresponding failure message to the caller.
@@ -52,22 +57,34 @@ public class TaskAdd extends SensorActAPI {
 
 			TaskAddFormat task = convertToRequestFormat(taskAddJson,
 					TaskAddFormat.class);
-			validateRequest(task);
-
-			if (!UserProfile.isRegisteredSecretkey(task.secretkey)) {
-				response.sendFailure(Const.API_TASK_ADD,
-						ErrorType.UNREGISTERED_SECRETKEY, task.secretkey);
-			}
-
+//			validateRequest(task);
+//
+//			if (!UserProfile.isRegisteredSecretkey(task.secretkey)) {
+//				response.sendFailure(Const.API_TASK_ADD,
+//						ErrorType.UNREGISTERED_SECRETKEY, task.secretkey);
+//			}
+//
 			TaskManager.addTask(task);
 
+//			TaskAdd mapJson = convertToRequestFormat(taskAddJson,
+//					TaskAdd.class);
+//		
+//			TaskAdd mm =  new TaskAdd();
+//			
+//			mm.params.put("p1", "v1");
+//			mm.params.put("p2", "v2");
+			
+			
+			response.sendJSON("");
+			
 			// TODO: Add task
-			response.SendSuccess(Const.API_TASK_ADD, Const.TODO);
+			//response.SendSuccess(Const.API_TASK_ADD, Const.TODO);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_TASK_ADD, ErrorType.INVALID_JSON,
 					e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.sendFailure(Const.API_TASK_ADD, ErrorType.SYSTEM_ERROR,
 					e.getMessage());
 		}

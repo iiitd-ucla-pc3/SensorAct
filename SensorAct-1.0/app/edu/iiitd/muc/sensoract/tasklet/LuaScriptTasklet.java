@@ -96,7 +96,7 @@ public class LuaScriptTasklet implements Job {
 			//System.out.println("e1:" + e1 + " e2:"+e2);
 			// System.out.println("script done..");
 
-			Double val = (Double) luaEngine.get("val");
+			//Double val = (Double) luaEngine.get("val");
 			//System.out.println("val : " + val);
 
 			//dataMap.put("val", val);

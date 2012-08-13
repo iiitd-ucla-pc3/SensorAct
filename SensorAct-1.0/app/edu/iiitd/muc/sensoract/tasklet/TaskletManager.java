@@ -103,7 +103,7 @@ public class TaskletManager {
 		}
 	}
 
-	public static void executeTask(TaskModel task, int taskcount) {
+	public static void executeTask(TaskModel task, int taskcount) throws InterruptedException {
 		
 /* sample task
   {	
@@ -126,10 +126,14 @@ public class TaskletManager {
 	--print(t1, t2)
 	"
 	}
-*/	
-		
+*/			
 		while (taskcount-- > 0)
-			scheduleTask(task.execute, task.params);
+		{
+			for(int i=0; i<1; ++i)
+				scheduleTask(task.execute, task.params);
+			
+			Thread.sleep(5000);
+		}
 	}
 		
 	public static void scheduleTask(String script, List<TaskVariableModel> params) {

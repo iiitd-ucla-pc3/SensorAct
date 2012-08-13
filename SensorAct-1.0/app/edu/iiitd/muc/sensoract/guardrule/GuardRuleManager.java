@@ -249,20 +249,21 @@ public class GuardRuleManager {
 
 		List<GuardRuleModel> ruleList = getRelevantReadGuardRules(secretkey, devicename, sensorname, sensorid);
 
+		
+		long t1 = new Date().getTime();
+		List<WaveSegmentModel> wwList = WaveSegmentData.read(username, devicename, sensorname, sensorid, fromtime, totime);
+//		List<WaveSegmentModel> wwList = WaveSegmentData.readLatest(username,
+//				devicename, sensorname, sensorid);
+		long t2 = new Date().getTime();
+		
+		SensorActLogger.info("WaveSegmentData.read: " + (t2 - t1) + "  size: " +wwList.size());
+
+
 		if (ruleList == null || ruleList.size() == 0) {
 			// No rules for this device.
 			return null;
 		}
-		
-		long t1 = new Date().getTime();
-//		List<WaveSegmentModel> wwList = WaveSegmentData.read(username, devicename, sensorname, sensorid, fromtime, totime);
-		List<WaveSegmentModel> wwList = WaveSegmentData.readLatest(username,
-				devicename, sensorname, sensorid);
-		long t2 = new Date().getTime();
-		
-		SensorActLogger.info("WaveSegmentData.readLatest: " + (t2 - t1));
 
-		
 		//System.out.println("guarad size " + wwList.size());
 		
 		engine.put("USER", requestingUser);
