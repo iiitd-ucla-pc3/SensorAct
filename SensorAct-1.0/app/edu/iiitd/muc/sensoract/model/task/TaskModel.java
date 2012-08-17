@@ -7,9 +7,8 @@
  */
 package edu.iiitd.muc.sensoract.model.task;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import play.modules.morphia.Model;
 
@@ -23,19 +22,21 @@ import edu.iiitd.muc.sensoract.api.request.TaskAddFormat;
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
-@Entity(value = "Tasks", noClassnameStored = true)
+@Entity(value = "Tasklet", noClassnameStored = true)
 public class TaskModel extends Model {
 
 	public String secretkey = null;
-
 	public String taskname = null;
 	public String desc = null;
 
-	public List<TaskVariableModel> params = null;
-	public List<TaskVariableModel> inputs = null;
+	public Map<String, String> param = null;
+	public Map<String, NotifyEmailModel> email = null;
+	public Map<String, String> input = null;
 
 	public String when = null;
 	public String execute = null;
+
+	public List<TaskVariableModel> params = null;
 
 	public TaskModel(final TaskAddFormat task) {
 
@@ -46,32 +47,13 @@ public class TaskModel extends Model {
 		secretkey = task.secretkey;
 		taskname = task.taskname;
 		desc = task.desc;
+
+		param = task.param;
+		input = task.input;
+		email = task.email;
+
 		when = task.when;
 		execute = task.execute;
-
-		if (null != task.params) {
-			params = new ArrayList<TaskVariableModel>();
-			Iterator<TaskAddFormat.Variable> paramsIterator = task.params
-					.iterator();
-
-			while (paramsIterator.hasNext()) {
-				TaskAddFormat.Variable variable = paramsIterator.next();
-				TaskVariableModel taskVariable = new TaskVariableModel(variable);
-				params.add(taskVariable);
-			}
-		}
-
-		if (null != task.inputs) {
-			inputs = new ArrayList<TaskVariableModel>();
-			Iterator<TaskAddFormat.Variable> inputsIterator = task.inputs
-					.iterator();
-
-			while (inputsIterator.hasNext()) {
-				TaskAddFormat.Variable variable = inputsIterator.next();
-				TaskVariableModel taskVariable = new TaskVariableModel(variable);
-				inputs.add(taskVariable);
-			}
-		}
 
 	}
 

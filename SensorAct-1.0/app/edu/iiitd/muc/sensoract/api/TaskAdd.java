@@ -10,10 +10,13 @@ package edu.iiitd.muc.sensoract.api;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.code.morphia.Morphia;
+
 import edu.iiitd.muc.sensoract.api.request.TaskAddFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
+import edu.iiitd.muc.sensoract.model.task.TaskModel;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
 import edu.iiitd.muc.sensoract.tasklet.TaskManager;
 
@@ -24,8 +27,6 @@ import edu.iiitd.muc.sensoract.tasklet.TaskManager;
  * @version 1.0
  */
 public class TaskAdd extends SensorActAPI {
-
-	
 	
 	/**
 	 * Validates the task add request format attributes. If validation fails,
@@ -64,8 +65,12 @@ public class TaskAdd extends SensorActAPI {
 //						ErrorType.UNREGISTERED_SECRETKEY, task.secretkey);
 //			}
 //
+			TaskManager.removeTask("key1", "task1");
+			
 			TaskManager.addTask(task);
-
+			
+			TaskModel tt = TaskManager.getTask("key1", "task1");
+			
 //			TaskAdd mapJson = convertToRequestFormat(taskAddJson,
 //					TaskAdd.class);
 //		
@@ -74,8 +79,8 @@ public class TaskAdd extends SensorActAPI {
 //			mm.params.put("p1", "v1");
 //			mm.params.put("p2", "v2");
 			
-			
-			response.sendJSON("");
+			//response.sendJSON(task);
+			response.sendJSON(tt);
 			
 			// TODO: Add task
 			//response.SendSuccess(Const.API_TASK_ADD, Const.TODO);
