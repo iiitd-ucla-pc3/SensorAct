@@ -25,20 +25,14 @@ public class TaskletAddFormat {
 	public int taskcount = 0;
 
 	public String secretkey = null;	
-	public String taskname = null;
+	public String taskletname = null;
 	public String desc = null;
 
 	public Map<String,String> param = null;
 	public Map<String,NotifyEmailModel> email = null;
 	public Map<String,String> input = null;
 
-	public List<Variable> params = null;
-	public List<Variable> inputs = null;
 	public String when = null;
 	public String execute = null;
 	
-	public class Variable {
-		public String name = null;
-		public String value = null;		
-	}
 }

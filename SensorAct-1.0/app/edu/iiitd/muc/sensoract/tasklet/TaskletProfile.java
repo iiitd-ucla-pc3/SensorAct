@@ -30,7 +30,7 @@ public class TaskletProfile {
 
 	public static boolean removeTasklet(String secretkey, String taskletname) {
 
-		MorphiaQuery mq = TaskletModel.find("bySecretkeyAndTaskname",
+		MorphiaQuery mq = TaskletModel.find("bySecretkeyAndTaskletname",
 				secretkey, taskletname);
 		if (0 == mq.count()) {
 			return false;
@@ -44,7 +44,7 @@ public class TaskletProfile {
 	public static TaskletModel getTasklet(String secretkey, String taskletname) {
 
 		List<TaskletModel> taskletList = TaskletModel.find(
-				"bySecretkeyAndTaskname", secretkey, taskletname).fetchAll();
+				"bySecretkeyAndTaskletname", secretkey, taskletname).fetchAll();
 		if (null == taskletList || 0 == taskletList.size()) {
 			return null;
 		}

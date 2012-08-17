@@ -75,12 +75,12 @@ public class Const {
 	public static final String API_GUARDRULE_ASSOCIATION_GET = "guardrule/association/get";
 	public static final String API_GUARDRULE_ASSOCIATION_LIST = "guardrule/association/list";
 
-	public static final String API_TASK_ADD = "task/add";
-	public static final String API_TASK_DELETE = "task/delete";
-	public static final String API_TASK_GET = "task/get";
-	public static final String API_TASK_LIST = "task/list";
+	public static final String API_TASKLET_ADD = "tasklet/add";
+	public static final String API_TASKLET_DELETE = "tasklet/delete";
+	public static final String API_TASKLET_GET = "tasklet/get";
+	public static final String API_TASKLET_LIST = "tasklet/list";
 	
-	public static final String API_TASK_EXECUTE = "task/execute";
+	public static final String API_TASKLET_EXECUTE = "tasklet/execute";
 	
 	public static final String API_DATA_UPLOAD_WAVESEGMENT = "data/upload/wavesegment";
 	public static final String API_DATA_QUERY = "data/query";
@@ -115,7 +115,13 @@ public class Const {
 	public static final String PARAM_READINGS = "readings";
 	public static final String PARAM_DEVICENAME = "devicename";
 	public static final String PARAM_TEMPLATENAME = "templatename";
+	
+	public static final String PARAM_TASKLETNAME = "taskletname";
+	public static final String PARAM_DESC = "desc";
 
+	public static final String PARAM_WHEN = "when";
+	public static final String PARAM_EXECUTE = "execute";
+	
 	/*
 	 * API parameter validation limits
 	 */
@@ -172,6 +178,15 @@ public class Const {
 
 	public static final int ACTUATORNAME_MIN_LENGTH = 2;
 	public static final int ACTUATORNAME_MAX_LENGTH = 20;
+
+	public static final int TASKLETNAME_MIN_LENGTH = 2;
+	public static final int TASKLETNAME_MAX_LENGTH = 20;
+
+	public static final int TASKLET_DESC_MIN_LENGTH = 2;
+	public static final int TASKLET_DESC_MAX_LENGTH = 20;
+
+	public static final int TASKLET_PARAM_MAX_LENGTH = 8;
+	public static final int TASKLET_PARAM_VALUE_MAX_LENGTH = 100;
 
 	/*
 	 * API parameter validation error messages

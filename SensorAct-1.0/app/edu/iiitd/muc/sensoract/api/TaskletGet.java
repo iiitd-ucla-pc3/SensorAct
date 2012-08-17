@@ -34,7 +34,7 @@ public class TaskletGet extends SensorActAPI {
 		// TODO: add validation for other parameters
 
 		if (validator.hasErrors()) {
-			response.sendFailure(Const.API_TASK_GET,
+			response.sendFailure(Const.API_TASKLET_GET,
 					ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
 		}
 	}
@@ -54,19 +54,19 @@ public class TaskletGet extends SensorActAPI {
 			validateRequest(taskGetRequest);
 
 			if (!UserProfile.isRegisteredSecretkey(taskGetRequest.secretkey)) {
-				response.sendFailure(Const.API_TASK_GET,
+				response.sendFailure(Const.API_TASKLET_GET,
 						ErrorType.UNREGISTERED_SECRETKEY,
 						taskGetRequest.secretkey);
 			}
 
 			// TODO: Get a tasklet
-			response.SendSuccess(Const.API_TASK_GET, Const.TODO);
+			response.SendSuccess(Const.API_TASKLET_GET, Const.TODO);
 
 		} catch (InvalidJsonException e) {
-			response.sendFailure(Const.API_TASK_GET, ErrorType.INVALID_JSON,
+			response.sendFailure(Const.API_TASKLET_GET, ErrorType.INVALID_JSON,
 					e.getMessage());
 		} catch (Exception e) {
-			response.sendFailure(Const.API_TASK_GET, ErrorType.SYSTEM_ERROR,
+			response.sendFailure(Const.API_TASKLET_GET, ErrorType.SYSTEM_ERROR,
 					e.getMessage());
 		}
 	}

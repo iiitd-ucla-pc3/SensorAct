@@ -158,6 +158,7 @@ public class TaskletScheduler {
 			// keyEquals(jobKey("LuaScript"+id, "group1")));
 
 			scheduler.scheduleJob(luaJob, luaTrigger);
+			
 
 		} catch (SchedulerException e) {
 			e.printStackTrace();

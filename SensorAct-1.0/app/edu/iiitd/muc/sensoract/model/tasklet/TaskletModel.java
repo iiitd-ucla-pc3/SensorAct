@@ -26,7 +26,7 @@ import edu.iiitd.muc.sensoract.api.request.TaskletAddFormat;
 public class TaskletModel extends Model {
 
 	public String secretkey = null;
-	public String taskname = null;
+	public String taskletname = null;
 	public String desc = null;
 
 	public Map<String, String> param = null;
@@ -43,7 +43,7 @@ public class TaskletModel extends Model {
 		}
 
 		secretkey = tasklet.secretkey;
-		taskname = tasklet.taskname;
+		taskletname = tasklet.taskletname;
 		desc = tasklet.desc;
 
 		param = tasklet.param;

@@ -34,7 +34,7 @@ public class TaskleteDelete extends SensorActAPI {
 		// TODO: add validation for other parameters
 
 		if (validator.hasErrors()) {
-			response.sendFailure(Const.API_TASK_DELETE,
+			response.sendFailure(Const.API_TASKLET_DELETE,
 					ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
 		}
 	}
@@ -54,19 +54,19 @@ public class TaskleteDelete extends SensorActAPI {
 			validateRequest(taskDeleteRequest);
 
 			if (!UserProfile.isRegisteredSecretkey(taskDeleteRequest.secretkey)) {
-				response.sendFailure(Const.API_TASK_DELETE,
+				response.sendFailure(Const.API_TASKLET_DELETE,
 						ErrorType.UNREGISTERED_SECRETKEY,
 						taskDeleteRequest.secretkey);
 			}
 
 			// TODO: Delete a tasklet
-			response.SendSuccess(Const.API_TASK_DELETE, Const.TODO);
+			response.SendSuccess(Const.API_TASKLET_DELETE, Const.TODO);
 
 		} catch (InvalidJsonException e) {
-			response.sendFailure(Const.API_TASK_DELETE, ErrorType.INVALID_JSON,
+			response.sendFailure(Const.API_TASKLET_DELETE, ErrorType.INVALID_JSON,
 					e.getMessage());
 		} catch (Exception e) {
-			response.sendFailure(Const.API_TASK_DELETE, ErrorType.SYSTEM_ERROR,
+			response.sendFailure(Const.API_TASKLET_DELETE, ErrorType.SYSTEM_ERROR,
 					e.getMessage());
 		}
 	}

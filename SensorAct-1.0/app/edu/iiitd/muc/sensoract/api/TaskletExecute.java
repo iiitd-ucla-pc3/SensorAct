@@ -37,7 +37,7 @@ public class TaskletExecute extends SensorActAPI {
 		// TODO: add validation for other parameters
 
 		if (validator.hasErrors()) {
-			response.sendFailure(Const.API_TASK_EXECUTE,
+			response.sendFailure(Const.API_TASKLET_EXECUTE,
 					ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
 		}
 	}
@@ -55,27 +55,27 @@ public class TaskletExecute extends SensorActAPI {
 					TaskletAddFormat.class);
 			validateRequest(taskletformat);
 
-			TaskletProfile.removeTasklet(taskletformat.secretkey, taskletformat.taskname);
+			TaskletProfile.removeTasklet(taskletformat.secretkey, taskletformat.taskletname);
 			TaskletProfile.addTasklet(taskletformat);
 			TaskletModel tasklet = TaskletProfile.getTasklet(taskletformat.secretkey,
-					taskletformat.taskname);
+					taskletformat.taskletname);
 
 			if( taskletformat.taskcount == 0 )
 				taskletformat.taskcount = 1;
-			
+						
 			TaskletScheduler.executeTask(tasklet, taskletformat.taskcount);
 
 			//response.sendJSON(tasklet);
 
 			// TODO: Add tasklet
-			response.SendSuccess(Const.API_TASK_EXECUTE, taskletformat.taskcount + " Jobs to be executed..");
+			response.SendSuccess(Const.API_TASKLET_EXECUTE, taskletformat.taskcount + " Jobs to be executed..");
 
 		} catch (InvalidJsonException e) {
-			response.sendFailure(Const.API_TASK_EXECUTE,
+			response.sendFailure(Const.API_TASKLET_EXECUTE,
 					ErrorType.INVALID_JSON, e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.sendFailure(Const.API_TASK_EXECUTE,
+			response.sendFailure(Const.API_TASKLET_EXECUTE,
 					ErrorType.SYSTEM_ERROR, e.getMessage());
 		}
 	}

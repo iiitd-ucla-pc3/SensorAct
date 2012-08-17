@@ -33,7 +33,7 @@ public class ParamValidator extends SensorActAPI {
 	 * @param maxSize
 	 *            Parameter's valid maximum length
 	 */
-	private void validateString(final String string, final String name,
+	protected void validateString(final String string, final String name,
 			final int minSize, final int maxSize) {
 		validation.required(string).message(name + Const.MSG_REQUIRED);
 		validation.minSize(string, minSize).message(
