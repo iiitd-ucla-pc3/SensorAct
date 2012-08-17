@@ -1,5 +1,5 @@
 /*
- * Name: TaskDelete.java
+ * Name: TaskletDelete.java
  * Project: SensorAct, MUC@IIIT-Delhi
  * Version: 1.0
  * Date: 2012-05-14
@@ -14,15 +14,15 @@ import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
 
 /**
- * task/delete API: Deletes a task
+ * tasklet/delete API: Deletes a tasklet
  * 
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
-public class TaskDelete extends SensorActAPI {
+public class TaskleteDelete extends SensorActAPI {
 
 	/**
-	 * Validates the task delete request format attributes. If validation fails,
+	 * Validates the tasklet delete request format attributes. If validation fails,
 	 * sends corresponding failure message to the caller.
 	 * 
 	 * @param taskDeleteRequest
@@ -40,17 +40,17 @@ public class TaskDelete extends SensorActAPI {
 	}
 
 	/**
-	 * Services the task/delete API.
+	 * Services the tasklet/delete API.
 	 * 
-	 * @param taskDeleteJson
+	 * @param taskletDeleteJson
 	 *            Task delete request attributes in Json string
 	 */
-	public void doProcess(final String taskDeleteJson) {
+	public void doProcess(final String taskletDeleteJson) {
 
 		try {
 
 			TaskDeleteFormat taskDeleteRequest = convertToRequestFormat(
-					taskDeleteJson, TaskDeleteFormat.class);
+					taskletDeleteJson, TaskDeleteFormat.class);
 			validateRequest(taskDeleteRequest);
 
 			if (!UserProfile.isRegisteredSecretkey(taskDeleteRequest.secretkey)) {
@@ -59,7 +59,7 @@ public class TaskDelete extends SensorActAPI {
 						taskDeleteRequest.secretkey);
 			}
 
-			// TODO: Delete a task
+			// TODO: Delete a tasklet
 			response.SendSuccess(Const.API_TASK_DELETE, Const.TODO);
 
 		} catch (InvalidJsonException e) {

@@ -1,5 +1,5 @@
 /*
- * Name: TaskAdd.java
+ * Name: TaskletAdd.java
  * Project: SensorAct, MUC@IIIT-Delhi
  * Version: 1.0
  * Date: 2012-05-14
@@ -12,32 +12,32 @@ import java.util.Map;
 
 import com.google.code.morphia.Morphia;
 
-import edu.iiitd.muc.sensoract.api.request.TaskAddFormat;
+import edu.iiitd.muc.sensoract.api.request.TaskletAddFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
-import edu.iiitd.muc.sensoract.model.task.TaskModel;
+import edu.iiitd.muc.sensoract.model.tasklet.TaskletModel;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
-import edu.iiitd.muc.sensoract.tasklet.TaskManager;
+import edu.iiitd.muc.sensoract.tasklet.TaskletProfile;
 
 /**
- * task/add API: Adds a task
+ * tasklet/add API: Adds a tasklet
  * 
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
-public class TaskAdd extends SensorActAPI {
+public class TaskletAdd extends SensorActAPI {
 	
 	/**
-	 * Validates the task add request format attributes. If validation fails,
+	 * Validates the tasklet add request format attributes. If validation fails,
 	 * sends corresponding failure message to the caller.
 	 * 
-	 * @param task
-	 *            Task add request format object
+	 * @param tasklet
+	 *            Tasklet add request format object
 	 */
-	private void validateRequest(final TaskAddFormat task) {
+	private void validateRequest(final TaskletAddFormat tasklet) {
 
-		validator.validateSecretKey(task.secretkey);
+		validator.validateSecretKey(tasklet.secretkey);
 		// TODO: add validation for other parameters
 
 		if (validator.hasErrors()) {
@@ -47,7 +47,7 @@ public class TaskAdd extends SensorActAPI {
 	}
 
 	/**
-	 * Services the task/add API.
+	 * Services the tasklet/add API.
 	 * 
 	 * @param taskAddJson
 	 *            Task add request attributes in Json string
@@ -56,20 +56,20 @@ public class TaskAdd extends SensorActAPI {
 
 		try {
 
-			TaskAddFormat task = convertToRequestFormat(taskAddJson,
-					TaskAddFormat.class);
-//			validateRequest(task);
+			TaskletAddFormat tasklet = convertToRequestFormat(taskAddJson,
+					TaskletAddFormat.class);
+//			validateRequest(tasklet);
 //
-//			if (!UserProfile.isRegisteredSecretkey(task.secretkey)) {
+//			if (!UserProfile.isRegisteredSecretkey(tasklet.secretkey)) {
 //				response.sendFailure(Const.API_TASK_ADD,
-//						ErrorType.UNREGISTERED_SECRETKEY, task.secretkey);
+//						ErrorType.UNREGISTERED_SECRETKEY, tasklet.secretkey);
 //			}
 //
-			TaskManager.removeTask("key1", "task1");
+			TaskletProfile.removeTasklet("key1", "task1");
 			
-			TaskManager.addTask(task);
+			TaskletProfile.addTasklet(tasklet);
 			
-			TaskModel tt = TaskManager.getTask("key1", "task1");
+			TaskletModel tt = TaskletProfile.getTasklet("key1", "task1");
 			
 //			TaskAdd mapJson = convertToRequestFormat(taskAddJson,
 //					TaskAdd.class);
@@ -79,10 +79,10 @@ public class TaskAdd extends SensorActAPI {
 //			mm.params.put("p1", "v1");
 //			mm.params.put("p2", "v2");
 			
-			//response.sendJSON(task);
+			//response.sendJSON(tasklet);
 			response.sendJSON(tt);
 			
-			// TODO: Add task
+			// TODO: Add tasklet
 			//response.SendSuccess(Const.API_TASK_ADD, Const.TODO);
 
 		} catch (InvalidJsonException e) {

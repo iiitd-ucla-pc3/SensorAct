@@ -1,5 +1,9 @@
-/**
- * 
+/*
+ * Name: SendEmailJob.java
+ * Project: SensorAct, MUC@IIIT-Delhi
+ * Version: 1.0
+ * Date: 2012-07-20
+ * Author: Pandarasamy Arjunan
  */
 package edu.iiitd.muc.sensoract.tasklet;
 
@@ -7,7 +11,6 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 
 import play.Play;
 import play.libs.Mail;
@@ -39,7 +42,7 @@ public class SendEmailJob implements Job {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
+
 	public static void sendMail(final String toEmail, final String subject,
 			final String message) {
 

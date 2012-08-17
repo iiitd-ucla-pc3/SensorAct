@@ -1,5 +1,9 @@
-/**
- * 
+/*
+ * Name: Email.java
+ * Project: SensorAct, MUC@IIIT-Delhi
+ * Version: 1.0
+ * Date: 2012-07-20
+ * Author: Pandarasamy Arjunan
  */
 package edu.iiitd.muc.sensoract.tasklet;
 
@@ -39,10 +43,10 @@ public class Email {
 		// straight forward way
 		// System.out.println("sending mail to " + toEmail);
 		SendEmailJob.sendMail(toEmail, subject, message);
-		//sendEmailViaJob(jobContext);
+		// sendEmailViaJob(jobContext);
 	}
-	
-	public void sendEmailViaJob (JobExecutionContext jobContext) {
+
+	public void sendEmailViaJob(JobExecutionContext jobContext) {
 		JobKey jobKey = jobContext.getJobDetail().getKey();
 		String jobName = jobKey.getName();
 		String groupName = CLASSNAME + "_" + jobKey.getGroup();
@@ -57,10 +61,10 @@ public class Email {
 				.startNow().build();
 
 		try {
-			TaskletManager.scheduler.getListenerManager().addJobListener(
-					TaskletManager.jobEventListener,
+			TaskletScheduler.scheduler.getListenerManager().addJobListener(
+					TaskletScheduler.jobEventListener,
 					keyEquals(jobKey(jobName, groupName)));
-			TaskletManager.scheduler.scheduleJob(emailJob, nowTrigger);
+			TaskletScheduler.scheduler.scheduleJob(emailJob, nowTrigger);
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}

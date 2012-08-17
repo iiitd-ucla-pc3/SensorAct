@@ -1,5 +1,5 @@
 /*
- * Name: TaskAddFormat.java
+ * Name: TaskletAddFormat.java
  * Project: SensorAct, MUC@IIIT-Delhi
  * Version: 1.0
  * Date: 2012-05-14
@@ -12,15 +12,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.iiitd.muc.sensoract.model.task.NotifyEmailModel;
+import edu.iiitd.muc.sensoract.model.tasklet.NotifyEmailModel;
 
 /**
- * Defines the request format for task/add API.
+ * Defines the request format for tasklet/add API.
  *
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
-public class TaskAddFormat {
+public class TaskletAddFormat {
 
 	public int taskcount = 0;
 

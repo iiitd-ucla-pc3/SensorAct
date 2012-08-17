@@ -69,11 +69,11 @@ public class SensorActAPI extends Application {
 	public static GuardRuleAssociationGet guardRuleAssociationGet = new GuardRuleAssociationGet();
 	public static GuardRuleAssociationList guardRuleAssociationList = new GuardRuleAssociationList();
 
-	public static TaskAdd taskAdd = new TaskAdd();
-	public static TaskDelete taskDelete = new TaskDelete();
-	public static TaskGet taskGet = new TaskGet();
-	public static TaskList taskList = new TaskList();
-	public static TaskExecute taskExecute = new TaskExecute();
+	public static TaskletAdd taskletAdd = new TaskletAdd();
+	public static TaskleteDelete taskleteDelete = new TaskleteDelete();
+	public static TaskletGet taskletGet = new TaskletGet();
+	public static TaskletList taskletList = new TaskletList();
+	public static TaskletExecute taskletExecute = new TaskletExecute();
 
 	public static DataUploadWaveSegment dataUploadWaveseg = new DataUploadWaveSegment();
 	public static DataQuery dataQuery = new DataQuery();

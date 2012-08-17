@@ -1,5 +1,5 @@
 /*
- * Name: TaskList.java
+ * Name: TaskletList.java
  * Project: SensorAct, MUC@IIIT-Delhi
  * Version: 1.0
  * Date: 2012-05-14
@@ -7,28 +7,28 @@
  */
 package edu.iiitd.muc.sensoract.api;
 
-import edu.iiitd.muc.sensoract.api.request.TaskListFormat;
+import edu.iiitd.muc.sensoract.api.request.TaskletListFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
 
 /**
- * task/list API: Lists task
+ * tasklet/list API: Lists tasklet
  * 
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
-public class TaskList extends SensorActAPI {
+public class TaskletList extends SensorActAPI {
 
 	/**
-	 * Validates the task list request format attributes. If validation fails,
+	 * Validates the tasklet list request format attributes. If validation fails,
 	 * sends corresponding failure message to the caller.
 	 * 
 	 * @param taskListRequest
 	 *            Task list request format object
 	 */
-	private void validateRequest(final TaskListFormat taskListRequest) {
+	private void validateRequest(final TaskletListFormat taskListRequest) {
 
 		validator.validateSecretKey(taskListRequest.secretkey);
 		// TODO: add validation for other parameters
@@ -40,7 +40,7 @@ public class TaskList extends SensorActAPI {
 	}
 
 	/**
-	 * Services the task/list API.
+	 * Services the tasklet/list API.
 	 * 
 	 * @param taskListJson
 	 *            Task list request attributes in Json string
@@ -49,8 +49,8 @@ public class TaskList extends SensorActAPI {
 
 		try {
 
-			TaskListFormat taskListRequest = convertToRequestFormat(
-					taskListJson, TaskListFormat.class);
+			TaskletListFormat taskListRequest = convertToRequestFormat(
+					taskListJson, TaskletListFormat.class);
 			validateRequest(taskListRequest);
 
 			if (!UserProfile.isRegisteredSecretkey(taskListRequest.secretkey)) {
@@ -59,7 +59,7 @@ public class TaskList extends SensorActAPI {
 						taskListRequest.secretkey);
 			}
 
-			// TODO: List a task
+			// TODO: List a tasklet
 			response.SendSuccess(Const.API_TASK_LIST, Const.TODO);
 
 		} catch (InvalidJsonException e) {

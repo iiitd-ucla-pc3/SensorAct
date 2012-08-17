@@ -1,11 +1,11 @@
 /*
- * Name: TaskModel.java
+ * Name: TaskletModel.java
  * Project: SensorAct, MUC@IIIT-Delhi
  * Version: 1.0
  * Date: 2012-07-20
  * Author: Pandarasamy Arjunan
  */
-package edu.iiitd.muc.sensoract.model.task;
+package edu.iiitd.muc.sensoract.model.tasklet;
 
 import java.util.List;
 import java.util.Map;
@@ -14,16 +14,16 @@ import play.modules.morphia.Model;
 
 import com.google.code.morphia.annotations.Entity;
 
-import edu.iiitd.muc.sensoract.api.request.TaskAddFormat;
+import edu.iiitd.muc.sensoract.api.request.TaskletAddFormat;
 
 /**
- * Model class for task script management.
+ * Model class for tasklet script management.
  * 
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
 @Entity(value = "Tasklet", noClassnameStored = true)
-public class TaskModel extends Model {
+public class TaskletModel extends Model {
 
 	public String secretkey = null;
 	public String taskname = null;
@@ -36,27 +36,25 @@ public class TaskModel extends Model {
 	public String when = null;
 	public String execute = null;
 
-	public List<TaskVariableModel> params = null;
+	public TaskletModel(final TaskletAddFormat tasklet) {
 
-	public TaskModel(final TaskAddFormat task) {
-
-		if (null == task) {
+		if (null == tasklet) {
 			return;
 		}
 
-		secretkey = task.secretkey;
-		taskname = task.taskname;
-		desc = task.desc;
+		secretkey = tasklet.secretkey;
+		taskname = tasklet.taskname;
+		desc = tasklet.desc;
 
-		param = task.param;
-		input = task.input;
-		email = task.email;
+		param = tasklet.param;
+		input = tasklet.input;
+		email = tasklet.email;
 
-		when = task.when;
-		execute = task.execute;
+		when = tasklet.when;
+		execute = tasklet.execute;
 
 	}
 
-	TaskModel() {
+	TaskletModel() {
 	}
 }

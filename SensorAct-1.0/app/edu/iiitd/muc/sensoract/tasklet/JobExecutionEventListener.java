@@ -1,3 +1,10 @@
+/*
+ * Name: JobExecutionEventListener.java
+ * Project: SensorAct, MUC@IIIT-Delhi
+ * Version: 1.0
+ * Date: 2012-07-20
+ * Author: Pandarasamy Arjunan
+ */
 package edu.iiitd.muc.sensoract.tasklet;
 
 import org.quartz.JobExecutionContext;
@@ -25,15 +32,19 @@ public class JobExecutionEventListener implements JobListener {
 				+ jobKey.getName() + "] is about to be executed");
 
 		try {
-			_log.info(CLASSNAME + ": Job [" + jobKey.getGroup() + "_"
-					+ jobKey.getName() + "], getCurrentlyExecutingJobs : " + 
-					TaskletManager.scheduler.getCurrentlyExecutingJobs().size());
+			_log.info(CLASSNAME
+					+ ": Job ["
+					+ jobKey.getGroup()
+					+ "_"
+					+ jobKey.getName()
+					+ "], getCurrentlyExecutingJobs : "
+					+ TaskletScheduler.scheduler.getCurrentlyExecutingJobs()
+							.size());
 		} catch (SchedulerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
 	}
 
 	public void jobExecutionVetoed(JobExecutionContext inContext) {
@@ -49,11 +60,16 @@ public class JobExecutionEventListener implements JobListener {
 				+ jobKey.getName() + "] is completed");
 		// _log.info("Job1Listener says: "
 		// + inContext.getJobDetail().getJobDataMap().get("val"));
-		
+
 		try {
-			_log.info(CLASSNAME + ": Job [" + jobKey.getGroup() + "_"
-					+ jobKey.getName() + "], getCurrentlyExecutingJobs : " + 
-					TaskletManager.scheduler.getCurrentlyExecutingJobs().size());
+			_log.info(CLASSNAME
+					+ ": Job ["
+					+ jobKey.getGroup()
+					+ "_"
+					+ jobKey.getName()
+					+ "], getCurrentlyExecutingJobs : "
+					+ TaskletScheduler.scheduler.getCurrentlyExecutingJobs()
+							.size());
 		} catch (SchedulerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

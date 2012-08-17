@@ -1,5 +1,5 @@
 /*
- * Name: TaskGet.java
+ * Name: TaskletGet.java
  * Project: SensorAct, MUC@IIIT-Delhi
  * Version: 1.0
  * Date: 2012-05-14
@@ -14,15 +14,15 @@ import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
 
 /**
- * task/get API: Gets a task
+ * tasklet/get API: Gets a tasklet
  * 
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
-public class TaskGet extends SensorActAPI {
+public class TaskletGet extends SensorActAPI {
 
 	/**
-	 * Validates the task get request format attributes. If validation fails,
+	 * Validates the tasklet get request format attributes. If validation fails,
 	 * sends corresponding failure message to the caller.
 	 * 
 	 * @param taskGetRequest
@@ -40,7 +40,7 @@ public class TaskGet extends SensorActAPI {
 	}
 
 	/**
-	 * Services the task/get API.
+	 * Services the tasklet/get API.
 	 * 
 	 * @param taskGetJson
 	 *            Task get request attributes in Json string
@@ -59,7 +59,7 @@ public class TaskGet extends SensorActAPI {
 						taskGetRequest.secretkey);
 			}
 
-			// TODO: Get a task
+			// TODO: Get a tasklet
 			response.SendSuccess(Const.API_TASK_GET, Const.TODO);
 
 		} catch (InvalidJsonException e) {
