@@ -16,6 +16,6 @@ package edu.iiitd.muc.sensoract.api.request;
 public class TaskExecuteFormat {
 
 	public String secretkey = null;
-	public String taskname = null;
+	public String taskletname = null;
 	
 }

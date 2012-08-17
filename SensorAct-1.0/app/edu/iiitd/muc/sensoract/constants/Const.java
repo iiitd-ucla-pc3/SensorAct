@@ -247,6 +247,9 @@ public class Const {
 	public static final String GUARDRULE_NOTFOUND = "No guard rule found";
 	public static final String GUARDRULE_ASSOCIATION_NOTFOUND = "No guard rule association found";
 	
+	public static final String TASKLET_NOTFOUND = "Tasklet not found";
+	public static final String TASKLET_SCHEDULED = "Tasklet scheduled";
+	
 	private Const() {
 	}
 }

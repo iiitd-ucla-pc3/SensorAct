@@ -7,14 +7,17 @@
  */
 package edu.iiitd.muc.sensoract.api;
 
+import edu.iiitd.muc.sensoract.api.request.TaskExecuteFormat;
 import edu.iiitd.muc.sensoract.api.request.TaskletAddFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
 import edu.iiitd.muc.sensoract.model.tasklet.TaskletModel;
+import edu.iiitd.muc.sensoract.profile.DeviceProfile;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
 import edu.iiitd.muc.sensoract.tasklet.TaskletProfile;
 import edu.iiitd.muc.sensoract.tasklet.TaskletScheduler;
+import edu.iiitd.muc.sensoract.util.TaskletParamValidator;
 
 /**
  * tasklet/execute API: Executes a tasklet
@@ -24,6 +27,8 @@ import edu.iiitd.muc.sensoract.tasklet.TaskletScheduler;
  */
 public class TaskletExecute extends SensorActAPI {
 
+	TaskletParamValidator taskletvalidator = new TaskletParamValidator();
+
 	/**
 	 * Validates the tasklet add request format attributes. If validation fails,
 	 * sends corresponding failure message to the caller.
@@ -31,10 +36,10 @@ public class TaskletExecute extends SensorActAPI {
 	 * @param tasklet
 	 *            Task add request format object
 	 */
-	private void validateRequest(final TaskletAddFormat tasklet) {
+	private void validateRequest(final TaskExecuteFormat tasklet) {
 
 		validator.validateSecretKey(tasklet.secretkey);
-		// TODO: add validation for other parameters
+		taskletvalidator.validateTaskletName(tasklet.taskletname);
 
 		if (validator.hasErrors()) {
 			response.sendFailure(Const.API_TASKLET_EXECUTE,
@@ -51,24 +56,40 @@ public class TaskletExecute extends SensorActAPI {
 	public void doProcess(final String taskletAddJson) {
 
 		try {
-			TaskletAddFormat taskletformat = convertToRequestFormat(taskletAddJson,
-					TaskletAddFormat.class);
-			validateRequest(taskletformat);
+			// TaskletAddFormat taskletformat =
+			// convertToRequestFormat(taskletAddJson,
+			// TaskletAddFormat.class);
+			// validateRequest(taskletformat);
+			//
+			// TaskletProfile.removeTasklet(taskletformat.secretkey,
+			// taskletformat.taskletname);
+			// TaskletProfile.addTasklet(taskletformat);
+			// TaskletModel tasklet =
+			// TaskletProfile.getTasklet(taskletformat.secretkey,
+			// taskletformat.taskletname);
+			//
+			// if( taskletformat.taskcount == 0 )
+			// taskletformat.taskcount = 1;
+			//
+			// TaskletScheduler.executeTask(tasklet, taskletformat.taskcount);
 
-			TaskletProfile.removeTasklet(taskletformat.secretkey, taskletformat.taskletname);
-			TaskletProfile.addTasklet(taskletformat);
-			TaskletModel tasklet = TaskletProfile.getTasklet(taskletformat.secretkey,
-					taskletformat.taskletname);
+			TaskExecuteFormat taskletExecute = convertToRequestFormat(
+					taskletAddJson, TaskExecuteFormat.class);
+			validateRequest(taskletExecute);
 
-			if( taskletformat.taskcount == 0 )
-				taskletformat.taskcount = 1;
-						
-			TaskletScheduler.executeTask(tasklet, taskletformat.taskcount);
+			TaskletModel tasklet = TaskletProfile.getTasklet(
+					taskletExecute.secretkey, taskletExecute.taskletname);
 
-			//response.sendJSON(tasklet);
+			if (null == tasklet) {
+				response.sendFailure(Const.API_TASKLET_EXECUTE,
+						ErrorType.TASKLET_NOTFOUND, taskletExecute.taskletname);
+			}
 
-			// TODO: Add tasklet
-			response.SendSuccess(Const.API_TASKLET_EXECUTE, taskletformat.taskcount + " Jobs to be executed..");
+			String taskletId = TaskletScheduler.scheduleOnShotTasklet(tasklet);
+
+			response.SendSuccess(Const.API_TASKLET_EXECUTE,
+					Const.TASKLET_SCHEDULED, tasklet.taskletname + "  "
+							+ taskletId);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_TASKLET_EXECUTE,

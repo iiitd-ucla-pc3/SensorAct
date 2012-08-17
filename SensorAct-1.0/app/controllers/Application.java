@@ -144,23 +144,23 @@ public class Application extends Controller {
 	}
 
 	// Task management
-	public static void taskAdd() {
+	public static void taskletAdd() {
 		SensorActAPI.taskletAdd.doProcess(request.params.get("body"));
 	}
 
-	public static void taskDelete() {
+	public static void taskletDelete() {
 		SensorActAPI.taskleteDelete.doProcess(request.params.get("body"));		
 	}
 
-	public static void taskGet() {
+	public static void taskletGet() {
 		SensorActAPI.taskletGet.doProcess(request.params.get("body"));
 	}
 
-	public static void taskList() {
+	public static void taskletList() {
 		SensorActAPI.taskletList.doProcess(request.params.get("body"));
 	}
 
-	public static void taskExecute() {
+	public static void taskletExecute() {
 		SensorActAPI.taskletExecute.doProcess(request.params.get("body"));
 	}
 

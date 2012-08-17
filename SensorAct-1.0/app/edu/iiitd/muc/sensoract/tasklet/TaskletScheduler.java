@@ -13,6 +13,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 import java.io.File;
 import java.io.FileReader;
+import java.util.Date;
 import java.util.Map;
 
 import org.quartz.JobDataMap;
@@ -163,6 +164,30 @@ public class TaskletScheduler {
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}
+	}
+
+	
+	public static String scheduleOnShotTasklet(final TaskletModel tasklet) {
+
+		JobDetail luaJob = newJob(LuaScriptTasklet.class)
+				.withIdentity(tasklet.taskletname, tasklet.secretkey)
+				.usingJobData(LuaScriptTasklet.LUASCRIPT, tasklet.execute).build();
+
+		JobDataMap luaJobDataMap = luaJob.getJobDataMap();
+		luaJobDataMap.putAll(tasklet.param);
+		
+		Trigger luaTrigger = newTrigger()
+				.withIdentity(tasklet.taskletname, tasklet.secretkey).startNow()
+				.build();
+
+		try {
+			Date d = scheduler.scheduleJob(luaJob, luaTrigger);
+			return ""+d.getTime();
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+		}
+		
+		return null;			
 	}
 
 }

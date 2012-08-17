@@ -45,7 +45,11 @@ public enum ErrorType {
 	// Guard rule management
 	GUARDRULE_NOTFOUND			        (40, Const.GUARDRULE_NOTFOUND),
 	GUARDRULE_ASSOCIATION_NOTFOUND      (41, Const.GUARDRULE_ASSOCIATION_NOTFOUND),
-	
+
+	// Tasklet rule management
+	TASKLET_NOTFOUND			        (50, Const.TASKLET_NOTFOUND),
+
+
 	END                         (100, null);
 
 
