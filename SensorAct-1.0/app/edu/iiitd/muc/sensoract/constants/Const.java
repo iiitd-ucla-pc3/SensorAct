@@ -81,6 +81,8 @@ public class Const {
 	public static final String API_TASKLET_LIST = "tasklet/list";
 	
 	public static final String API_TASKLET_EXECUTE = "tasklet/execute";
+	public static final String API_TASKLET_STATUS = "tasklet/status";
+	public static final String API_TASKLET_CANCEL = "tasklet/cancel";
 	
 	public static final String API_DATA_UPLOAD_WAVESEGMENT = "data/upload/wavesegment";
 	public static final String API_DATA_QUERY = "data/query";
@@ -117,6 +119,7 @@ public class Const {
 	public static final String PARAM_TEMPLATENAME = "templatename";
 	
 	public static final String PARAM_TASKLETNAME = "taskletname";
+	public static final String PARAM_TASKLETID = "taskletid";
 	public static final String PARAM_DESC = "desc";
 
 	public static final String PARAM_WHEN = "when";
@@ -181,6 +184,9 @@ public class Const {
 
 	public static final int TASKLETNAME_MIN_LENGTH = 2;
 	public static final int TASKLETNAME_MAX_LENGTH = 20;
+
+	public static final int TASKLETID_MIN_LENGTH = 2;
+	public static final int TASKLETID_MAX_LENGTH = 40;
 
 	public static final int TASKLET_DESC_MIN_LENGTH = 2;
 	public static final int TASKLET_DESC_MAX_LENGTH = 20;
@@ -249,6 +255,11 @@ public class Const {
 	
 	public static final String TASKLET_NOTFOUND = "Tasklet not found";
 	public static final String TASKLET_SCHEDULED = "Tasklet scheduled";
+	public static final String TASKLET_NOTSCHEDULED = "Tasklet not scheduled";
+	
+	public static final String TASKLET_CANCELED = "Tasklet cancelled";
+	public static final String TASKLET_ALREADY_SCHEDULED = "Tasklet already scheduled";
+	public static final String TASKLET_FAILED_TO_SCHEDULE = "Tasklet failed to schedule";
 	
 	private Const() {
 	}

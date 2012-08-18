@@ -15,6 +15,7 @@ import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
 import edu.iiitd.muc.sensoract.model.tasklet.NotifyEmailModel;
 import edu.iiitd.muc.sensoract.model.tasklet.TaskletModel;
+import edu.iiitd.muc.sensoract.model.tasklet.TaskletModel.TaskletType;
 import edu.iiitd.muc.sensoract.tasklet.TaskletProfile;
 import edu.iiitd.muc.sensoract.util.TaskletParamValidator;
 
@@ -54,6 +55,10 @@ public class TaskletAdd extends SensorActAPI {
 		}
 	}
 
+	private void preProcessTaskelt(final TaskletAddFormat tasklet) {		
+		tasklet.tasklet_type = TaskletType.PERIODIC;	
+	}
+	
 	/**
 	 * Services the tasklet/add API.
 	 * 
@@ -67,6 +72,8 @@ public class TaskletAdd extends SensorActAPI {
 			TaskletAddFormat tasklet = convertToRequestFormat(taskAddJson,
 					TaskletAddFormat.class);
 			validateRequest(tasklet);
+			preProcessTaskelt(tasklet);
+			
 			//
 			// if (!UserProfile.isRegisteredSecretkey(tasklet.secretkey)) {
 			// response.sendFailure(Const.API_TASK_ADD,
@@ -79,16 +86,7 @@ public class TaskletAdd extends SensorActAPI {
 
 			TaskletModel tt = TaskletProfile.getTasklet(tasklet.secretkey, tasklet.taskletname);
 
-			// TaskAdd mapJson = convertToRequestFormat(taskAddJson,
-			// TaskAdd.class);
-			//
-			// TaskAdd mm = new TaskAdd();
-			//
-			// mm.params.put("p1", "v1");
-			// mm.params.put("p2", "v2");
-
-			// response.sendJSON(tasklet);
-			response.sendJSON(tasklet);
+			response.sendJSON(tt);
 
 			// TODO: Add tasklet
 			// response.SendSuccess(Const.API_TASK_ADD, Const.TODO);

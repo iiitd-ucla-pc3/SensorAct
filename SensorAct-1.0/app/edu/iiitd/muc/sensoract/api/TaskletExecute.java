@@ -7,7 +7,7 @@
  */
 package edu.iiitd.muc.sensoract.api;
 
-import edu.iiitd.muc.sensoract.api.request.TaskExecuteFormat;
+import edu.iiitd.muc.sensoract.api.request.TaskletExecuteFormat;
 import edu.iiitd.muc.sensoract.api.request.TaskletAddFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
@@ -36,7 +36,7 @@ public class TaskletExecute extends SensorActAPI {
 	 * @param tasklet
 	 *            Task add request format object
 	 */
-	private void validateRequest(final TaskExecuteFormat tasklet) {
+	private void validateRequest(final TaskletExecuteFormat tasklet) {
 
 		validator.validateSecretKey(tasklet.secretkey);
 		taskletvalidator.validateTaskletName(tasklet.taskletname);
@@ -56,25 +56,8 @@ public class TaskletExecute extends SensorActAPI {
 	public void doProcess(final String taskletAddJson) {
 
 		try {
-			// TaskletAddFormat taskletformat =
-			// convertToRequestFormat(taskletAddJson,
-			// TaskletAddFormat.class);
-			// validateRequest(taskletformat);
-			//
-			// TaskletProfile.removeTasklet(taskletformat.secretkey,
-			// taskletformat.taskletname);
-			// TaskletProfile.addTasklet(taskletformat);
-			// TaskletModel tasklet =
-			// TaskletProfile.getTasklet(taskletformat.secretkey,
-			// taskletformat.taskletname);
-			//
-			// if( taskletformat.taskcount == 0 )
-			// taskletformat.taskcount = 1;
-			//
-			// TaskletScheduler.executeTask(tasklet, taskletformat.taskcount);
-
-			TaskExecuteFormat taskletExecute = convertToRequestFormat(
-					taskletAddJson, TaskExecuteFormat.class);
+			TaskletExecuteFormat taskletExecute = convertToRequestFormat(
+					taskletAddJson, TaskletExecuteFormat.class);
 			validateRequest(taskletExecute);
 
 			TaskletModel tasklet = TaskletProfile.getTasklet(
@@ -85,11 +68,24 @@ public class TaskletExecute extends SensorActAPI {
 						ErrorType.TASKLET_NOTFOUND, taskletExecute.taskletname);
 			}
 
-			String taskletId = TaskletScheduler.scheduleOnShotTasklet(tasklet);
+			String username = UserProfile
+					.getUserProfile(taskletExecute.secretkey).username;
 
-			response.SendSuccess(Const.API_TASKLET_EXECUTE,
-					Const.TASKLET_SCHEDULED, tasklet.taskletname + "  "
-							+ taskletId);
+			String taskletId = TaskletScheduler.scheduleTasklet(username,
+					tasklet);
+
+			if (null == taskletId) {
+				response.sendFailure(Const.API_TASKLET_EXECUTE,
+						ErrorType.TASKLET_FAILED_TO_SCHEDULE,
+						taskletExecute.taskletname);
+			} else if (taskletId.equals(Const.TASKLET_ALREADY_SCHEDULED)) {
+				response.sendFailure(Const.API_TASKLET_EXECUTE,
+						ErrorType.TASKLET_ALREADY_SCHEDULED,
+						taskletExecute.taskletname);
+			} else {
+				response.SendSuccess(Const.API_TASKLET_EXECUTE,
+						Const.TASKLET_SCHEDULED, taskletId);
+			}
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_TASKLET_EXECUTE,

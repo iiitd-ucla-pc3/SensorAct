@@ -15,6 +15,7 @@ import play.modules.morphia.Model;
 import com.google.code.morphia.annotations.Entity;
 
 import edu.iiitd.muc.sensoract.api.request.TaskletAddFormat;
+import edu.iiitd.muc.sensoract.model.tasklet.TaskletModel.TaskletType;
 
 /**
  * Model class for tasklet script management.
@@ -25,6 +26,8 @@ import edu.iiitd.muc.sensoract.api.request.TaskletAddFormat;
 @Entity(value = "Tasklet", noClassnameStored = true)
 public class TaskletModel extends Model {
 
+	public enum TaskletType {ONESHOT, PERIODIC, EVENT, PERIODIC_AND_EVENT}
+	
 	public String secretkey = null;
 	public String taskletname = null;
 	public String desc = null;
@@ -36,8 +39,11 @@ public class TaskletModel extends Model {
 	public String when = null;
 	public String execute = null;
 
+	// Internal use
+	public TaskletType tasklet_type;
+	
 	public TaskletModel(final TaskletAddFormat tasklet) {
-
+		
 		if (null == tasklet) {
 			return;
 		}
@@ -52,7 +58,8 @@ public class TaskletModel extends Model {
 
 		when = tasklet.when;
 		execute = tasklet.execute;
-
+		
+		tasklet_type = tasklet.tasklet_type;
 	}
 
 	TaskletModel() {

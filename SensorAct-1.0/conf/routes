@@ -47,6 +47,8 @@ POST    /tasklet/delete                         Application.taskletDelete
 POST    /tasklet/get                            Application.taskletGet
 POST    /tasklet/list                           Application.taskletList
 POST    /tasklet/execute                        Application.taskletExecute
+POST    /tasklet/status                         Application.taskletStatus
+POST    /tasklet/cancel                         Application.taskletCancel
         
 POST    /data/query                             Application.dataQuery
 POST    /upload/wavesegment                     Application.dataUploadWaveSegment

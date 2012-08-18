@@ -164,6 +164,14 @@ public class Application extends Controller {
 		SensorActAPI.taskletExecute.doProcess(request.params.get("body"));
 	}
 
+	public static void taskletStatus() {
+		SensorActAPI.taskletStatus.doProcess(request.params.get("body"));
+	}
+
+	public static void taskletCancel() {
+		SensorActAPI.taskletCancel.doProcess(request.params.get("body"));
+	}
+
 	// Data management
 	public static void dataQuery() {
 		SensorActAPI.dataQuery.doProcess(request.params.get("body"));

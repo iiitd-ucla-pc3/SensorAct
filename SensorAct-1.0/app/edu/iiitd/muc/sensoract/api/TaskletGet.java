@@ -7,7 +7,7 @@
  */
 package edu.iiitd.muc.sensoract.api;
 
-import edu.iiitd.muc.sensoract.api.request.TaskGetFormat;
+import edu.iiitd.muc.sensoract.api.request.TaskletGetFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
@@ -28,7 +28,7 @@ public class TaskletGet extends SensorActAPI {
 	 * @param taskGetRequest
 	 *            Task get request format object
 	 */
-	private void validateRequest(final TaskGetFormat taskGetRequest) {
+	private void validateRequest(final TaskletGetFormat taskGetRequest) {
 
 		validator.validateSecretKey(taskGetRequest.secretkey);
 		// TODO: add validation for other parameters
@@ -49,8 +49,8 @@ public class TaskletGet extends SensorActAPI {
 
 		try {
 
-			TaskGetFormat taskGetRequest = convertToRequestFormat(taskGetJson,
-					TaskGetFormat.class);
+			TaskletGetFormat taskGetRequest = convertToRequestFormat(taskGetJson,
+					TaskletGetFormat.class);
 			validateRequest(taskGetRequest);
 
 			if (!UserProfile.isRegisteredSecretkey(taskGetRequest.secretkey)) {

@@ -7,7 +7,7 @@
  */
 package edu.iiitd.muc.sensoract.api;
 
-import edu.iiitd.muc.sensoract.api.request.TaskDeleteFormat;
+import edu.iiitd.muc.sensoract.api.request.TaskletDeleteFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
@@ -28,7 +28,7 @@ public class TaskleteDelete extends SensorActAPI {
 	 * @param taskDeleteRequest
 	 *            Task delete request format object
 	 */
-	private void validateRequest(final TaskDeleteFormat taskDeleteRequest) {
+	private void validateRequest(final TaskletDeleteFormat taskDeleteRequest) {
 
 		validator.validateSecretKey(taskDeleteRequest.secretkey);
 		// TODO: add validation for other parameters
@@ -49,8 +49,8 @@ public class TaskleteDelete extends SensorActAPI {
 
 		try {
 
-			TaskDeleteFormat taskDeleteRequest = convertToRequestFormat(
-					taskletDeleteJson, TaskDeleteFormat.class);
+			TaskletDeleteFormat taskDeleteRequest = convertToRequestFormat(
+					taskletDeleteJson, TaskletDeleteFormat.class);
 			validateRequest(taskDeleteRequest);
 
 			if (!UserProfile.isRegisteredSecretkey(taskDeleteRequest.secretkey)) {

@@ -8,6 +8,7 @@
 
 package edu.iiitd.muc.sensoract.tasklet;
 
+import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.TriggerBuilder.newTrigger;
 
@@ -15,23 +16,27 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.Date;
 import java.util.Map;
+import java.util.StringTokenizer;
 
+import org.quartz.CronTrigger;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
+import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
 import org.quartz.Trigger;
+import org.quartz.TriggerKey;
 import org.quartz.impl.StdSchedulerFactory;
 
+import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.model.tasklet.TaskletModel;
+import edu.iiitd.muc.sensoract.model.tasklet.TaskletModel.TaskletType;
 
 public class TaskletScheduler {
 
 	public static Scheduler scheduler = null;
 	public static JobExecutionEventListener jobEventListener = null;
-	private static Email email = new Email("muc.iiitd@gmail.com", "subject",
-			"message ");
 
 	public static int id = 100;
 
@@ -130,8 +135,8 @@ public class TaskletScheduler {
 		if (null != param) {
 			for (String key : param.keySet()) {
 				luaJobDataMap.put(key, param.get(key));
-			}			
-			//luaJobDataMap.putAll(param);
+			}
+			// luaJobDataMap.putAll(param);
 		}
 
 		Trigger luaTrigger = newTrigger()
@@ -159,35 +164,148 @@ public class TaskletScheduler {
 			// keyEquals(jobKey("LuaScript"+id, "group1")));
 
 			scheduler.scheduleJob(luaJob, luaTrigger);
-			
 
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}
 	}
 
-	
-	public static String scheduleOnShotTasklet(final TaskletModel tasklet) {
+	private static JobKey toJobKey(final String taskletid) {
 
-		JobDetail luaJob = newJob(LuaScriptTasklet.class)
-				.withIdentity(tasklet.taskletname, tasklet.secretkey)
-				.usingJobData(LuaScriptTasklet.LUASCRIPT, tasklet.execute).build();
+		StringTokenizer stk = new StringTokenizer(taskletid, ".");
+		String group = stk.nextToken();
+		String name = stk.nextToken();
+		JobKey jobKey = new JobKey(name, group);
+		return jobKey;
+	}
 
-		JobDataMap luaJobDataMap = luaJob.getJobDataMap();
-		luaJobDataMap.putAll(tasklet.param);
-		
-		Trigger luaTrigger = newTrigger()
-				.withIdentity(tasklet.taskletname, tasklet.secretkey).startNow()
-				.build();
-
+	private static boolean checkTaskletExists(final JobKey jobKey) {
 		try {
-			Date d = scheduler.scheduleJob(luaJob, luaTrigger);
-			return ""+d.getTime();
+			return scheduler.checkExists(jobKey);
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public static boolean checkTaskletExists(final String taskletid) {
+		JobKey jobKey = toJobKey(taskletid);
+		return checkTaskletExists(jobKey);
+	}
+
+	public static boolean cancelTasklet(final String taskletid) {
+		JobKey jobKey = toJobKey(taskletid);
+		try {
+			return scheduler.deleteJob(jobKey);
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	private static boolean scheduleTasklet(final JobDetail job,
+			final Trigger trigger) {
+		try {
+			return scheduler.scheduleJob(job, trigger) != null;
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}
-		
-		return null;			
+		return false;
+	}
+
+	public static String scheduleTasklet(final String group,
+			final TaskletModel tasklet) {
+
+		JobKey jobKey = new JobKey(tasklet.taskletname, group);
+		TriggerKey triggerKey = new TriggerKey(tasklet.taskletname, group);
+
+		if (checkTaskletExists(jobKey)) {
+			return Const.TASKLET_ALREADY_SCHEDULED;
+		}
+
+		JobDataMap jobDataMap = new JobDataMap();
+		jobDataMap.putAll(tasklet.param);
+
+		JobDetail jobDetail = newJob(LuaScriptTasklet.class)
+				.withIdentity(jobKey)
+				.usingJobData(LuaScriptTasklet.LUASCRIPT, tasklet.execute)
+				.usingJobData(jobDataMap).build();
+
+		Trigger trigger = null;
+
+		switch (tasklet.tasklet_type) {
+		case ONESHOT:
+			trigger = newTrigger().withIdentity(triggerKey).startNow().build();
+			break;
+
+		case PERIODIC:
+			trigger = newTrigger().withIdentity(triggerKey)
+					.withSchedule(cronSchedule("0/5 * * * * ?")).build();
+			break;
+
+		case EVENT:
+			trigger = newTrigger().withIdentity(triggerKey).startNow().build();
+			break;
+
+		case PERIODIC_AND_EVENT:
+			trigger = newTrigger().withIdentity(triggerKey).startNow().build();
+			break;
+		}
+
+		return scheduleTasklet(jobDetail, trigger) ? jobKey.toString() : null;
+	}
+
+
+	private static String scheduleOnShotTasklet(final String group,
+			final TaskletModel tasklet) {
+
+		JobKey jobKey = new JobKey(tasklet.taskletname, group);
+		TriggerKey triggerKey = new TriggerKey(tasklet.taskletname, group);
+
+		JobDetail luaJob = newJob(LuaScriptTasklet.class).withIdentity(jobKey)
+				.usingJobData(LuaScriptTasklet.LUASCRIPT, tasklet.execute)
+				.build();
+
+		JobDataMap luaJobDataMap = luaJob.getJobDataMap();
+		luaJobDataMap.putAll(tasklet.param);
+
+		Trigger luaTrigger = newTrigger().withIdentity(triggerKey).startNow()
+				.build();
+
+		try {
+			scheduler.scheduleJob(luaJob, luaTrigger);
+			return jobKey.toString();
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	private static String schedulePeriodicTasklet(final String group,
+			final TaskletModel tasklet) {
+
+		JobKey jobKey = new JobKey(tasklet.taskletname, group);
+		TriggerKey triggerKey = new TriggerKey(tasklet.taskletname, group);
+
+		JobDetail luaJob = newJob(LuaScriptTasklet.class).withIdentity(jobKey)
+				.usingJobData(LuaScriptTasklet.LUASCRIPT, tasklet.execute)
+				.build();
+
+		JobDataMap luaJobDataMap = luaJob.getJobDataMap();
+		luaJobDataMap.putAll(tasklet.param);
+
+		CronTrigger cronTrigger = newTrigger().withIdentity(triggerKey)
+				.startNow().withSchedule(cronSchedule("0/5 * * * * ?")).build();
+
+		try {
+			scheduler.scheduleJob(luaJob, cronTrigger);
+			return jobKey.toString();
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 }
