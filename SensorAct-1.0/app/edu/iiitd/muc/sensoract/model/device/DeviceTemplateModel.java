@@ -9,7 +9,7 @@ package edu.iiitd.muc.sensoract.model.device;
 
 import com.google.code.morphia.annotations.Entity;
 
-import edu.iiitd.muc.sensoract.api.request.DeviceAddFormat;
+import edu.iiitd.muc.sensoract.api.device.request.DeviceAddFormat;
 
 /**
  * Model class for device template management.

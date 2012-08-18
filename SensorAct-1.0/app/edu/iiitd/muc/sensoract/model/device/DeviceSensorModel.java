@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import play.modules.morphia.Model;
-import edu.iiitd.muc.sensoract.api.request.DeviceAddFormat;
+import edu.iiitd.muc.sensoract.api.device.request.DeviceAddFormat;
 
 /**
  * Model class for device profile (Sensor) management

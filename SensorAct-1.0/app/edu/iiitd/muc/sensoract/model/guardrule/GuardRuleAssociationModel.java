@@ -12,7 +12,7 @@ import play.modules.morphia.Model;
 
 import com.google.code.morphia.annotations.Entity;
 
-import edu.iiitd.muc.sensoract.api.request.GuardRuleAssociationAddFormat;
+import edu.iiitd.muc.sensoract.api.guardrule.request.GuardRuleAssociationAddFormat;
 
 /**
  * Model class for guard rule association management.

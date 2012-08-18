@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import play.modules.morphia.Model;
-import edu.iiitd.muc.sensoract.api.request.WaveSegmentFormat;
+import edu.iiitd.muc.sensoract.api.data.request.WaveSegmentFormat;
 
 /**
  * Model class for wavesegment (data)

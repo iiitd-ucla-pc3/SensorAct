@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import play.modules.morphia.Model.MorphiaQuery;
-import edu.iiitd.muc.sensoract.api.request.DeviceAddFormat;
+import edu.iiitd.muc.sensoract.api.device.request.DeviceAddFormat;
 import edu.iiitd.muc.sensoract.api.response.DeviceListResponseFormat;
 import edu.iiitd.muc.sensoract.model.device.DeviceModel;
 import edu.iiitd.muc.sensoract.model.device.DeviceProfileModel;

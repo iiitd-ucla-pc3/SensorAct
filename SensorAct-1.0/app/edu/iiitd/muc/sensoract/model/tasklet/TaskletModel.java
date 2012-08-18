@@ -14,7 +14,7 @@ import play.modules.morphia.Model;
 
 import com.google.code.morphia.annotations.Entity;
 
-import edu.iiitd.muc.sensoract.api.request.TaskletAddFormat;
+import edu.iiitd.muc.sensoract.api.tasklet.request.TaskletAddFormat;
 import edu.iiitd.muc.sensoract.model.tasklet.TaskletModel.TaskletType;
 
 /**

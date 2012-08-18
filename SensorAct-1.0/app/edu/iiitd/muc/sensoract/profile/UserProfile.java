@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-import edu.iiitd.muc.sensoract.api.request.UserRegisterFormat;
+import edu.iiitd.muc.sensoract.api.user.request.UserRegisterFormat;
 import edu.iiitd.muc.sensoract.model.user.UserKeyModel;
 import edu.iiitd.muc.sensoract.model.user.UserProfileModel;
 

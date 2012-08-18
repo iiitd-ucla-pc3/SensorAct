@@ -10,7 +10,7 @@ package edu.iiitd.muc.sensoract.tasklet;
 import java.util.List;
 
 import play.modules.morphia.Model.MorphiaQuery;
-import edu.iiitd.muc.sensoract.api.request.TaskletAddFormat;
+import edu.iiitd.muc.sensoract.api.tasklet.request.TaskletAddFormat;
 import edu.iiitd.muc.sensoract.model.tasklet.TaskletModel;
 
 /**

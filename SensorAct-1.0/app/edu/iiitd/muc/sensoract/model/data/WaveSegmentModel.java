@@ -10,7 +10,7 @@ package edu.iiitd.muc.sensoract.model.data;
 import play.modules.morphia.Model;
 import com.google.code.morphia.annotations.Entity;
 
-import edu.iiitd.muc.sensoract.api.request.WaveSegmentFormat;
+import edu.iiitd.muc.sensoract.api.data.request.WaveSegmentFormat;
 
 /**
  * Model class for wavesegment

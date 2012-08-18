@@ -10,7 +10,7 @@ package edu.iiitd.muc.sensoract.model.data;
 import java.util.ArrayList;
 
 import play.modules.morphia.Model;
-import edu.iiitd.muc.sensoract.api.request.WaveSegmentFormat;
+import edu.iiitd.muc.sensoract.api.data.request.WaveSegmentFormat;
 
 /**
  * Model class for wavesegment (channel)
