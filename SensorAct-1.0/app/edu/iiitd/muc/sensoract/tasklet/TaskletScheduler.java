@@ -29,6 +29,7 @@ import org.quartz.Trigger;
 import org.quartz.TriggerKey;
 import org.quartz.impl.StdSchedulerFactory;
 
+import edu.iiitd.muc.sensoract.api.SensorActAPI;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.model.tasklet.TaskletModel;
 import edu.iiitd.muc.sensoract.model.tasklet.TaskletModel.TaskletType;
@@ -196,11 +197,34 @@ public class TaskletScheduler {
 	public static boolean cancelTasklet(final String taskletid) {
 		JobKey jobKey = toJobKey(taskletid);
 		try {
+			scheduler.interrupt(jobKey);
 			return scheduler.deleteJob(jobKey);
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	public static boolean addTasklet(final JobDetail job) {
+
+		try {
+			scheduler.addJob(job, true);
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	public static boolean triggerTasklet(final JobDetail job) {
+
+		try {
+			scheduler.triggerJob(job.getKey());
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	private static boolean scheduleTasklet(final JobDetail job,
@@ -233,6 +257,10 @@ public class TaskletScheduler {
 
 		Trigger trigger = null;
 
+		// CronTrigger Ctrigger = newTrigger().withIdentity("trigger1",
+		// "group1")
+		// .withSchedule(cronSchedule("0/20 * * * * ?")).build();
+
 		switch (tasklet.tasklet_type) {
 		case ONESHOT:
 			trigger = newTrigger().withIdentity(triggerKey).startNow().build();
@@ -240,21 +268,29 @@ public class TaskletScheduler {
 
 		case PERIODIC:
 			trigger = newTrigger().withIdentity(triggerKey)
-					.withSchedule(cronSchedule("0/5 * * * * ?")).build();
+					.withSchedule(cronSchedule("0/15 * * * * ?")).build();
 			break;
 
 		case EVENT:
-			trigger = newTrigger().withIdentity(triggerKey).startNow().build();
-			break;
-
 		case PERIODIC_AND_EVENT:
-			trigger = newTrigger().withIdentity(triggerKey).startNow().build();
-			break;
+			trigger = newTrigger().withIdentity(triggerKey)
+			.withSchedule(cronSchedule("* * * * * ? 2099")).build();
+
+			DeviceEventListener deListener = new DeviceEventListener(jobDetail);
+			for (String key : tasklet.input.keySet()) {
+				DeviceId deviceId = new DeviceId(tasklet.secretkey,
+						tasklet.input.get(key));
+				System.out.println("adding " + deviceId
+						+ " to DeviceEventListener");
+				SensorActAPI.deviceEvent.addDeviceEventListener(deviceId,
+						deListener);
+				System.out.println("adding done..");
+			}
+			//return addTasklet(jobDetail) ? jobKey.toString() : null;
 		}
 
 		return scheduleTasklet(jobDetail, trigger) ? jobKey.toString() : null;
 	}
-
 
 	private static String scheduleOnShotTasklet(final String group,
 			final TaskletModel tasklet) {

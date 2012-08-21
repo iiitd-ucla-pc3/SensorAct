@@ -56,6 +56,7 @@ import edu.iiitd.muc.sensoract.api.user.UserLogin;
 import edu.iiitd.muc.sensoract.api.user.UserRegister;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
+import edu.iiitd.muc.sensoract.tasklet.DeviceEvent;
 import edu.iiitd.muc.sensoract.util.ParamValidator;
 import edu.iiitd.muc.sensoract.util.SensorActLogger;
 
@@ -118,6 +119,8 @@ public class SensorActAPI extends Application {
 
 	public static Test test = new Test();
 
+	public static DeviceEvent deviceEvent = new DeviceEvent();
+	
 	/*
 	 * API helper references
 	 */

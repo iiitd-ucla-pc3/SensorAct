@@ -16,15 +16,19 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.SimpleScriptContext;
 
+import org.hibernate.annotations.AccessType;
+import org.quartz.InterruptableJob;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
 import org.quartz.SchedulerException;
+import org.quartz.UnableToInterruptJobException;
 
 import edu.iiitd.muc.sensoract.util.SensorActLogger;
 
-public class LuaScriptTasklet implements Job {
+//@org.quartz.DisallowConcurrentExecution
+public class LuaScriptTasklet implements InterruptableJob {
 
 	private static ScriptEngine luaEngine = null;
 	// private static LuaJavaMapper luaJavaMapper = new LuaJavaMapper();
@@ -47,6 +51,7 @@ public class LuaScriptTasklet implements Job {
 
 	public void execute(JobExecutionContext context) {
 
+		
 		long t1 = new Date().getTime();
 
 		if (null == luaScript) {
@@ -56,8 +61,14 @@ public class LuaScriptTasklet implements Job {
 		JobKey key = context.getJobDetail().getKey();
 		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 
+		SensorActLogger.info(key.getName() + " started..." );
+
 		try {
 
+			ScriptEngine luaEngineLocal = new ScriptEngineManager().getEngineByName("Lua");
+			LuaToJavaFunctionMapper luaToJavaFunctionMapper = new LuaToJavaFunctionMapper();
+			luaEngineLocal.put("PDS", luaToJavaFunctionMapper);
+			
 			// Object email = dataMap.get("email");
 
 			// System.out.println("****before : " + t1);
@@ -96,10 +107,10 @@ public class LuaScriptTasklet implements Job {
 			} catch (SchedulerException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}	
 
 			long e1 = new Date().getTime();
-			luaEngine.eval(luaScript, newScope);
+			luaEngineLocal.eval(luaScript, newScope);			
 			long e2 = new Date().getTime();
 			// System.out.print(" eval : " + (e2 - e1));
 
@@ -132,6 +143,12 @@ public class LuaScriptTasklet implements Job {
 			e.printStackTrace();
 		}
 
+	}
+
+	@Override
+	public void interrupt() throws UnableToInterruptJobException {
+		// TODO Auto-generated method stub
+		System.out.println("Interrupted..");
 	}
 
 }

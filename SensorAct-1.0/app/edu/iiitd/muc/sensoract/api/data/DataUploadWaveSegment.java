@@ -9,6 +9,7 @@ package edu.iiitd.muc.sensoract.api.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Observer;
 
 import play.data.validation.Error;
 import edu.iiitd.muc.sensoract.api.SensorActAPI;
@@ -17,6 +18,8 @@ import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
 import edu.iiitd.muc.sensoract.model.data.WaveSegmentModel;
+import edu.iiitd.muc.sensoract.tasklet.DeviceEvent;
+import edu.iiitd.muc.sensoract.tasklet.DeviceEventListener;
 
 /**
  * data/upload/wavesegment API: Uploads the wave segments sent by a device to
@@ -31,6 +34,10 @@ public class DataUploadWaveSegment extends SensorActAPI {
 	private static boolean isSendResponseEnabled = true;
 
 	private HashMap<String, ArrayList<WaveSegmentFormat>> hashmapWaveSegments = new HashMap<String, ArrayList<WaveSegmentFormat>>();
+
+	public DataUploadWaveSegment() {
+		super();
+	}
 
 	/**
 	 * Sends error message to the callel.
@@ -74,8 +81,12 @@ public class DataUploadWaveSegment extends SensorActAPI {
 	 */
 	private void persistWaveSegment(final WaveSegmentFormat waveSegment) {
 
-		WaveSegmentModel waveSegmentModel = new WaveSegmentModel(waveSegment);
-		waveSegmentModel.save();
+		//WaveSegmentModel waveSegmentModel = new WaveSegmentModel(waveSegment);
+		//waveSegmentModel.save();
+		System.out.println(System.currentTimeMillis() + " " + waveSegment.data.sid + " notifing...");
+		deviceEvent.notifyWaveSegmentArrived(waveSegment);
+		System.out.println(System.currentTimeMillis() + " " + waveSegment.data.sid + " notified...");
+		
 	}
 
 	/**
@@ -166,6 +177,7 @@ public class DataUploadWaveSegment extends SensorActAPI {
 		} catch (InvalidJsonException e) {
 			sendError(ErrorType.INVALID_JSON, e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			sendError(ErrorType.SYSTEM_ERROR, e.getMessage());
 		}
 	}

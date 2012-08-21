@@ -57,7 +57,7 @@ public class TaskletAdd extends SensorActAPI {
 	}
 
 	private void preProcessTaskelt(final TaskletAddFormat tasklet) {		
-		tasklet.tasklet_type = TaskletType.PERIODIC;	
+		tasklet.tasklet_type = TaskletType.EVENT;	
 	}
 	
 	/**

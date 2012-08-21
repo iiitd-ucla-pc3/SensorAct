@@ -16,6 +16,7 @@ import com.google.code.morphia.annotations.Entity;
 
 import edu.iiitd.muc.sensoract.api.tasklet.request.TaskletAddFormat;
 import edu.iiitd.muc.sensoract.model.tasklet.TaskletModel.TaskletType;
+import edu.iiitd.muc.sensoract.tasklet.DeviceId;
 
 /**
  * Model class for tasklet script management.
