@@ -63,8 +63,8 @@ public class UserLogin extends SensorActAPI {
 					UserLoginFormat.class);
 			validateRequest(newLogin);
 
-			newLogin.password = UserProfile.getHashCode(newLogin.password);
-			String secretkey = UserProfile.getSecretkey(newLogin.username,
+			newLogin.password = userProfile.getHashCode(newLogin.password);
+			String secretkey = userProfile.getSecretkey(newLogin.username,
 					newLogin.password);
 
 			if (null != secretkey) {

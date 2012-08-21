@@ -53,7 +53,7 @@ public class GuardRuleAssociationAdd extends SensorActAPI {
 					guardRuleAssociationAdd, GuardRuleAssociationAddFormat.class);
 			validateRequest(guardRuleAssociationAddFormat);
 
-			if (!UserProfile.isRegisteredSecretkey(guardRuleAssociationAddFormat.secretkey)) {
+			if (!userProfile.isRegisteredSecretkey(guardRuleAssociationAddFormat.secretkey)) {
 				response.sendFailure(Const.API_GUARDRULE_ASSOCIATION_ADD,
 						ErrorType.UNREGISTERED_SECRETKEY, guardRuleAssociationAddFormat.secretkey);
 			}

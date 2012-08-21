@@ -1,30 +1,12 @@
-/*
- * Name: DeviceProfile.java
- * Project: SensorAct, MUC@IIIT-Delhi
- * Version: 1.0
- * Date: 2012-04-14
- * Author: Pandarasamy Arjunan
- */
 package edu.iiitd.muc.sensoract.profile;
 
-import java.util.Iterator;
 import java.util.List;
 
-import play.modules.morphia.Model.MorphiaQuery;
 import edu.iiitd.muc.sensoract.api.device.request.DeviceAddFormat;
-import edu.iiitd.muc.sensoract.api.response.DeviceListResponseFormat;
 import edu.iiitd.muc.sensoract.model.device.DeviceModel;
-import edu.iiitd.muc.sensoract.model.device.DeviceProfileModel;
 import edu.iiitd.muc.sensoract.model.device.DeviceTemplateModel;
 
-/**
- * Device profile management, provides methods for managing devices and device
- * templates
- * 
- * @author Pandarasamy Arjunan
- * @version 1.0
- */
-public class DeviceProfile {
+public interface DeviceProfile {
 
 	/**
 	 * Adds a new device to the repository.
@@ -33,11 +15,7 @@ public class DeviceProfile {
 	 *            Device object to persist to the repository.
 	 * @return True, if device profile added successfully, otherwise false.
 	 */
-	public static boolean addDevice(final DeviceAddFormat newDevice) {
-		DeviceModel device = new DeviceModel(newDevice);
-		device.save();
-		return true;
-	}
+	public boolean addDevice(final DeviceAddFormat newDevice);
 
 	/**
 	 * Adds a new device template to the repository.
@@ -46,11 +24,7 @@ public class DeviceProfile {
 	 *            Device profile object to persist to the repository.
 	 * @return True, if device template added successfully, otherwise false.
 	 */
-	public static boolean addDeviceTemplate(final DeviceAddFormat newTemplate) {
-		DeviceTemplateModel template = new DeviceTemplateModel(newTemplate);
-		template.save();
-		return true;
-	}
+	public boolean addDeviceTemplate(final DeviceAddFormat newTemplate);
 
 	/**
 	 * Removes a device profile corresponding to the user's secretkey and
@@ -63,21 +37,7 @@ public class DeviceProfile {
 	 * @return True, if device removed successfully, otherwise false.
 	 */
 
-	public static boolean deleteDevice(final String secretkey,
-			final String devicename) {
-
-		// TODO: Include other params to uniquely identify device profile
-		// TODO: Inconsistent way with play's jpa Model
-		MorphiaQuery mq = DeviceModel.find("bySecretkeyAndDevicename",
-				secretkey, devicename);
-		if (0 == mq.count()) {
-			return false;
-		}
-		// DeviceProfileModel.find("bySecretkeyAndName", secretkey,
-		// devicename).delete();
-		mq.delete();
-		return true;
-	}
+	public boolean deleteDevice(final String secretkey, final String devicename);
 
 	/**
 	 * Removes a device template corresponding to the user's secretkey and
@@ -90,21 +50,8 @@ public class DeviceProfile {
 	 *            Name of the registered device template.
 	 * @return True, if device profile removed successfully, otherwise false.
 	 */
-	public static boolean deleteDeviceTemplate(final String secretkey,
-			final String templatename) {
-
-		// TODO: Include other params to uniquely identify device profile
-		// TODO: Inconsistent way with play's jpa Model
-		MorphiaQuery mq = DeviceTemplateModel.find(
-				"bySecretkeyAndTemplatename", secretkey, templatename);
-		if (0 == mq.count()) {
-			return false;
-		}
-		// DeviceProfileModel.find("bySecretkeyAndName", secretkey,
-		// devicename).delete();
-		mq.delete();
-		return true;
-	}
+	public boolean deleteDeviceTemplate(final String secretkey,
+			final String templatename);
 
 	/**
 	 * Retrieves a device from the data repository corresponding to the
@@ -117,17 +64,7 @@ public class DeviceProfile {
 	 * @return Device object in DeviceModel format.
 	 * @see DeviceModel
 	 */
-	public static DeviceModel getDevice(final String secretkey,
-			final String devicename) {
-
-		// TODO: Inconsistent way with play's jpa Model
-		List<DeviceModel> deviceList = DeviceModel.find(
-				"bySecretkeyAndDevicename", secretkey, devicename).fetchAll();
-		if (null == deviceList || 0 == deviceList.size()) {
-			return null;
-		}
-		return deviceList.get(0);
-	}
+	public DeviceModel getDevice(final String secretkey, final String devicename);
 
 	/**
 	 * Retrieves a device template from the data repository corresponding to the
@@ -140,18 +77,8 @@ public class DeviceProfile {
 	 * @return Device template object in DeviceTemplateModel format.
 	 * @see DeviceTemplateModel
 	 */
-	public static DeviceTemplateModel getDeviceTemplate(final String secretkey,
-			final String templatename) {
-
-		// TODO: Inconsistent way with play's jpa Model
-		List<DeviceTemplateModel> templateList = DeviceTemplateModel.find(
-				"bySecretkeyAndTemplatename", secretkey, templatename)
-				.fetchAll();
-		if (null == templateList || 0 == templateList.size()) {
-			return null;
-		}
-		return templateList.get(0);
-	}
+	public DeviceTemplateModel getDeviceTemplate(final String secretkey,
+			final String templatename);
 
 	/**
 	 * Retrieves all devices from the data repository corresponding to the
@@ -162,23 +89,7 @@ public class DeviceProfile {
 	 * @return List of devices in DeviceModel object.
 	 * @see DeviceModel
 	 */
-	public static List<DeviceModel> getDeviceList(final String secretkey) {
-
-		// TODO: Inconsistent way with play's jpa Model
-		List<DeviceModel> deviceList = DeviceModel.find("bySecretkey",
-				secretkey).fetchAll();
-		if (null == deviceList || 0 == deviceList.size()) {
-			return null;
-		}
-		// TODO: filter only devices
-		// Iterator<DeviceProfileModel> devicesListIterator = allDevicesList
-		// .iterator();
-		// while (devicesListIterator.hasNext()) {
-		// devicesListIterator.next().templatename = null;
-		// }
-
-		return deviceList;
-	}
+	public List<DeviceModel> getDeviceList(final String secretkey);
 
 	/**
 	 * Retrieves all device templates from the data repository corresponding to
@@ -189,18 +100,8 @@ public class DeviceProfile {
 	 * @return List of device templates in DeviceTemplateModel object.
 	 * @see DeviceTemplateModel
 	 */
-	public static List<DeviceTemplateModel> getDeviceTemplateList(
-			final String secretkey) {
-
-		// TODO: Inconsistent way with play's jpa Model
-		List<DeviceTemplateModel> templateList = DeviceTemplateModel.find(
-				"bySecretkey", secretkey).fetchAll();
-		if (null == templateList || 0 == templateList.size()) {
-			return null;
-		}
-
-		return templateList;
-	}
+	public List<DeviceTemplateModel> getDeviceTemplateList(
+			final String secretkey);
 
 	/**
 	 * Retrieves all device templates from the data repository corresponding to
@@ -211,17 +112,7 @@ public class DeviceProfile {
 	 * @return List of device templates in DeviceTemplateModel object.
 	 * @see DeviceTemplateModel
 	 */
-	public static List<DeviceTemplateModel> getGlobalDeviceTemplateList() {
-
-		// TODO: Inconsistent way with play's jpa Model
-		List<DeviceTemplateModel> templateList = DeviceTemplateModel.find(
-				"isglobal", false).fetchAll();
-		if (null == templateList || 0 == templateList.size()) {
-			return null;
-		}
-
-		return templateList;
-	}
+	public List<DeviceTemplateModel> getGlobalDeviceTemplateList();
 
 	/**
 	 * Checks for duplicate devices. If device already exists in the repository,
@@ -232,13 +123,7 @@ public class DeviceProfile {
 	 * @return True, if device profile exists in the repository, otherwise
 	 *         false.
 	 */
-	public static boolean isDeviceExists(final DeviceAddFormat newDevice) {
-
-		// TODO: Check the uniqueness against id, ip, etc also
-		return 0 == DeviceModel.count("bySecretkeyAndDevicename",
-				newDevice.secretkey, newDevice.deviceprofile.name) ? false
-				: true;
-	}
+	public boolean isDeviceExists(final DeviceAddFormat newDevice);
 
 	/**
 	 * Checks for duplicate device templates. If device template already exists
@@ -250,13 +135,6 @@ public class DeviceProfile {
 	 *         false.
 	 */
 
-	public static boolean isDeviceTemplateExists(
-			final DeviceAddFormat newTemplate) {
-
-		// TODO: Check the uniqueness against id, ip, etc also
-		return 0 == DeviceTemplateModel.count("bySecretkeyAndTemplatename",
-				newTemplate.secretkey, newTemplate.deviceprofile.name) ? false
-				: true;
-	}
+	public boolean isDeviceTemplateExists(final DeviceAddFormat newTemplate);
 
 }

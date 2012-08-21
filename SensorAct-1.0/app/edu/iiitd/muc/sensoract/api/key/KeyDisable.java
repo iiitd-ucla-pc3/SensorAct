@@ -13,7 +13,6 @@ import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
 import edu.iiitd.muc.sensoract.model.user.UserProfileModel;
-import edu.iiitd.muc.sensoract.profile.UserProfile;
 
 /**
  * key/disable API: Disable a secret key associated with a user.
@@ -54,16 +53,16 @@ public class KeyDisable extends SensorActAPI {
 					keyDisableJson, KeyDisableFormat.class);
 			validateRequest(keyDisableFormat);
 
-			UserProfileModel userProfile = UserProfile
+			UserProfileModel user = userProfile
 					.getUserProfile(keyDisableFormat.secretkey);
 
-			if (null == userProfile) {
+			if (null == user) {
 				response.sendFailure(Const.API_KEY_DISABLE,
 						ErrorType.UNREGISTERED_SECRETKEY,
 						keyDisableFormat.secretkey);
 			}
 
-			if (UserProfile.setKeyStatus(userProfile, keyDisableFormat.key,false)) {
+			if (userProfile.setKeyStatus(user, keyDisableFormat.key, false)) {
 				response.SendSuccess(Const.API_KEY_DISABLE, Const.KEY_DISABLED,
 						keyDisableFormat.key);
 			} else {

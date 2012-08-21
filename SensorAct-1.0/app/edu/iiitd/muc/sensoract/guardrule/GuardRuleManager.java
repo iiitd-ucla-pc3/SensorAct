@@ -18,6 +18,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import edu.iiitd.muc.sensoract.api.SensorActAPI;
 import edu.iiitd.muc.sensoract.api.guardrule.request.GuardRuleAddFormat;
 import edu.iiitd.muc.sensoract.api.guardrule.request.GuardRuleAssociationAddFormat;
 import edu.iiitd.muc.sensoract.api.guardrule.request.GuardRuleAssociationDeleteFormat;
@@ -31,9 +32,6 @@ import edu.iiitd.muc.sensoract.model.data.WaveSegmentModel;
 import edu.iiitd.muc.sensoract.model.device.DeviceModel;
 import edu.iiitd.muc.sensoract.model.guardrule.GuardRuleAssociationModel;
 import edu.iiitd.muc.sensoract.model.guardrule.GuardRuleModel;
-import edu.iiitd.muc.sensoract.profile.Actuator;
-import edu.iiitd.muc.sensoract.profile.UserProfile;
-import edu.iiitd.muc.sensoract.profile.WaveSegmentData;
 import edu.iiitd.muc.sensoract.util.SensorActLogger;
 
 /**
@@ -241,7 +239,7 @@ public class GuardRuleManager {
 			final RequestingUser requestingUser, final String devicename, final String sensorname,
 			final String sensorid, final long fromtime, final long totime) {
 
-		String secretkey = UserProfile.getSecretkey(username);
+		String secretkey = SensorActAPI.userProfile.getSecretkey(username);
 		if (null == secretkey) {
 			SensorActLogger.error(String.format("Couldn't find secretkey for username: %s", username));
 			return null;
@@ -251,7 +249,7 @@ public class GuardRuleManager {
 
 		
 		long t1 = new Date().getTime();
-		List<WaveSegmentModel> wwList = WaveSegmentData.read(username, devicename, sensorname, sensorid, fromtime, totime);
+		List<WaveSegmentModel> wwList = SensorActAPI.waveSegmentData.read(username, devicename, sensorname, sensorid, fromtime, totime);
 //		List<WaveSegmentModel> wwList = WaveSegmentData.readLatest(username,
 //				devicename, sensorname, sensorid);
 		long t2 = new Date().getTime();
@@ -326,7 +324,7 @@ public class GuardRuleManager {
 			final String devicename, final String actuatorname,
 			final String actuatorid, final double value ) {
 
-		String secretkey = UserProfile.getSecretkey(username);
+		String secretkey = SensorActAPI.userProfile.getSecretkey(username);
 		if (null == secretkey) {
 			SensorActLogger.error(String.format("Couldn't find secretkey for username: %s", username));
 			return false;
@@ -391,7 +389,7 @@ public class GuardRuleManager {
 		}
 		
 		if (decision == Decision.ALLOWED) {
-			return Actuator.write(username, devicename, actuatorname, actuatorid, value);	
+			return SensorActAPI.actuator.write(username, devicename, actuatorname, actuatorid, value);	
 		}
 		
 		return false;

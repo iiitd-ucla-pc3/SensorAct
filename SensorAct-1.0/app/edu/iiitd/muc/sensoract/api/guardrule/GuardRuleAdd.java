@@ -55,7 +55,7 @@ public class GuardRuleAdd extends SensorActAPI {
 					guardRuleAddJson, GuardRuleAddFormat.class);
 			validateRequest(guardRule);
 
-			if (!UserProfile.isRegisteredSecretkey(guardRule.secretkey)) {
+			if (!userProfile.isRegisteredSecretkey(guardRule.secretkey)) {
 				response.sendFailure(Const.API_GUARDRULE_ADD,
 						ErrorType.UNREGISTERED_SECRETKEY, guardRule.secretkey);
 			}

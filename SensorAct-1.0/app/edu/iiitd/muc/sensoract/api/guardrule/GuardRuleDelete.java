@@ -56,7 +56,7 @@ public class GuardRuleDelete extends SensorActAPI {
 					guardRuleDeleteJson, GuardRuleDeleteFormat.class);
 			validateRequest(guardRuleDeleteRequest);
 
-			if (!UserProfile
+			if (!userProfile
 					.isRegisteredSecretkey(guardRuleDeleteRequest.secretkey)) {
 				response.sendFailure(Const.API_GUARDRULE_DELETE,
 						ErrorType.UNREGISTERED_SECRETKEY,

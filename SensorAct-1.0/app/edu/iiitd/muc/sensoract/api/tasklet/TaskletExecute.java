@@ -8,14 +8,11 @@
 package edu.iiitd.muc.sensoract.api.tasklet;
 
 import edu.iiitd.muc.sensoract.api.SensorActAPI;
-import edu.iiitd.muc.sensoract.api.tasklet.request.TaskletAddFormat;
 import edu.iiitd.muc.sensoract.api.tasklet.request.TaskletExecuteFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
 import edu.iiitd.muc.sensoract.model.tasklet.TaskletModel;
-import edu.iiitd.muc.sensoract.profile.DeviceProfile;
-import edu.iiitd.muc.sensoract.profile.UserProfile;
 import edu.iiitd.muc.sensoract.tasklet.TaskletProfile;
 import edu.iiitd.muc.sensoract.tasklet.TaskletScheduler;
 import edu.iiitd.muc.sensoract.util.TaskletParamValidator;
@@ -69,7 +66,7 @@ public class TaskletExecute extends SensorActAPI {
 						ErrorType.TASKLET_NOTFOUND, taskletExecute.taskletname);
 			}
 
-			String username = UserProfile
+			String username = userProfile
 					.getUserProfile(taskletExecute.secretkey).username;
 
 			String taskletId = TaskletScheduler.scheduleTasklet(username,

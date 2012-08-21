@@ -7,19 +7,10 @@
  */
 package edu.iiitd.muc.sensoract.api.device;
 
-import java.util.Iterator;
-import java.util.List;
-
 import edu.iiitd.muc.sensoract.api.device.request.DeviceAddFormat;
-import edu.iiitd.muc.sensoract.api.device.request.DeviceAddFormat.DeviceActuator;
-import edu.iiitd.muc.sensoract.api.device.request.DeviceAddFormat.DeviceChannel;
-import edu.iiitd.muc.sensoract.api.device.request.DeviceAddFormat.DeviceFormat;
-import edu.iiitd.muc.sensoract.api.device.request.DeviceAddFormat.DeviceSensor;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
-import edu.iiitd.muc.sensoract.profile.DeviceProfile;
-import edu.iiitd.muc.sensoract.profile.UserProfile;
 
 /**
  * device/add API: Adds a new device profile in the repository.
@@ -46,17 +37,17 @@ public class DeviceTemplateAdd extends DeviceAdd {
 
 			validateRequest(newDevice, Const.API_DEVICE_TEMPLATE_ADD);
 
-			if (!UserProfile.isRegisteredSecretkey(newDevice.secretkey)) {
+			if (!userProfile.isRegisteredSecretkey(newDevice.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_TEMPLATE_ADD,
 						ErrorType.UNREGISTERED_SECRETKEY, newDevice.secretkey);
 			}
 
-			if (DeviceProfile.isDeviceTemplateExists(newDevice)) {
+			if (deviceProfile.isDeviceTemplateExists(newDevice)) {
 				response.sendFailure(Const.API_DEVICE_TEMPLATE_ADD,
 						ErrorType.DEVICE_TEMPLATE_ALREADYEXISTS,
 						newDevice.deviceprofile.name);
 			}
-			DeviceProfile.addDevice(newDevice);
+			deviceProfile.addDevice(newDevice);
 			response.SendSuccess(Const.API_DEVICE_TEMPLATE_ADD,
 					Const.DEVICE_TEMPLATE_ADDED, newDevice.deviceprofile.name);
 

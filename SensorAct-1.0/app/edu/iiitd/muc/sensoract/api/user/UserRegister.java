@@ -58,15 +58,15 @@ public class UserRegister extends SensorActAPI {
 					userProfileJson, UserRegisterFormat.class);
 			validateUserProfile(newUser);
 
-			if (UserProfile.isUserProfileExists(newUser)) {
+			if (userProfile.isUserProfileExists(newUser)) {
 				response.sendFailure(Const.API_USER_REGISTER,
 						ErrorType.USER_ALREADYEXISTS, newUser.username);
 			}
 
-			newUser.password = UserProfile.getHashCode(newUser.password);
-			String secretkey = UserProfile.generateNewKey();
+			newUser.password = userProfile.getHashCode(newUser.password);
+			String secretkey = userProfile.generateNewKey();
 
-			UserProfile.addUserProfile(newUser, secretkey);
+			userProfile.addUserProfile(newUser, secretkey);
 			response.SendSuccess(Const.API_USER_REGISTER,
 					Const.USER_REGISTERED, newUser.username);
 

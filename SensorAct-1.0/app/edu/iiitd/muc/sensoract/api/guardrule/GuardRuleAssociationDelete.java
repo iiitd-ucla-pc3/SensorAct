@@ -53,7 +53,7 @@ public class GuardRuleAssociationDelete extends SensorActAPI {
 					guardRuleAssociationDelete, GuardRuleAssociationDeleteFormat.class);
 			validateRequest(guardRuleAssociationDeleteFormat);
 
-			if (!UserProfile.isRegisteredSecretkey(guardRuleAssociationDeleteFormat.secretkey)) {
+			if (!userProfile.isRegisteredSecretkey(guardRuleAssociationDeleteFormat.secretkey)) {
 				response.sendFailure(Const.API_GUARDRULE_ASSOCIATION_DELETE,
 						ErrorType.UNREGISTERED_SECRETKEY, guardRuleAssociationDeleteFormat.secretkey);
 			}

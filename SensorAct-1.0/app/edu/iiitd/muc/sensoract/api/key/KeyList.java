@@ -13,7 +13,6 @@ import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
 import edu.iiitd.muc.sensoract.model.user.UserProfileModel;
-import edu.iiitd.muc.sensoract.profile.UserProfile;
 
 /**
  * key/list API: List all the secret keys associated with a user.
@@ -54,17 +53,17 @@ public class KeyList extends SensorActAPI {
 					KeyListFormat.class);
 			validateRequest(keyListFormat);
 
-			UserProfileModel userProfile = UserProfile
+			UserProfileModel user = userProfile
 					.getUserProfile(keyListFormat.secretkey);
 
-			if (null == userProfile) {
+			if (null == user) {
 				response.sendFailure(Const.API_KEY_LIST,
 						ErrorType.UNREGISTERED_SECRETKEY,
 						keyListFormat.secretkey);
 			}
 
-			response.sendJSON(userProfile.keylist);
-			
+			response.sendJSON(user.keylist);
+
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_KEY_LIST, ErrorType.INVALID_JSON,
 					e.getMessage());

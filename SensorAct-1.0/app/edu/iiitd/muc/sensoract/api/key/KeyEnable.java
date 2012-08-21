@@ -54,16 +54,16 @@ public class KeyEnable extends SensorActAPI {
 					keyEnableJson, KeyEnableFormat.class);
 			validateRequest(keyEnableFormat);
 
-			UserProfileModel userProfile = UserProfile
+			UserProfileModel user = userProfile
 					.getUserProfile(keyEnableFormat.secretkey);
 
-			if (null == userProfile) {
+			if (null == user) {
 				response.sendFailure(Const.API_KEY_ENABLE,
 						ErrorType.UNREGISTERED_SECRETKEY,
 						keyEnableFormat.secretkey);
 			}
 
-			if (UserProfile.setKeyStatus(userProfile, keyEnableFormat.key, true)) {
+			if (userProfile.setKeyStatus(user, keyEnableFormat.key, true)) {
 				response.SendSuccess(Const.API_KEY_ENABLE, Const.KEY_ENABLED,
 						keyEnableFormat.key);
 			} else {

@@ -54,7 +54,7 @@ public class TaskletList extends SensorActAPI {
 					taskListJson, TaskletListFormat.class);
 			validateRequest(taskListRequest);
 
-			if (!UserProfile.isRegisteredSecretkey(taskListRequest.secretkey)) {
+			if (!userProfile.isRegisteredSecretkey(taskListRequest.secretkey)) {
 				response.sendFailure(Const.API_TASKLET_LIST,
 						ErrorType.UNREGISTERED_SECRETKEY,
 						taskListRequest.secretkey);

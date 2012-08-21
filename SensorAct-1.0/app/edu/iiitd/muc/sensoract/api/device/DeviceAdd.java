@@ -19,8 +19,6 @@ import edu.iiitd.muc.sensoract.api.device.request.DeviceAddFormat.DeviceSensor;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
-import edu.iiitd.muc.sensoract.profile.DeviceProfile;
-import edu.iiitd.muc.sensoract.profile.UserProfile;
 
 /**
  * device/add API: Adds a new device to the repository.
@@ -197,17 +195,17 @@ public class DeviceAdd extends SensorActAPI {
 
 			validateRequest(newDevice, Const.API_DEVICE_ADD);
 
-			if (!UserProfile.isRegisteredSecretkey(newDevice.secretkey)) {
+			if (!userProfile.isRegisteredSecretkey(newDevice.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_ADD,
 						ErrorType.UNREGISTERED_SECRETKEY, newDevice.secretkey);
 			}
 
-			if (DeviceProfile.isDeviceExists(newDevice)) {
+			if (deviceProfile.isDeviceExists(newDevice)) {
 				response.sendFailure(Const.API_DEVICE_ADD,
 						ErrorType.DEVICE_ALREADYEXISTS,
 						newDevice.deviceprofile.name);
 			}
-			DeviceProfile.addDevice(newDevice);
+			deviceProfile.addDevice(newDevice);
 			response.SendSuccess(Const.API_DEVICE_ADD, Const.DEVICE_ADDED,
 					newDevice.deviceprofile.name);
 

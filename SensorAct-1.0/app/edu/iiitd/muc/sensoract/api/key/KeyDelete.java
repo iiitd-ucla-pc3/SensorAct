@@ -59,16 +59,15 @@ public class KeyDelete extends SensorActAPI {
 					keyDeleteJson, KeyDeleteFormat.class);
 			validateRequest(keyDeleteFormat);
 
-			UserProfileModel userProfile = UserProfile
-					.getUserProfile(keyDeleteFormat.secretkey);
+			UserProfileModel user = userProfile.getUserProfile(keyDeleteFormat.secretkey);
 
-			if (null == userProfile) {
+			if (null == user) {
 				response.sendFailure(Const.API_KEY_DELETE,
 						ErrorType.UNREGISTERED_SECRETKEY,
 						keyDeleteFormat.secretkey);
 			}
 
-			if (UserProfile.deleteKey(userProfile, keyDeleteFormat.key)) {
+			if (userProfile.deleteKey(user, keyDeleteFormat.key)) {
 				response.SendSuccess(Const.API_KEY_DELETE, Const.KEY_DELETED,
 						keyDeleteFormat.key);
 			} else {

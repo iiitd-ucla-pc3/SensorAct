@@ -54,7 +54,7 @@ public class TaskletGet extends SensorActAPI {
 					TaskletGetFormat.class);
 			validateRequest(taskGetRequest);
 
-			if (!UserProfile.isRegisteredSecretkey(taskGetRequest.secretkey)) {
+			if (!userProfile.isRegisteredSecretkey(taskGetRequest.secretkey)) {
 				response.sendFailure(Const.API_TASKLET_GET,
 						ErrorType.UNREGISTERED_SECRETKEY,
 						taskGetRequest.secretkey);

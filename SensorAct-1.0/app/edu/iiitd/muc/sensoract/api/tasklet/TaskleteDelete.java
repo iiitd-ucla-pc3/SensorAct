@@ -54,7 +54,7 @@ public class TaskleteDelete extends SensorActAPI {
 					taskletDeleteJson, TaskletDeleteFormat.class);
 			validateRequest(taskDeleteRequest);
 
-			if (!UserProfile.isRegisteredSecretkey(taskDeleteRequest.secretkey)) {
+			if (!userProfile.isRegisteredSecretkey(taskDeleteRequest.secretkey)) {
 				response.sendFailure(Const.API_TASKLET_DELETE,
 						ErrorType.UNREGISTERED_SECRETKEY,
 						taskDeleteRequest.secretkey);

@@ -56,6 +56,14 @@ import edu.iiitd.muc.sensoract.api.user.UserLogin;
 import edu.iiitd.muc.sensoract.api.user.UserRegister;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
+import edu.iiitd.muc.sensoract.profile.Actuator;
+import edu.iiitd.muc.sensoract.profile.DeviceProfile;
+import edu.iiitd.muc.sensoract.profile.UserProfile;
+import edu.iiitd.muc.sensoract.profile.WaveSegmentData;
+import edu.iiitd.muc.sensoract.profile.mongo.ActuatorMongo;
+import edu.iiitd.muc.sensoract.profile.mongo.DeviceProfileMongo;
+import edu.iiitd.muc.sensoract.profile.mongo.UserProfileMongo;
+import edu.iiitd.muc.sensoract.profile.mongo.WaveSegmentDataMongo;
 import edu.iiitd.muc.sensoract.tasklet.DeviceEvent;
 import edu.iiitd.muc.sensoract.util.ParamValidator;
 import edu.iiitd.muc.sensoract.util.SensorActLogger;
@@ -118,8 +126,15 @@ public class SensorActAPI extends Application {
 	public static DataQuery dataQuery = new DataQuery();
 
 	public static Test test = new Test();
-
+	
+	public static UserProfile userProfile = new UserProfileMongo();
+	public static DeviceProfile deviceProfile = new DeviceProfileMongo();
+	public static WaveSegmentData waveSegmentData = new WaveSegmentDataMongo();
+	public static Actuator actuator = new ActuatorMongo();
+	
 	public static DeviceEvent deviceEvent = new DeviceEvent();
+	
+	
 	
 	/*
 	 * API helper references

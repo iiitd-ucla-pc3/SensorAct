@@ -12,8 +12,6 @@ import edu.iiitd.muc.sensoract.api.device.request.DeviceDeleteFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
-import edu.iiitd.muc.sensoract.profile.DeviceProfile;
-import edu.iiitd.muc.sensoract.profile.UserProfile;
 
 /**
  * device/delete API: Deletes an existing device profile from the repository.
@@ -61,14 +59,14 @@ public class DeviceTemplateDelete extends SensorActAPI {
 
 			validateRequest(deviceDeleteRequest);
 
-			if (!UserProfile
+			if (!userProfile
 					.isRegisteredSecretkey(deviceDeleteRequest.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_TEMPLATE_DELETE,
 						ErrorType.UNREGISTERED_SECRETKEY,
 						deviceDeleteRequest.secretkey);
 			}
 
-			if (!DeviceProfile.deleteDeviceTemplate(
+			if (!deviceProfile.deleteDeviceTemplate(
 					deviceDeleteRequest.secretkey,
 					deviceDeleteRequest.templatename)) {
 				response.sendFailure(Const.API_DEVICE_TEMPLATE_DELETE,

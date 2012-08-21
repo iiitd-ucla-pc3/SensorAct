@@ -61,17 +61,17 @@ public class KeyGenerate extends SensorActAPI {
 					keyGenerateJson, KeyGenerateFormat.class);
 			validateRequest(keyGenerateFormat);
 
-			UserProfileModel userProfile = UserProfile
+			UserProfileModel user = userProfile
 					.getUserProfile(keyGenerateFormat.secretkey);
 
-			if (null == userProfile) {
+			if (null == user) {
 				response.sendFailure(Const.API_KEY_GENERATE,
 						ErrorType.UNREGISTERED_SECRETKEY,
 						keyGenerateFormat.secretkey);
 			}
 
-			String newKey = UserProfile.generateNewKey();
-			UserProfile.addKey(userProfile, newKey);
+			String newKey = userProfile.generateNewKey();
+			userProfile.addKey(user, newKey);
 			response.SendSuccess(Const.API_KEY_GENERATE, newKey);
 
 		} catch (InvalidJsonException e) {

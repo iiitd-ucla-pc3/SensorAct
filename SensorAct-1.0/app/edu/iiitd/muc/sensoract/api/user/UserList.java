@@ -60,7 +60,7 @@ public class UserList extends SensorActAPI {
 			validateRequest(userList);
 
 			UserList userNameList = new UserList();
-			userNameList.usernames.addAll(UserProfile.getUserNameList());
+			userNameList.usernames.addAll(userProfile.getUserNameList());
 
 			response.sendJSON(userNameList);
 

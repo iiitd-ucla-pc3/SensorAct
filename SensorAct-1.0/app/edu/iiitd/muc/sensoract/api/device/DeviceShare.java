@@ -54,7 +54,7 @@ public class DeviceShare extends SensorActAPI {
 					deviceShareJson, DeviceShareFormat.class);
 			validateRequest(deviceShareRequest);
 
-			if (!UserProfile
+			if (!userProfile
 					.isRegisteredSecretkey(deviceShareRequest.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_SHARE,
 						ErrorType.UNREGISTERED_SECRETKEY,

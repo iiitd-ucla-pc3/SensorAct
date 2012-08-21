@@ -7,24 +7,12 @@
  */
 package edu.iiitd.muc.sensoract.api.device;
 
-import java.lang.reflect.Method;
-
-import play.mvc.results.RenderJson;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.mongodb.util.JSON;
-
 import edu.iiitd.muc.sensoract.api.SensorActAPI;
 import edu.iiitd.muc.sensoract.api.device.request.DeviceGetFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
 import edu.iiitd.muc.sensoract.model.device.DeviceModel;
-import edu.iiitd.muc.sensoract.model.device.DeviceProfileModel;
-import edu.iiitd.muc.sensoract.profile.DeviceProfile;
-import edu.iiitd.muc.sensoract.profile.UserProfile;
 
 /**
  * device/get API: Retries a device profile from the repository.
@@ -87,13 +75,13 @@ public class DeviceGet extends SensorActAPI {
 
 			validateRequest(deviceGetRequest);
 
-			if (!UserProfile.isRegisteredSecretkey(deviceGetRequest.secretkey)) {
+			if (!userProfile.isRegisteredSecretkey(deviceGetRequest.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_GET,
 						ErrorType.UNREGISTERED_SECRETKEY,
 						deviceGetRequest.secretkey);
 			}
 
-			DeviceModel oneDevice = DeviceProfile.getDevice(
+			DeviceModel oneDevice = deviceProfile.getDevice(
 					deviceGetRequest.secretkey, deviceGetRequest.devicename);
 			if (null == oneDevice) {
 				response.sendFailure(Const.API_DEVICE_GET,

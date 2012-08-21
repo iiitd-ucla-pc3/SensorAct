@@ -54,7 +54,7 @@ public class DeviceSearch extends SensorActAPI {
 					deviceSearchJson, DeviceSearchFormat.class);
 			validateRequest(deviceSearchRequest);
 
-			if (!UserProfile
+			if (!userProfile
 					.isRegisteredSecretkey(deviceSearchRequest.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_SEARCH,
 						ErrorType.UNREGISTERED_SECRETKEY,
