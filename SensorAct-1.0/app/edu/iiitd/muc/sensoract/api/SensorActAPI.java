@@ -62,8 +62,8 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
 import edu.iiitd.muc.sensoract.profile.WaveSegmentData;
 import edu.iiitd.muc.sensoract.profile.mongo.ActuatorMongo;
 import edu.iiitd.muc.sensoract.profile.mongo.DeviceProfileMongo;
-import edu.iiitd.muc.sensoract.profile.mongo.UserProfileMongo;
 import edu.iiitd.muc.sensoract.profile.mongo.WaveSegmentDataMongo;
+import edu.iiitd.muc.sensoract.profile.rdbms.UserProfileRDBMS;
 import edu.iiitd.muc.sensoract.tasklet.DeviceEvent;
 import edu.iiitd.muc.sensoract.util.ParamValidator;
 import edu.iiitd.muc.sensoract.util.SensorActLogger;
@@ -103,8 +103,7 @@ public class SensorActAPI extends Application {
 	public static DeviceTemplateGet deviceTemplateGet = new DeviceTemplateGet();
 	public static DeviceTemplateList deviceTemplateList = new DeviceTemplateList();
 	public static DeviceTemplateGlobalList deviceTemplateGlobalList = new DeviceTemplateGlobalList();
-	
-	
+
 	public static GuardRuleAdd guardRuleAdd = new GuardRuleAdd();
 	public static GuardRuleDelete guardRuleDelete = new GuardRuleDelete();
 	public static GuardRuleGet guardRuleGet = new GuardRuleGet();
@@ -126,23 +125,23 @@ public class SensorActAPI extends Application {
 	public static DataQuery dataQuery = new DataQuery();
 
 	public static Test test = new Test();
-	
-	public static UserProfile userProfile = new UserProfileMongo();
+
+	public static UserProfile userProfile = new UserProfileRDBMS();
+
 	public static DeviceProfile deviceProfile = new DeviceProfileMongo();
 	public static WaveSegmentData waveSegmentData = new WaveSegmentDataMongo();
 	public static Actuator actuator = new ActuatorMongo();
-	
+
 	public static DeviceEvent deviceEvent = new DeviceEvent();
-	
-	
-	
+
 	/*
 	 * API helper references
 	 */
 	public static ResponseFormat response = new ResponseFormat();
 	public static ParamValidator validator = new ParamValidator();
-	//TODO Remove pretty printing in deployment.
-	public static Gson json = new GsonBuilder().serializeSpecialFloatingPointValues().setPrettyPrinting().create();
+	// TODO Remove pretty printing in deployment.
+	public static Gson json = new GsonBuilder()
+			.serializeSpecialFloatingPointValues().setPrettyPrinting().create();
 	public static SensorActLogger log = new SensorActLogger();
 
 	/**
@@ -177,7 +176,8 @@ public class SensorActAPI extends Application {
 	 * Morhphia models keep _id attributes internally. Removes those unnecessary
 	 * _id attributes for printing.
 	 * 
-	 * @param obj Object which contains the _id attribute.
+	 * @param obj
+	 *            Object which contains the _id attribute.
 	 * @return Json string with _id attribute removed.
 	 */
 	protected String remove_Id(final Object obj) {
@@ -197,8 +197,10 @@ public class SensorActAPI extends Application {
 	 * Morhphia models keep _id attributes internally. Removes those unnecessary
 	 * _id attributes for printing.
 	 * 
-	 * @param obj Object which contains the _id attribute.
-	 * @param name Name of the array list.
+	 * @param obj
+	 *            Object which contains the _id attribute.
+	 * @param name
+	 *            Name of the array list.
 	 * @return Json string with _id attribute removed.
 	 */
 	protected String remove_Id(final Object obj, final String name) {
@@ -220,9 +222,10 @@ public class SensorActAPI extends Application {
 		return json.toJson(obj);
 	}
 
-	protected <T> JsonArray convertFromListToJsonArrayRemovingSecretKeyAndId(List<T> objList) { 
+	protected <T> JsonArray convertFromListToJsonArrayRemovingSecretKeyAndId(
+			List<T> objList) {
 		JsonArray jsonArray = new JsonArray();
-		for (T obj: objList) {
+		for (T obj : objList) {
 			JsonObject jsonObj = json.toJsonTree(obj).getAsJsonObject();
 			jsonObj.remove("secretkey");
 			jsonObj.remove("_id");

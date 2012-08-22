@@ -66,8 +66,7 @@ public class TaskletExecute extends SensorActAPI {
 						ErrorType.TASKLET_NOTFOUND, taskletExecute.taskletname);
 			}
 
-			String username = userProfile
-					.getUserProfile(taskletExecute.secretkey).username;
+			String username = userProfile.getUsername(taskletExecute.secretkey);
 
 			String taskletId = TaskletScheduler.scheduleTasklet(username,
 					tasklet);

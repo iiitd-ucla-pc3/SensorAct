@@ -12,7 +12,7 @@ import edu.iiitd.muc.sensoract.api.key.request.KeyEnableFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
-import edu.iiitd.muc.sensoract.model.user.UserProfileModel;
+import edu.iiitd.muc.sensoract.model.RDBMS.UserProfileModel;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
 
 /**
@@ -54,7 +54,8 @@ public class KeyEnable extends SensorActAPI {
 					keyEnableJson, KeyEnableFormat.class);
 			validateRequest(keyEnableFormat);
 
-			UserProfileModel user = userProfile
+			// TODO: need to change UserProfile class
+/*			UserProfileModel user = userProfile
 					.getUserProfile(keyEnableFormat.secretkey);
 
 			if (null == user) {
@@ -70,7 +71,7 @@ public class KeyEnable extends SensorActAPI {
 				response.sendFailure(Const.API_KEY_ENABLE,
 						ErrorType.KEY_NOTFOUND, keyEnableFormat.key);
 			}
-
+*/
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_KEY_ENABLE, ErrorType.INVALID_JSON,
 					e.getMessage());

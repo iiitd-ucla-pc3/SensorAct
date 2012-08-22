@@ -5,7 +5,7 @@ import java.util.List;
 import edu.iiitd.muc.sensoract.api.user.request.UserRegisterFormat;
 import edu.iiitd.muc.sensoract.model.user.UserProfileModel;
 
-public interface UserProfile {
+public interface UserProfile <T> {
 
 	/**
 	 * Generates unique ids to create secret keys.
@@ -32,6 +32,15 @@ public interface UserProfile {
 	 */
 	public boolean addUserProfile(final UserRegisterFormat newUser,
 			final String secretkey);
+
+	/**
+	 * Retrieves the username corresponding to the given secretkey.
+	 * 
+	 * @param secretkey
+	 *            User name
+	 * @return Username of the secrectkey, if already registered, otherwise null.
+	 */
+	public String getUsername(final String secretkey);
 
 	/**
 	 * Retrieves the secretkey corresponding to the given username and password.
@@ -94,7 +103,7 @@ public interface UserProfile {
 	 * @param key
 	 * @return
 	 */
-	public UserProfileModel getUserProfile(String key);
+	//public UserProfileModel getUserProfile(String key);
 
 	/**
 	 * 
@@ -102,7 +111,7 @@ public interface UserProfile {
 	 * @param key
 	 * @return
 	 */
-	public boolean addKey(final UserProfileModel userProfile, final String key);
+	//public boolean addKey(final T userProfile, final String key);
 
 	/**
 	 * 
@@ -114,8 +123,8 @@ public interface UserProfile {
 	// {
 	// return deleteKey(getUserProfile(secretkey),key);
 	// }
-	public boolean deleteKey(final UserProfileModel userProfile,
-			final String key);
+	//public boolean deleteKey(final T userProfile,
+		//	final String key);
 
 	/**
 	 * 
@@ -123,7 +132,7 @@ public interface UserProfile {
 	 * @param key
 	 * @return
 	 */
-	public boolean setKeyStatus(final UserProfileModel userProfile,
-			final String key, boolean status);
+	//public boolean setKeyStatus(final T userProfile,
+		//	final String key, boolean status);
 
 }

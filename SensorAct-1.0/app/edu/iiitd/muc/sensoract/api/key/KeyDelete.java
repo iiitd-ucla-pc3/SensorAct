@@ -59,7 +59,8 @@ public class KeyDelete extends SensorActAPI {
 					keyDeleteJson, KeyDeleteFormat.class);
 			validateRequest(keyDeleteFormat);
 
-			UserProfileModel user = userProfile.getUserProfile(keyDeleteFormat.secretkey);
+			// TODO: need to change UserProfile class
+/*			UserProfileModel user = userProfile.getUserProfile(keyDeleteFormat.secretkey);
 
 			if (null == user) {
 				response.sendFailure(Const.API_KEY_DELETE,
@@ -74,7 +75,7 @@ public class KeyDelete extends SensorActAPI {
 				response.sendFailure(Const.API_KEY_DELETE,
 						ErrorType.KEY_NOTFOUND, keyDeleteFormat.key);
 			}
-
+*/
 			// //TODO: handle multiple key request
 			// StringBuffer resBuf = new StringBuffer();
 			// List<String> keyList = new ArrayList<String>();

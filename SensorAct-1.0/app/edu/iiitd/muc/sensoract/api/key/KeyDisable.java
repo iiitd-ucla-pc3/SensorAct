@@ -12,7 +12,7 @@ import edu.iiitd.muc.sensoract.api.key.request.KeyDisableFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
-import edu.iiitd.muc.sensoract.model.user.UserProfileModel;
+import edu.iiitd.muc.sensoract.model.RDBMS.UserProfileModel;
 
 /**
  * key/disable API: Disable a secret key associated with a user.
@@ -53,7 +53,8 @@ public class KeyDisable extends SensorActAPI {
 					keyDisableJson, KeyDisableFormat.class);
 			validateRequest(keyDisableFormat);
 
-			UserProfileModel user = userProfile
+			// TODO: need to change UserProfile class
+/*			UserProfileModel user = userProfile
 					.getUserProfile(keyDisableFormat.secretkey);
 
 			if (null == user) {
@@ -69,7 +70,7 @@ public class KeyDisable extends SensorActAPI {
 				response.sendFailure(Const.API_KEY_DISABLE,
 						ErrorType.KEY_NOTFOUND, keyDisableFormat.key);
 			}
-
+*/
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_KEY_DISABLE, ErrorType.INVALID_JSON,
 					e.getMessage());

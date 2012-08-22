@@ -5,7 +5,7 @@
  * Date: 2012-04-14
  * Author: Pandarasamy Arjunan
  */
-package edu.iiitd.muc.sensoract.profile.mongo;
+package edu.iiitd.muc.sensoract.profile.rdbms;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -15,8 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 import edu.iiitd.muc.sensoract.api.user.request.UserRegisterFormat;
-import edu.iiitd.muc.sensoract.model.user.UserKeyModel;
-import edu.iiitd.muc.sensoract.model.user.UserProfileModel;
+import edu.iiitd.muc.sensoract.model.RDBMS.UserProfileModel;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
 
 /**
@@ -26,7 +25,7 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
  * @version 1.0
  */
 
-public class UserProfileMongo implements UserProfile<UserProfileModel> {
+public class UserProfileRDBMS implements UserProfile<UserProfileModel> {
 
 	/**
 	 * Generates unique ids to create secret keys.
@@ -94,13 +93,13 @@ public class UserProfileMongo implements UserProfile<UserProfileModel> {
 	public String getUsername(final String secretkey) {
 
 		List<UserProfileModel> userList = UserProfileModel.find("bySecretkey",
-				secretkey).fetchAll();
+				secretkey).fetch();
 		if (null != userList && userList.size() > 0) {
 			return userList.get(0).secretkey;
 		}
 		return null;
 	}
-
+	
 	/**
 	 * Retrieves the secretkey corresponding to the given username and password.
 	 * 
@@ -112,7 +111,7 @@ public class UserProfileMongo implements UserProfile<UserProfileModel> {
 	public String getSecretkey(final String username, final String password) {
 
 		List<UserProfileModel> userList = UserProfileModel.find(
-				"byUsernameAndPassword", username, password).fetchAll();
+				"byUsernameAndPassword", username, password).fetch();
 		if (null != userList && userList.size() > 0) {
 			return userList.get(0).secretkey;
 		}
@@ -130,7 +129,7 @@ public class UserProfileMongo implements UserProfile<UserProfileModel> {
 	public String getSecretkey(final String username) {
 
 		List<UserProfileModel> userList = UserProfileModel.find("byUsername",
-				username).fetchAll();
+				username).fetch();
 		if (null != userList && userList.size() > 0) {
 			return userList.get(0).secretkey;
 		}
@@ -149,7 +148,7 @@ public class UserProfileMongo implements UserProfile<UserProfileModel> {
 	public boolean isRegisteredSecretkey(final String secretkey) {
 
 		List<UserProfileModel> userList = UserProfileModel.find("bySecretkey",
-				secretkey).fetchAll();
+				secretkey).fetch();
 
 		if (null == userList || 1 != userList.size()) {
 			return false; // something went wrong if size > 1
@@ -253,10 +252,13 @@ public class UserProfileMongo implements UserProfile<UserProfileModel> {
 	 * @param key
 	 * @return
 	 */
-	public UserProfileModel getUserProfile(String key) {
+	public edu.iiitd.muc.sensoract.model.user.UserProfileModel getUserProfile(String key) {
 
-		List<UserProfileModel> userList = UserProfileModel.find("Secretkey",
-				key).fetchAll();
+		return null;
+/*		List<UserProfileModel> userList = UserProfileModel.find("Secretkey",
+				key).fetch();
+
+		userList.get(0);
 
 		// TODO: if we want to check all the keys
 		// List<UserProfileModel> userList =
@@ -267,7 +269,7 @@ public class UserProfileMongo implements UserProfile<UserProfileModel> {
 			return null; // something went wrong if userList.size > 1
 		}
 		return userList.get(0);
-	}
+*/	}
 
 	/**
 	 * 
@@ -275,7 +277,7 @@ public class UserProfileMongo implements UserProfile<UserProfileModel> {
 	 * @param key
 	 * @return
 	 */
-	public boolean addKey(final UserProfileModel userProfile, final String key) {
+/*	public boolean addKey(final UserProfileModel userProfile, final String key) {
 
 		if (null == userProfile) {
 			return false;
@@ -290,7 +292,7 @@ public class UserProfileMongo implements UserProfile<UserProfileModel> {
 
 		return true;
 	}
-
+*/
 	/**
 	 * 
 	 * @param userProfile
@@ -301,7 +303,7 @@ public class UserProfileMongo implements UserProfile<UserProfileModel> {
 	// {
 	// return deleteKey(getUserProfile(secretkey),key);
 	// }
-	public boolean deleteKey(final UserProfileModel userProfile,
+/*	public boolean deleteKey(final UserProfileModel userProfile,
 			final String key) {
 
 		if (null == userProfile || null == userProfile.keylist) {
@@ -319,14 +321,14 @@ public class UserProfileMongo implements UserProfile<UserProfileModel> {
 		}
 		return false;
 	}
-
+*/
 	/**
 	 * 
 	 * @param userProfile
 	 * @param key
 	 * @return
 	 */
-	public boolean setKeyStatus(final UserProfileModel userProfile,
+/*	public boolean setKeyStatus(final UserProfileModel userProfile,
 			final String key, boolean status) {
 
 		if (null == userProfile || null == userProfile.keylist) {
@@ -346,5 +348,4 @@ public class UserProfileMongo implements UserProfile<UserProfileModel> {
 		}
 		return false;
 	}
-
-}
+*/}

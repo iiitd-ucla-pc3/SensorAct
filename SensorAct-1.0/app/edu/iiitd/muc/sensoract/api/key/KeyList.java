@@ -53,7 +53,8 @@ public class KeyList extends SensorActAPI {
 					KeyListFormat.class);
 			validateRequest(keyListFormat);
 
-			UserProfileModel user = userProfile
+			// TODO: need to change UserProfile class
+/*			UserProfileModel user = userProfile
 					.getUserProfile(keyListFormat.secretkey);
 
 			if (null == user) {
@@ -63,7 +64,7 @@ public class KeyList extends SensorActAPI {
 			}
 
 			response.sendJSON(user.keylist);
-
+*/
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_KEY_LIST, ErrorType.INVALID_JSON,
 					e.getMessage());

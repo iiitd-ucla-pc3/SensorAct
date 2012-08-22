@@ -61,7 +61,8 @@ public class KeyGenerate extends SensorActAPI {
 					keyGenerateJson, KeyGenerateFormat.class);
 			validateRequest(keyGenerateFormat);
 
-			UserProfileModel user = userProfile
+			// TODO: need to change UserProfile class
+/*			UserProfileModel user = userProfile
 					.getUserProfile(keyGenerateFormat.secretkey);
 
 			if (null == user) {
@@ -73,7 +74,7 @@ public class KeyGenerate extends SensorActAPI {
 			String newKey = userProfile.generateNewKey();
 			userProfile.addKey(user, newKey);
 			response.SendSuccess(Const.API_KEY_GENERATE, newKey);
-
+*/
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_KEY_GENERATE,
 					ErrorType.INVALID_JSON, e.getMessage());
