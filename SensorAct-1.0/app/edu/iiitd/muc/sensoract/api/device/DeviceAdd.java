@@ -91,7 +91,7 @@ public class DeviceAdd extends SensorActAPI {
 		while (iteratorSensors.hasNext()) {
 			DeviceSensor sensor = iteratorSensors.next();
 			validator.validateDeviceProfileSensorName(sensor.name, sensorIndex);
-			validator.validateDeviceProfileSensorId(sensor.id, sensorIndex);
+			validator.validateDeviceProfileSensorId(sensor.sid, sensorIndex);
 			validateChannels(sensor.channels, sensorIndex);
 			++sensorIndex;
 		}
@@ -146,7 +146,7 @@ public class DeviceAdd extends SensorActAPI {
 			List sensors = deviceProfile.sensors;
 			List actuators = deviceProfile.actuators;
 
-			validator.validateDeviceProfileName(deviceProfile.name);
+			validator.validateDeviceProfileName(deviceProfile.devicename);
 			validator.validateDeviceProfileLocation(deviceProfile.location);
 			validator.validateDeviceProfileTags(deviceProfile.tags);
 			validator.validateDeviceProfileLatitude(deviceProfile.latitude);
@@ -203,11 +203,11 @@ public class DeviceAdd extends SensorActAPI {
 			if (deviceProfile.isDeviceExists(newDevice)) {
 				response.sendFailure(Const.API_DEVICE_ADD,
 						ErrorType.DEVICE_ALREADYEXISTS,
-						newDevice.deviceprofile.name);
+						newDevice.deviceprofile.devicename);
 			}
 			deviceProfile.addDevice(newDevice);
 			response.SendSuccess(Const.API_DEVICE_ADD, Const.DEVICE_ADDED,
-					newDevice.deviceprofile.name);
+					newDevice.deviceprofile.devicename);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_DEVICE_ADD, ErrorType.INVALID_JSON,

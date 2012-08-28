@@ -17,6 +17,7 @@ import edu.iiitd.muc.sensoract.api.data.request.WaveSegmentFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
+import edu.iiitd.muc.sensoract.model.RDBMS.WaveSegmentRModel;
 import edu.iiitd.muc.sensoract.model.data.WaveSegmentModel;
 import edu.iiitd.muc.sensoract.tasklet.DeviceEvent;
 import edu.iiitd.muc.sensoract.tasklet.DeviceEventListener;
@@ -81,6 +82,9 @@ public class DataUploadWaveSegment extends SensorActAPI {
 	 */
 	private void persistWaveSegment(final WaveSegmentFormat waveSegment) {
 
+		WaveSegmentRModel ws = new WaveSegmentRModel(waveSegment);
+		ws.save();
+		
 		//WaveSegmentModel waveSegmentModel = new WaveSegmentModel(waveSegment);
 		//waveSegmentModel.save();
 		System.out.println(System.currentTimeMillis() + " " + waveSegment.data.sid + " notifing...");

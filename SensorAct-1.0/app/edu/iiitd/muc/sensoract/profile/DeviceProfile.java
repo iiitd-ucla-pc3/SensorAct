@@ -3,7 +3,7 @@ package edu.iiitd.muc.sensoract.profile;
 import java.util.List;
 
 import edu.iiitd.muc.sensoract.api.device.request.DeviceAddFormat;
-import edu.iiitd.muc.sensoract.model.device.DeviceModel;
+import edu.iiitd.muc.sensoract.api.response.DeviceProfileFormat;
 import edu.iiitd.muc.sensoract.model.device.DeviceTemplateModel;
 
 public interface DeviceProfile {
@@ -62,9 +62,10 @@ public interface DeviceProfile {
 	 * @param devicename
 	 *            Name of the registered device profile.
 	 * @return Device object in DeviceModel format.
-	 * @see DeviceModel
+	 * @see DeviceProfileFormat
 	 */
-	public DeviceModel getDevice(final String secretkey, final String devicename);
+	public DeviceProfileFormat getDevice(final String secretkey,
+			final String devicename);
 
 	/**
 	 * Retrieves a device template from the data repository corresponding to the
@@ -77,7 +78,7 @@ public interface DeviceProfile {
 	 * @return Device template object in DeviceTemplateModel format.
 	 * @see DeviceTemplateModel
 	 */
-	public DeviceTemplateModel getDeviceTemplate(final String secretkey,
+	public DeviceProfileFormat getDeviceTemplate(final String secretkey,
 			final String templatename);
 
 	/**
@@ -87,9 +88,9 @@ public interface DeviceProfile {
 	 * @param secretkey
 	 *            Secret key of the registered user associated with the devices.
 	 * @return List of devices in DeviceModel object.
-	 * @see DeviceModel
+	 * @see DeviceProfileFormat
 	 */
-	public List<DeviceModel> getDeviceList(final String secretkey);
+	public List<DeviceProfileFormat> getDeviceList(final String secretkey);
 
 	/**
 	 * Retrieves all device templates from the data repository corresponding to
@@ -100,7 +101,7 @@ public interface DeviceProfile {
 	 * @return List of device templates in DeviceTemplateModel object.
 	 * @see DeviceTemplateModel
 	 */
-	public List<DeviceTemplateModel> getDeviceTemplateList(
+	public List<DeviceProfileFormat> getDeviceTemplateList(
 			final String secretkey);
 
 	/**
@@ -112,7 +113,7 @@ public interface DeviceProfile {
 	 * @return List of device templates in DeviceTemplateModel object.
 	 * @see DeviceTemplateModel
 	 */
-	public List<DeviceTemplateModel> getGlobalDeviceTemplateList();
+	public List<DeviceProfileFormat> getGlobalDeviceTemplateList();
 
 	/**
 	 * Checks for duplicate devices. If device already exists in the repository,

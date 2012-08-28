@@ -13,6 +13,7 @@ import java.util.List;
 import edu.iiitd.muc.sensoract.api.SensorActAPI;
 import edu.iiitd.muc.sensoract.api.device.request.DeviceListFormat;
 import edu.iiitd.muc.sensoract.api.response.DeviceListResponseFormat;
+import edu.iiitd.muc.sensoract.api.response.DeviceProfileFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
@@ -52,19 +53,14 @@ public class DeviceList extends SensorActAPI {
 	 * @param deviceList
 	 *            List of device profile objects to send.
 	 */
-	private void sendDeviceProfileList(final List<DeviceModel> deviceList) {
+	private void sendDeviceProfileList(
+			final List<DeviceProfileFormat> deviceList) {
 
 		DeviceListResponseFormat outList = new DeviceListResponseFormat();
-		Iterator<DeviceModel> deviceListIterator = deviceList.iterator();
-
-		while (deviceListIterator.hasNext()) {
-			DeviceModel device = deviceListIterator.next();
-			device.secretkey = null;
-		}
-
 		outList.setDeviceList(deviceList);
 		// response.sendJSON(outList);
-		response.sendJSON(remove_Id(outList, "devicelist"));
+		//response.sendJSON(remove_Id(outList, "devicelist"));
+		response.sendJSON(outList);
 	}
 
 	/**
@@ -83,7 +79,7 @@ public class DeviceList extends SensorActAPI {
 
 			DeviceListFormat deviceListRequest = convertToRequestFormat(
 					deviceListJson, DeviceListFormat.class);
-			
+
 			validateRequest(deviceListRequest, Const.API_DEVICE_LIST);
 
 			if (!userProfile.isRegisteredSecretkey(deviceListRequest.secretkey)) {
@@ -92,7 +88,7 @@ public class DeviceList extends SensorActAPI {
 						deviceListRequest.secretkey);
 			}
 
-			List<DeviceModel> devicesList = deviceProfile
+			List<DeviceProfileFormat> devicesList = deviceProfile
 					.getDeviceList(deviceListRequest.secretkey);
 			if (null == devicesList || 0 == devicesList.size()) {
 				response.sendFailure(Const.API_DEVICE_LIST,

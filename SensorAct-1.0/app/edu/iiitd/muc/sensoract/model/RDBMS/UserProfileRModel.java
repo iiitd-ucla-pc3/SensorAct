@@ -21,14 +21,14 @@ import play.db.jpa.Model;
  * @version 1.0
  */
 @Entity(name = "users")
-public class UserProfileModel extends Model {
+public class UserProfileRModel extends Model {
 
 	public String username = null;
 	public String password = null;
 	public String email = null;
 	public String secretkey = null;
 	
-	public UserProfileModel(final String username, final String password,
+	public UserProfileRModel(final String username, final String password,
 			final String email, final String secretkey) {
 		this.username = username;
 		this.password = password;
@@ -36,6 +36,6 @@ public class UserProfileModel extends Model {
 		this.secretkey = secretkey;
 	}
 	
-	UserProfileModel() {
+	UserProfileRModel() {
 	}
 }

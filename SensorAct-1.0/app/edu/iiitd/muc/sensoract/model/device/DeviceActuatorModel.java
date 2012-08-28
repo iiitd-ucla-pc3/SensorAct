@@ -21,9 +21,11 @@ public class DeviceActuatorModel extends Model {
 
 	// TODO: Add other actuator attributes
 	public String name = null;
+	public String aid = null;
 
 	public DeviceActuatorModel(DeviceAddFormat.DeviceActuator actuator) {
 		this.name = actuator.name;
+		this.aid = actuator.aid;
 	}
 
 	DeviceActuatorModel() {

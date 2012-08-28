@@ -9,6 +9,7 @@ package edu.iiitd.muc.sensoract.api.device;
 
 import edu.iiitd.muc.sensoract.api.SensorActAPI;
 import edu.iiitd.muc.sensoract.api.device.request.DeviceGetFormat;
+import edu.iiitd.muc.sensoract.api.response.DeviceProfileFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
@@ -46,12 +47,12 @@ public class DeviceGet extends SensorActAPI {
 	 * @param oneDevice
 	 *            Device profile object to send
 	 */
-	private void sendDeviceProfile(final DeviceModel oneDevice) {
+	private void sendDeviceProfile(final DeviceProfileFormat oneDevice) {
 
 		// TODO: Remove unnecessary _id attributes thrown by morphia
-		oneDevice.secretkey = null;
-		//response.sendJSON(oneDevice);
-		response.sendJSON(remove_Id(oneDevice));
+		//oneDevice.secretkey = null;
+		response.sendJSON(oneDevice);
+		//response.sendJSON(remove_Id(oneDevice));
 		
 	}
 
@@ -81,7 +82,7 @@ public class DeviceGet extends SensorActAPI {
 						deviceGetRequest.secretkey);
 			}
 
-			DeviceModel oneDevice = deviceProfile.getDevice(
+			DeviceProfileFormat oneDevice = deviceProfile.getDevice(
 					deviceGetRequest.secretkey, deviceGetRequest.devicename);
 			if (null == oneDevice) {
 				response.sendFailure(Const.API_DEVICE_GET,

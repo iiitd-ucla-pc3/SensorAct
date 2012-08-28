@@ -10,6 +10,7 @@ package edu.iiitd.muc.sensoract.api.device;
 import java.util.List;
 
 import edu.iiitd.muc.sensoract.api.device.request.DeviceListFormat;
+import edu.iiitd.muc.sensoract.api.response.DeviceProfileFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
@@ -51,7 +52,7 @@ public class DeviceTemplateGlobalList extends DeviceTemplateList {
 						templateListRequest.secretkey);
 			}
 
-			List<DeviceTemplateModel> templateList = deviceProfile
+			List<DeviceProfileFormat> templateList = deviceProfile
 					.getGlobalDeviceTemplateList();
 
 			if (null == templateList || 0 == templateList.size()) {

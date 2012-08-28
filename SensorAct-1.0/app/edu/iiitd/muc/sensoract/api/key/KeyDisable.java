@@ -12,7 +12,7 @@ import edu.iiitd.muc.sensoract.api.key.request.KeyDisableFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
-import edu.iiitd.muc.sensoract.model.RDBMS.UserProfileModel;
+import edu.iiitd.muc.sensoract.model.RDBMS.UserProfileRModel;
 
 /**
  * key/disable API: Disable a secret key associated with a user.

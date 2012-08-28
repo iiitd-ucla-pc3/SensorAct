@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 import edu.iiitd.muc.sensoract.api.user.request.UserRegisterFormat;
-import edu.iiitd.muc.sensoract.model.RDBMS.UserProfileModel;
+import edu.iiitd.muc.sensoract.model.RDBMS.UserProfileRModel;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
 
 /**
@@ -25,7 +25,7 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
  * @version 1.0
  */
 
-public class UserProfileRDBMS implements UserProfile<UserProfileModel> {
+public class UserProfileRDBMS implements UserProfile<UserProfileRModel> {
 
 	/**
 	 * Generates unique ids to create secret keys.
@@ -76,7 +76,7 @@ public class UserProfileRDBMS implements UserProfile<UserProfileModel> {
 	public boolean addUserProfile(final UserRegisterFormat newUser,
 			final String secretkey) {
 
-		UserProfileModel newUserProfile = new UserProfileModel(
+		UserProfileRModel newUserProfile = new UserProfileRModel(
 				newUser.username, newUser.password, newUser.email, secretkey);
 		newUserProfile.save();
 		return true;
@@ -92,7 +92,7 @@ public class UserProfileRDBMS implements UserProfile<UserProfileModel> {
 	@Override
 	public String getUsername(final String secretkey) {
 
-		List<UserProfileModel> userList = UserProfileModel.find("bySecretkey",
+		List<UserProfileRModel> userList = UserProfileRModel.find("bySecretkey",
 				secretkey).fetch();
 		if (null != userList && userList.size() > 0) {
 			return userList.get(0).secretkey;
@@ -110,7 +110,7 @@ public class UserProfileRDBMS implements UserProfile<UserProfileModel> {
 	@Override
 	public String getSecretkey(final String username, final String password) {
 
-		List<UserProfileModel> userList = UserProfileModel.find(
+		List<UserProfileRModel> userList = UserProfileRModel.find(
 				"byUsernameAndPassword", username, password).fetch();
 		if (null != userList && userList.size() > 0) {
 			return userList.get(0).secretkey;
@@ -128,7 +128,7 @@ public class UserProfileRDBMS implements UserProfile<UserProfileModel> {
 	@Override
 	public String getSecretkey(final String username) {
 
-		List<UserProfileModel> userList = UserProfileModel.find("byUsername",
+		List<UserProfileRModel> userList = UserProfileRModel.find("byUsername",
 				username).fetch();
 		if (null != userList && userList.size() > 0) {
 			return userList.get(0).secretkey;
@@ -147,7 +147,7 @@ public class UserProfileRDBMS implements UserProfile<UserProfileModel> {
 	@Override
 	public boolean isRegisteredSecretkey(final String secretkey) {
 
-		List<UserProfileModel> userList = UserProfileModel.find("bySecretkey",
+		List<UserProfileRModel> userList = UserProfileRModel.find("bySecretkey",
 				secretkey).fetch();
 
 		if (null == userList || 1 != userList.size()) {
@@ -179,7 +179,7 @@ public class UserProfileRDBMS implements UserProfile<UserProfileModel> {
 	 */
 	@Override
 	public boolean isRegisteredUser(final String username) {
-		return !(0 == UserProfileModel.count("byUsername", username));
+		return !(0 == UserProfileRModel.count("byUsername", username));
 	}
 
 	/**
@@ -193,7 +193,7 @@ public class UserProfileRDBMS implements UserProfile<UserProfileModel> {
 	 */
 	@Override
 	public boolean isUserProfileExists(final UserRegisterFormat newUser) {
-		return !(0 == UserProfileModel.count("byUsername", newUser.username));
+		return !(0 == UserProfileRModel.count("byUsername", newUser.username));
 	}
 
 	/**
@@ -233,13 +233,13 @@ public class UserProfileRDBMS implements UserProfile<UserProfileModel> {
 	public List<String> getUserNameList() {
 
 		List<String> userNameList = new ArrayList<String>();
-		List<UserProfileModel> userList = UserProfileModel.findAll();
+		List<UserProfileRModel> userList = UserProfileRModel.findAll();
 
 		if (null == userList) {
 			return null;
 		}
 
-		Iterator<UserProfileModel> userListIterator = userList.iterator();
+		Iterator<UserProfileRModel> userListIterator = userList.iterator();
 		while (userListIterator.hasNext()) {
 			userNameList.add(userListIterator.next().username);
 		}

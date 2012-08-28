@@ -22,17 +22,17 @@ import edu.iiitd.muc.sensoract.model.device.DeviceTemplateModel;
  */
 public class DeviceListResponseFormat {
 
-	private List<DeviceModel> devicelist = null;
-	private List<DeviceTemplateModel> templatelist = null;
+	private List<DeviceProfileFormat> devicelist = null;
+	private List<DeviceProfileFormat> templatelist = null;
 
-	public void setDeviceList(List<DeviceModel> deviceList) {
-		devicelist = new ArrayList<DeviceModel>();
+	public void setDeviceList(List<DeviceProfileFormat> deviceList) {
+		devicelist = new ArrayList<DeviceProfileFormat>();
 		devicelist.addAll(deviceList);
 		templatelist = null;
 	}
 	
-	public void setTemplateList(List<DeviceTemplateModel> templateList) {
-		templatelist = new ArrayList<DeviceTemplateModel>();
+	public void setTemplateList(List<DeviceProfileFormat> templateList) {
+		templatelist = new ArrayList<DeviceProfileFormat>();
 		templatelist.addAll(templateList);
 		devicelist = null;
 	}

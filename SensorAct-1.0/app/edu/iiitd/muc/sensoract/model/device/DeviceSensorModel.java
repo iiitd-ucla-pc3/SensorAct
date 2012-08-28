@@ -13,6 +13,7 @@ import java.util.List;
 
 import play.modules.morphia.Model;
 import edu.iiitd.muc.sensoract.api.device.request.DeviceAddFormat;
+import edu.iiitd.muc.sensoract.api.device.request.DeviceAddFormat.DeviceSensor;
 
 /**
  * Model class for device profile (Sensor) management
@@ -24,13 +25,13 @@ import edu.iiitd.muc.sensoract.api.device.request.DeviceAddFormat;
 public class DeviceSensorModel extends Model {
 
 	public String name = null;
-	public String id = null;
+	public String sid = null;
 	public List<DeviceChannelModel> channels = null;
 
-	public DeviceSensorModel(final DeviceAddFormat.DeviceSensor sensor) {
+	public DeviceSensorModel(final DeviceSensor sensor) {
 
 		name = sensor.name;
-		id = sensor.id.toString();
+		sid = sensor.sid.toString();
 
 		if(null == sensor.channels) {
 			return;

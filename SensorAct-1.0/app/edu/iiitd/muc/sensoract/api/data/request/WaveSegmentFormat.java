@@ -20,7 +20,7 @@ public class WaveSegmentFormat {
 	/**
 	 * Defines the channel data format
 	 */
-	public class Channels {
+	public static class Channels {
 		public String cname = null;
 		public String unit = null;
 		public List<Double> readings = null;
@@ -29,13 +29,13 @@ public class WaveSegmentFormat {
 	/**
 	 * Defines the device meta information format
 	 */
-	public class DeviceData {
-		public String loc = null;
+	public static class DeviceData {		
 		public String dname = null;
 		public String sname = null;
 		public String sid = null;
-		public long timestamp;
 		public String sinterval;
+		public long timestamp;		
+		public String loc = null;
 		public List<Channels> channels = null;
 	}
 

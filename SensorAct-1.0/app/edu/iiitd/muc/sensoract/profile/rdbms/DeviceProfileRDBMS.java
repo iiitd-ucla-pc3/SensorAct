@@ -5,18 +5,22 @@
  * Date: 2012-04-14
  * Author: Pandarasamy Arjunan
  */
-package edu.iiitd.muc.sensoract.profile.mongo;
+package edu.iiitd.muc.sensoract.profile.rdbms;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import org.hibernate.ejb.criteria.Renderable;
+
 import play.modules.morphia.Model.MorphiaQuery;
+import edu.iiitd.muc.sensoract.api.SensorActAPI;
 import edu.iiitd.muc.sensoract.api.device.request.DeviceAddFormat;
-import edu.iiitd.muc.sensoract.api.response.DeviceListResponseFormat;
 import edu.iiitd.muc.sensoract.api.response.DeviceProfileFormat;
+import edu.iiitd.muc.sensoract.model.RDBMS.DeviceActuatorRModel;
+import edu.iiitd.muc.sensoract.model.RDBMS.DeviceRModel;
+import edu.iiitd.muc.sensoract.model.RDBMS.DeviceSensorRModel;
+import edu.iiitd.muc.sensoract.model.RDBMS.TemplateRModel;
 import edu.iiitd.muc.sensoract.model.device.DeviceModel;
-import edu.iiitd.muc.sensoract.model.device.DeviceProfileModel;
 import edu.iiitd.muc.sensoract.model.device.DeviceTemplateModel;
 import edu.iiitd.muc.sensoract.profile.DeviceProfile;
 
@@ -27,8 +31,19 @@ import edu.iiitd.muc.sensoract.profile.DeviceProfile;
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
-public class DeviceProfileMongo implements DeviceProfile {
+public class DeviceProfileRDBMS implements DeviceProfile {
 
+	/*
+	 * 
+	 * { secretkey : "cf7908f7b8694975aec68e0475e7cb6c", devicename : "d1",
+	 * username : "samysamy", password : "password", email : "email@id.com",
+	 * deviceprofile : { name : 'd1', location : "loc", tags : "tags", latitude
+	 * : 10, longitude : 20, IP : "99", sensors : [ {name:"sensor1", sid:1,
+	 * channels : [ {name:"ch1", type:"tt", unit: "uu", samplingperiod : 1}] }
+	 * ], actuators : [{name:"sensor1", sid:1}] }
+	 * 
+	 * }
+	 */
 	/**
 	 * Adds a new device to the repository.
 	 * 
@@ -38,7 +53,7 @@ public class DeviceProfileMongo implements DeviceProfile {
 	 */
 	@Override
 	public boolean addDevice(final DeviceAddFormat newDevice) {
-		DeviceModel device = new DeviceModel(newDevice);
+		DeviceRModel device = new DeviceRModel(newDevice);
 		device.save();
 		return true;
 	}
@@ -52,7 +67,7 @@ public class DeviceProfileMongo implements DeviceProfile {
 	 */
 	@Override
 	public boolean addDeviceTemplate(final DeviceAddFormat newTemplate) {
-		DeviceTemplateModel template = new DeviceTemplateModel(newTemplate);
+		DeviceRModel template = new DeviceRModel(newTemplate, true);
 		template.save();
 		return true;
 	}
@@ -69,20 +84,16 @@ public class DeviceProfileMongo implements DeviceProfile {
 	 */
 
 	@Override
-	public boolean deleteDevice(final String secretkey,
-			final String devicename) {
+	public boolean deleteDevice(final String secretkey, final String devicename) {
 
 		// TODO: Include other params to uniquely identify device profile
 		// TODO: Inconsistent way with play's jpa Model
-		MorphiaQuery mq = DeviceModel.find("bySecretkeyAndDevicename",
-				secretkey, devicename);
-		if (0 == mq.count()) {
-			return false;
-		}
-		// DeviceProfileModel.find("bySecretkeyAndName", secretkey,
-		// devicename).delete();
-		mq.delete();
-		return true;
+		/*
+		 * MorphiaQuery mq = DeviceModel.find("bySecretkeyAndDevicename",
+		 * secretkey, devicename); if (0 == mq.count()) { return false; } //
+		 * DeviceProfileModel.find("bySecretkeyAndName", secretkey, //
+		 * devicename).delete(); mq.delete();
+		 */return true;
 	}
 
 	/**
@@ -122,19 +133,45 @@ public class DeviceProfileMongo implements DeviceProfile {
 	 * @param devicename
 	 *            Name of the registered device profile.
 	 * @return Device object in DeviceModel format.
-	 * @see DeviceModel
+	 * @see DeviceRModel
 	 */
 	@Override
 	public DeviceProfileFormat getDevice(final String secretkey,
 			final String devicename) {
 
-		// TODO: Inconsistent way with play's jpa Model
-		List<DeviceModel> deviceList = DeviceModel.find(
-				"bySecretkeyAndDevicename", secretkey, devicename).fetchAll();
+		/*
+		 * List<DeviceRModel> dlist = DeviceRModel.find("devicename",
+		 * "d2").fetch();
+		 * 
+		 * System.out.println(dlist.size());
+		 * 
+		 * DeviceRModel d1 = dlist.get(0); System.out.println(d1.devicename);
+		 * 
+		 * System.out.println("sensor# " + d1.sensors.size());
+		 * System.out.println("act# " + d1.actuators.size());
+		 * 
+		 * for(DeviceSensorRModel s: d1.sensors) { System.out.println("sensor "
+		 * + s.name); }
+		 * 
+		 * for(DeviceActuatorRModel a: d1.actuators) {
+		 * System.out.println("actuator " + a.name); }
+		 */
+
+		List<DeviceRModel> deviceList = DeviceRModel.find(
+				"bySecretkeyAndDevicename", secretkey, devicename).fetch();
+
 		if (null == deviceList || 0 == deviceList.size()) {
 			return null;
 		}
 		return new DeviceProfileFormat(deviceList.get(0));
+
+		// TODO: Inconsistent way with play's jpa Model
+		/*
+		 * List<DeviceModel> deviceList = DeviceModel.find(
+		 * "bySecretkeyAndDevicename", secretkey, devicename).fetch()(); if
+		 * (null == deviceList || 0 == deviceList.size()) { return null; }
+		 * return deviceList.get(0);
+		 */
 	}
 
 	/**
@@ -152,17 +189,13 @@ public class DeviceProfileMongo implements DeviceProfile {
 	public DeviceProfileFormat getDeviceTemplate(final String secretkey,
 			final String templatename) {
 
-		// TODO: Inconsistent way with play's jpa Model
-		List<DeviceTemplateModel> templateList = DeviceTemplateModel.find(
-				"bySecretkeyAndTemplatename", secretkey, templatename)
-				.fetchAll();
-		if (null == templateList || 0 == templateList.size()) {
+		List<DeviceRModel> deviceList = DeviceRModel.find(
+				"bySecretkeyAndTemplatename", secretkey, templatename).fetch();
+
+		if (null == deviceList || 0 == deviceList.size()) {
 			return null;
 		}
-		
-		//return new DeviceProfileFormat(templateList.get(0));
-		return null;
-		
+		return new DeviceProfileFormat(deviceList.get(0));
 	}
 
 	/**
@@ -172,29 +205,36 @@ public class DeviceProfileMongo implements DeviceProfile {
 	 * @param secretkey
 	 *            Secret key of the registered user associated with the devices.
 	 * @return List of devices in DeviceModel object.
-	 * @see DeviceModel
+	 * @see DeviceRModel
 	 */
 	@Override
 	public List<DeviceProfileFormat> getDeviceList(final String secretkey) {
 
-		// TODO: Inconsistent way with play's jpa Model
-		List<DeviceModel> deviceList = DeviceModel.find("bySecretkey",
-				secretkey).fetchAll();
+		List<DeviceRModel> deviceList = DeviceRModel.find("bySecretkey",
+				secretkey).fetch();
+
 		if (null == deviceList || 0 == deviceList.size()) {
 			return null;
 		}
-		// TODO: filter only devices
-		// Iterator<DeviceProfileModel> devicesListIterator = allDevicesList
-		// .iterator();
-		// while (devicesListIterator.hasNext()) {
-		// devicesListIterator.next().templatename = null;
-		// }
 
-		List<DeviceProfileFormat> list = new ArrayList<DeviceProfileFormat>();
-		for(DeviceModel dm: deviceList) {
-			list.add(new DeviceProfileFormat(dm));
+		List<DeviceProfileFormat> dList = new ArrayList<DeviceProfileFormat>();
+		for (DeviceRModel d : deviceList) {
+			dList.add(new DeviceProfileFormat(d));
 		}
-		return list;
+
+		return dList;
+
+		/*
+		 * // TODO: Inconsistent way with play's jpa Model List<DeviceModel>
+		 * deviceList = DeviceModel.find("bySecretkey", secretkey).fetchAll();
+		 * if (null == deviceList || 0 == deviceList.size()) { return null; } //
+		 * TODO: filter only devices // Iterator<DeviceProfileModel>
+		 * devicesListIterator = allDevicesList // .iterator(); // while
+		 * (devicesListIterator.hasNext()) { //
+		 * devicesListIterator.next().templatename = null; // }
+		 * 
+		 * return deviceList;
+		 */
 	}
 
 	/**
@@ -210,15 +250,19 @@ public class DeviceProfileMongo implements DeviceProfile {
 	public List<DeviceProfileFormat> getDeviceTemplateList(
 			final String secretkey) {
 
-		// TODO: Inconsistent way with play's jpa Model
-		List<DeviceTemplateModel> templateList = DeviceTemplateModel.find(
-				"bySecretkey", secretkey).fetchAll();
-		if (null == templateList || 0 == templateList.size()) {
+		List<DeviceRModel> deviceList = DeviceRModel.find("bySecretkeyAndDevicename",
+				secretkey,"NULL").fetch();
+
+		if (null == deviceList || 0 == deviceList.size()) {
 			return null;
 		}
 
-		//return templateList;
-		return null;
+		List<DeviceProfileFormat> dList = new ArrayList<DeviceProfileFormat>();
+		for (DeviceRModel d : deviceList) {
+			dList.add(new DeviceProfileFormat(d));
+		}
+
+		return dList;
 	}
 
 	/**
@@ -233,15 +277,23 @@ public class DeviceProfileMongo implements DeviceProfile {
 	@Override
 	public List<DeviceProfileFormat> getGlobalDeviceTemplateList() {
 
-		// TODO: Inconsistent way with play's jpa Model
-		List<DeviceTemplateModel> templateList = DeviceTemplateModel.find(
-				"isglobal", false).fetchAll();
-		if (null == templateList || 0 == templateList.size()) {
+//		List<DeviceRModel> deviceList = DeviceRModel.find("bySecretkey")
+	//			.fetch();
+
+		List<DeviceRModel> deviceList = DeviceRModel.find("bySecretkey")
+				.fetch();
+
+		if (null == deviceList || 0 == deviceList.size()) {
 			return null;
 		}
 
-		//return templateList;
-		return null;
+		List<DeviceProfileFormat> dList = new ArrayList<DeviceProfileFormat>();
+		for (DeviceRModel d : deviceList) {
+			dList.add(new DeviceProfileFormat(d));
+		}
+
+		return dList;
+
 	}
 
 	/**
@@ -257,7 +309,7 @@ public class DeviceProfileMongo implements DeviceProfile {
 	public boolean isDeviceExists(final DeviceAddFormat newDevice) {
 
 		// TODO: Check the uniqueness against id, ip, etc also
-		return 0 == DeviceModel.count("bySecretkeyAndDevicename",
+		return 0 == DeviceRModel.count("bySecretkeyAndDevicename",
 				newDevice.secretkey, newDevice.deviceprofile.devicename) ? false
 				: true;
 	}
@@ -273,8 +325,7 @@ public class DeviceProfileMongo implements DeviceProfile {
 	 */
 
 	@Override
-	public boolean isDeviceTemplateExists(
-			final DeviceAddFormat newTemplate) {
+	public boolean isDeviceTemplateExists(final DeviceAddFormat newTemplate) {
 
 		// TODO: Check the uniqueness against id, ip, etc also
 		return 0 == DeviceTemplateModel.count("bySecretkeyAndTemplatename",

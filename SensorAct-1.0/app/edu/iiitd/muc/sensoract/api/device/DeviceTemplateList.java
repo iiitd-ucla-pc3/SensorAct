@@ -12,6 +12,7 @@ import java.util.List;
 
 import edu.iiitd.muc.sensoract.api.device.request.DeviceListFormat;
 import edu.iiitd.muc.sensoract.api.response.DeviceListResponseFormat;
+import edu.iiitd.muc.sensoract.api.response.DeviceProfileFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
@@ -34,20 +35,13 @@ public class DeviceTemplateList extends DeviceList {
 	 *            List of device profile objects to send.
 	 */
 	protected void sendDeviceTemplateList(
-			final List<DeviceTemplateModel> templateList) {
+			final List<DeviceProfileFormat> templateList) {
 
 		DeviceListResponseFormat outList = new DeviceListResponseFormat();
-		Iterator<DeviceTemplateModel> templateListIterator = templateList
-				.iterator();
-
-		while (templateListIterator.hasNext()) {
-			DeviceTemplateModel template = templateListIterator.next();
-			template.secretkey = null;
-		}
-
 		outList.setTemplateList(templateList);
 		// response.sendJSON(outList);
-		response.sendJSON(remove_Id(outList, "templatelist"));
+		//response.sendJSON(remove_Id(outList, "devicelist"));
+		response.sendJSON(outList);
 	}
 
 	/**
@@ -76,7 +70,7 @@ public class DeviceTemplateList extends DeviceList {
 						templateListRequest.secretkey);
 			}
 
-			List<DeviceTemplateModel> templateList = deviceProfile
+			List<DeviceProfileFormat> templateList = deviceProfile
 					.getDeviceTemplateList(templateListRequest.secretkey);
 			if (null == templateList || 0 == templateList.size()) {
 				response.sendFailure(Const.API_DEVICE_TEMPLATE_LIST,

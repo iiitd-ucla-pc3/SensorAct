@@ -28,8 +28,7 @@ public class DeviceChannelModel extends Model {
 		name = channel.name;
 		type = channel.type;
 		unit = channel.unit;
-		samplingperiod = channel.samplingperiod;
-		
+		samplingperiod = channel.samplingperiod;		
 	}
 
 	DeviceChannelModel() {

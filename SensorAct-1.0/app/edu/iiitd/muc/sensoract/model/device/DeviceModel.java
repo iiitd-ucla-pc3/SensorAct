@@ -27,7 +27,7 @@ public class DeviceModel extends DeviceProfileModel {
 	 */
 	public DeviceModel(final DeviceAddFormat newDevice) {		
 		super(newDevice);
-		devicename = newDevice.deviceprofile.name;
+		devicename = newDevice.deviceprofile.devicename;
 	}
 
 	public DeviceModel() {
