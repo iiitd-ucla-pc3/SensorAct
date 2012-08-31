@@ -12,7 +12,10 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.IndexColumn;
 
 import play.data.validation.Required;
 import play.db.jpa.Model;
@@ -57,10 +60,12 @@ public class DeviceRModel extends Model {
 	@Required
 	public Double longitude;
 
-	@OneToMany(mappedBy = "device", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "device", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@IndexColumn(name="id")
 	public List<DeviceSensorRModel> sensors;
 
-	@OneToMany(mappedBy = "device", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "device", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@IndexColumn(name="id")
 	public List<DeviceActuatorRModel> actuators;
 
 	public DeviceRModel(final DeviceAddFormat newDevice) {

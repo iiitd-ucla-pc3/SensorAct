@@ -66,6 +66,9 @@ import edu.iiitd.muc.sensoract.profile.mongo.WaveSegmentDataMongo;
 import edu.iiitd.muc.sensoract.profile.rdbms.DeviceProfileRDBMS;
 import edu.iiitd.muc.sensoract.profile.rdbms.UserProfileRDBMS;
 import edu.iiitd.muc.sensoract.tasklet.DeviceEvent;
+import edu.iiitd.muc.sensoract.tasklet.TaskletManager;
+import edu.iiitd.muc.sensoract.tasklet.TaskletManagerImpl;
+import edu.iiitd.muc.sensoract.tasklet.TaskletManagerRImpl;
 import edu.iiitd.muc.sensoract.util.ParamValidator;
 import edu.iiitd.muc.sensoract.util.SensorActLogger;
 
@@ -137,6 +140,9 @@ public class SensorActAPI extends Application {
 
 	public static DeviceEvent deviceEvent = new DeviceEvent();
 
+	public static TaskletManager taskletManager = new TaskletManagerRImpl();
+	
+	
 	/*
 	 * API helper references
 	 */

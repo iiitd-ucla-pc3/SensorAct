@@ -13,7 +13,7 @@ import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
 import edu.iiitd.muc.sensoract.model.tasklet.TaskletModel;
-import edu.iiitd.muc.sensoract.tasklet.TaskletProfile;
+import edu.iiitd.muc.sensoract.tasklet.TaskletManagerImpl;
 import edu.iiitd.muc.sensoract.tasklet.TaskletScheduler;
 import edu.iiitd.muc.sensoract.util.TaskletParamValidator;
 
@@ -58,7 +58,7 @@ public class TaskletExecute extends SensorActAPI {
 					taskletAddJson, TaskletExecuteFormat.class);
 			validateRequest(taskletExecute);
 
-			TaskletModel tasklet = TaskletProfile.getTasklet(
+			TaskletModel tasklet = taskletManager.getTasklet(
 					taskletExecute.secretkey, taskletExecute.taskletname);
 
 			if (null == tasklet) {

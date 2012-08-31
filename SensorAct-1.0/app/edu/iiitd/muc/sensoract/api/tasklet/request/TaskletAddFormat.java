@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.iiitd.muc.sensoract.model.tasklet.NotifyEmailModel;
-import edu.iiitd.muc.sensoract.model.tasklet.TaskletModel.TaskletType;
+import edu.iiitd.muc.sensoract.model.tasklet.TaskletType;
 
 /**
  * Defines the request format for tasklet/add API.

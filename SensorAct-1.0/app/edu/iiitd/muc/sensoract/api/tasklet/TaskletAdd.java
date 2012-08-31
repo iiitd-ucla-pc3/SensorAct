@@ -16,8 +16,8 @@ import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
 import edu.iiitd.muc.sensoract.model.tasklet.NotifyEmailModel;
 import edu.iiitd.muc.sensoract.model.tasklet.TaskletModel;
-import edu.iiitd.muc.sensoract.model.tasklet.TaskletModel.TaskletType;
-import edu.iiitd.muc.sensoract.tasklet.TaskletProfile;
+import edu.iiitd.muc.sensoract.model.tasklet.TaskletType;
+import edu.iiitd.muc.sensoract.tasklet.TaskletManagerImpl;
 import edu.iiitd.muc.sensoract.util.TaskletParamValidator;
 
 /**
@@ -57,7 +57,7 @@ public class TaskletAdd extends SensorActAPI {
 	}
 
 	private void preProcessTaskelt(final TaskletAddFormat tasklet) {		
-		tasklet.tasklet_type = TaskletType.EVENT;	
+		tasklet.tasklet_type = TaskletType.ONESHOT;	
 	}
 	
 	/**
@@ -81,11 +81,14 @@ public class TaskletAdd extends SensorActAPI {
 			// ErrorType.UNREGISTERED_SECRETKEY, tasklet.secretkey);
 			// }
 			//
-			TaskletProfile.removeTasklet(tasklet.secretkey, tasklet.taskletname);
+			
+			//response.sendJSON(tasklet);
+			
+			taskletManager.removeTasklet(tasklet.secretkey, tasklet.taskletname);
 
-			TaskletProfile.addTasklet(tasklet);
+			taskletManager.addTasklet(tasklet);
 
-			TaskletModel tt = TaskletProfile.getTasklet(tasklet.secretkey, tasklet.taskletname);
+			TaskletModel tt = taskletManager.getTasklet(tasklet.secretkey, tasklet.taskletname);
 
 			response.sendJSON(tt);
 

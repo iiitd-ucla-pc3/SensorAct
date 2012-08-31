@@ -14,7 +14,6 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 import java.io.File;
 import java.io.FileReader;
-import java.util.Date;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -32,7 +31,6 @@ import org.quartz.impl.StdSchedulerFactory;
 import edu.iiitd.muc.sensoract.api.SensorActAPI;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.model.tasklet.TaskletModel;
-import edu.iiitd.muc.sensoract.model.tasklet.TaskletModel.TaskletType;
 
 public class TaskletScheduler {
 

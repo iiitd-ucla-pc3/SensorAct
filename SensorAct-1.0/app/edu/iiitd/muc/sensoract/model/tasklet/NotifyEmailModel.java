@@ -13,9 +13,15 @@ public class NotifyEmailModel {
 	public String message = null;
 
 	public NotifyEmailModel(String toId, String subject, String message) {
-		super();
 		this.toemail = toId;
 		this.subject = subject;
 		this.message = message;
 	}
+	
+	public NotifyEmailModel(NotifyEmailRModel email) {
+		toemail = email.toemail;
+		subject = email.subject;
+		message = email.message;
+	}
+
 }

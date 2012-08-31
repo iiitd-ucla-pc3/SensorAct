@@ -7,7 +7,7 @@
  */
 package edu.iiitd.muc.sensoract.model.tasklet;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import play.modules.morphia.Model;
@@ -15,8 +15,6 @@ import play.modules.morphia.Model;
 import com.google.code.morphia.annotations.Entity;
 
 import edu.iiitd.muc.sensoract.api.tasklet.request.TaskletAddFormat;
-import edu.iiitd.muc.sensoract.model.tasklet.TaskletModel.TaskletType;
-import edu.iiitd.muc.sensoract.tasklet.DeviceId;
 
 /**
  * Model class for tasklet script management.
@@ -27,8 +25,6 @@ import edu.iiitd.muc.sensoract.tasklet.DeviceId;
 @Entity(value = "Tasklet", noClassnameStored = true)
 public class TaskletModel extends Model {
 
-	public enum TaskletType {ONESHOT, PERIODIC, EVENT, PERIODIC_AND_EVENT}
-	
 	public String secretkey = null;
 	public String taskletname = null;
 	public String desc = null;
@@ -63,6 +59,31 @@ public class TaskletModel extends Model {
 		tasklet_type = tasklet.tasklet_type;
 	}
 
+	public TaskletModel(final TaskletRModel tasklet) {
+
+		if (null == tasklet) {
+			return;
+		}
+		secretkey = tasklet.secretkey;
+		taskletname = tasklet.taskletname;
+		desc = tasklet.description;
+
+		param = tasklet.param;
+		input = tasklet.input;
+
+		if(tasklet.email != null ) {
+			email = new HashMap<String,NotifyEmailModel>();
+			for(String key:tasklet.email.keySet()){
+				email.put(key, new NotifyEmailModel(tasklet.email.get(key)));
+			}
+		}
+
+		when = tasklet.when_;
+		execute = tasklet.execute;
+		
+		tasklet_type = tasklet.tasklet_type;
+	}
+	
 	TaskletModel() {
 	}
 }
