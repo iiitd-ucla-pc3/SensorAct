@@ -15,6 +15,8 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
@@ -78,7 +80,7 @@ public class TaskletRModel extends Model {
 	@Required
 	public String execute;
 
-	// Internal use
+	@Enumerated(EnumType.STRING)
 	public TaskletType tasklet_type;
 
 	public TaskletRModel(final TaskletAddFormat tasklet) {

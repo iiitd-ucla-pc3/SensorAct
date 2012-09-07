@@ -28,6 +28,7 @@ public class DataQueryFormat {
 	public String devicename = null;
 	public String sensorname = null;
 	public String sensorid = null;
+	public String channelname = null;
 	public QueryCondition conditions = null;
 
 }

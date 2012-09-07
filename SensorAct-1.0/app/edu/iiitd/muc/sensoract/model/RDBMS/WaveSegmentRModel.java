@@ -33,13 +33,13 @@ public class WaveSegmentRModel extends Model {
 	public String secretkey;
 	
 	@Required
-	public String dname;
+	public String device;
 	
 	@Required
-	public String sname;
+	public String sensor;
 	
 	@Required
-	public String sid = null;
+	public String sensorid = null;
 	
 	@Required
 	public String loc = null;
@@ -48,7 +48,7 @@ public class WaveSegmentRModel extends Model {
 	public long timestamp = 0;
 	
 	@Required
-	public String sinterval;
+	public String sampling_interval;
 	
 	@OneToMany(mappedBy = "wavesegment", cascade = CascadeType.ALL)
 	public List<WaveSegmentChannelRModel> channels;
@@ -62,11 +62,11 @@ public class WaveSegmentRModel extends Model {
 		DeviceData wsData = ws.data;
 		
 		secretkey = ws.secretkey;
-		dname = wsData.dname;
-		sname = wsData.sname;
-		sid = wsData.sid;
+		device = wsData.dname;
+		sensor = wsData.sname;
+		sensorid = wsData.sid;
 		timestamp = wsData.timestamp;
-		sinterval = wsData.sinterval;
+		sampling_interval = wsData.sinterval;
 		loc = wsData.loc;
 
 		if(null != wsData.channels )

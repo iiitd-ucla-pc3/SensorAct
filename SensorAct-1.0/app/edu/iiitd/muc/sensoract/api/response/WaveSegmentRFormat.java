@@ -23,32 +23,60 @@ import edu.iiitd.muc.sensoract.model.RDBMS.WaveSegmentRModel;
  */
 public class WaveSegmentRFormat extends DeviceData {
 
+	/*
 	public WaveSegmentRFormat(WaveSegmentRModel ws) {
 
-		if(null == ws) {
+		if (null == ws) {
 			return;
 		}
-		
+
 		dname = ws.dname;
 		sname = ws.sname;
 		sid = ws.sid;
 		sinterval = ws.sinterval;
-		timestamp = ws.timestamp;		
+		timestamp = ws.timestamp;
 		loc = ws.loc;
 
-		if(null != ws.channels )
-		{
+		if (null != ws.channels) {
 			channels = new ArrayList<Channels>();
-			for(WaveSegmentChannelRModel ch: ws.channels) {
+			for (WaveSegmentChannelRModel ch : ws.channels) {
 				Channels c = new Channels();
 				c.cname = ch.cname;
 				c.unit = ch.unit;
-				c.readings = new ArrayList<Double>();			
-				for(float f:ch.readings) {
-					c.readings.add(new Double(f));					
+				c.readings = new ArrayList<Double>();
+				for (float f : ch.readings) {
+					c.readings.add(new Double(f));
 				}
 				channels.add(c);
 			}
 		}
 	}
+*/
+	
+	public WaveSegmentRFormat(WaveSegmentChannelRModel ch) {
+
+		if (null == ch) {
+			return;
+		}
+
+		WaveSegmentRModel ws = ch.wavesegment;
+		dname = ws.device;
+		sname = ws.sensor;
+		sid = ws.sensorid;
+		sinterval = ws.sampling_interval;
+		timestamp = ws.timestamp;
+		loc = ws.loc;
+
+		channels = new ArrayList<Channels>();
+
+		Channels c = new Channels();
+		c.cname = ch.cname;
+		c.unit = ch.unit;
+		c.readings = new ArrayList<Double>();
+		for (float f : ch.readings) {
+			c.readings.add(new Double(f));
+		}
+		channels.add(c);
+	}
+
 }

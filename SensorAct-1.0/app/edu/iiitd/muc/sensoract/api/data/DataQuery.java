@@ -11,12 +11,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+
+import play.db.jpa.JPA;
+
 import edu.iiitd.muc.sensoract.api.SensorActAPI;
 import edu.iiitd.muc.sensoract.api.data.request.DataQueryFormat;
 import edu.iiitd.muc.sensoract.api.response.WaveSegmentRFormat;
 import edu.iiitd.muc.sensoract.constants.Const;
 import edu.iiitd.muc.sensoract.enums.ErrorType;
 import edu.iiitd.muc.sensoract.exceptions.InvalidJsonException;
+import edu.iiitd.muc.sensoract.model.RDBMS.WaveSegmentChannelRModel;
 import edu.iiitd.muc.sensoract.model.RDBMS.WaveSegmentRModel;
 import edu.iiitd.muc.sensoract.model.data.WaveSegmentModel;
 import edu.iiitd.muc.sensoract.profile.UserProfile;
@@ -99,14 +105,13 @@ public class DataQuery extends SensorActAPI {
 
 	private void executeRQuery(final DataQueryFormat queryObj) {
 
-		/*
-		 * { username : "samysamy", devicename : "device1", sensorname :
-		 * "sensor", secretkey : "cf7908f7b8694975aec68e0475e7cb6c", data : {
-		 * dname : "device1", sname : "sensor", sid : "1", sinterval : "1",
-		 * timestamp : 1234567890, channels : [ {cname: "channel1", unit : "C",
-		 * readings: [1,2,3,4,5,6,7,8,9,10]}, {cname: "channel2", unit : "T",
-		 * readings: [10,20,30,40,50,60,70,80,90,100]} ]} }
-		 */
+		// { username : "samysamy", devicename : "device1", sensorname :
+		// "sensor", secretkey : "cf7908f7b8694975aec68e0475e7cb6c", data : {
+		// dname : "device1", sname : "sensor", sid : "1", sinterval : "1",
+		// timestamp : 1234567890, channels : [ {cname: "channel1", unit : "C",
+		// readings: [1,2,3,4,5,6,7,8,9,10]}, {cname: "channel2", unit : "T",
+		// readings: [10,20,30,40,50,60,70,80,90,100]} ]} }
+
 		// TODO: add extensive query processing options
 		String secretkey = userProfile.getSecretkey(queryObj.username);
 		if (null == secretkey) {
@@ -116,20 +121,64 @@ public class DataQuery extends SensorActAPI {
 
 		log.info("QueryDAta : \n" + json.toJson(queryObj));
 
-//		List<WaveSegmentRModel> allWaveSegments = WaveSegmentRModel.find(
-	//			"bySecretkeyAndDnameAndSname", secretkey, queryObj.devicename, queryObj.sensorname).fetch();
+		// List<WaveSegmentRModel> allWaveSegments = WaveSegmentRModel.find(
+		// "bySecretkeyAndDnameAndSname", secretkey, queryObj.devicename,
+		// queryObj.sensorname).fetch();
 
-		List<WaveSegmentRModel> allWaveSegments = WaveSegmentRModel.find(
-				"secretkey = ? and dname = ? and sname = ? and sid = ? and " +
-				"timestamp >= ? and timestamp <= ?", 
-				secretkey, queryObj.devicename, queryObj.sensorname, queryObj.sensorid,
-				queryObj.conditions.fromtime,queryObj.conditions.totime)
-				.fetch();
+		// List<WaveSegmentRModel> allWaveSegments = WaveSegmentRModel.find(
+		// "secretkey = ? and dname = ? and sname = ? and sid = ? and " +
+		// "timestamp >= ? and timestamp <= ?",
+		// secretkey, queryObj.devicename, queryObj.sensorname,
+		// queryObj.sensorid,
+		// queryObj.conditions.fromtime,queryObj.conditions.totime)
+		// .fetch();
+
+		// for (WaveSegmentRModel ws : allWaveSegments) {
+		// wsf.add(new WaveSegmentRFormat(ws));
+		// }
+
+		// List<WaveSegmentRModel> allWaveSegments = WaveSegmentRModel
+		// .find("channels.cname = channel1")
+		// .fetch();
+
+		
+//		List<WaveSegmentChannelRModel> allWaveSegments = WaveSegmentRModel
+//				.em()
+//				.createQuery(
+//						"select ch from wschannels ch join ch.wavesegment ws "
+//								+ "where ch.cname = 'channel1' and ws.dname = 'device1'",
+//						WaveSegmentChannelRModel.class).getResultList();
+
+		String queryStr = "SELECT channel FROM wschannels channel "
+				+ "JOIN channel.wavesegment wavesegment "
+				+ "WHERE channel.cname = :cname "
+				+ "AND wavesegment.secretkey = :secretkey "
+				+ "AND wavesegment.device = :device "
+				+ "AND wavesegment.sensor = :sensor "
+				+ "AND wavesegment.sensorid = :sensorid "
+				+ "AND wavesegment.timestamp >= :fromtime "
+				+ "AND wavesegment.timestamp <= :totime ";
+
+		TypedQuery<WaveSegmentChannelRModel> query = JPA.em().createQuery(
+				queryStr, WaveSegmentChannelRModel.class);
+		
+		query.setParameter("secretkey", secretkey);
+		query.setParameter("device",queryObj.devicename );
+		query.setParameter("sensor", queryObj.sensorname);
+		query.setParameter("sensorid", queryObj.sensorid);
+		query.setParameter("cname", queryObj.channelname);
+		query.setParameter("fromtime", queryObj.conditions.fromtime);
+		query.setParameter("totime", queryObj.conditions.totime);
+		
+		List<WaveSegmentChannelRModel> allWaveSegments = query.getResultList();
+		
+		System.out.println("ch # " + allWaveSegments.size());
 
 		List<WaveSegmentRFormat> wsf = new ArrayList<WaveSegmentRFormat>();
-		for(WaveSegmentRModel ws : allWaveSegments){
+		for (WaveSegmentChannelRModel ws : allWaveSegments) {
 			wsf.add(new WaveSegmentRFormat(ws));
-		}		
+		}
+
 		response.sendJSON(wsf);
 	}
 
