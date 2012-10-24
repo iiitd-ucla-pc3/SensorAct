@@ -62,6 +62,7 @@ import edu.iiitd.muc.sensoract.profile.UserProfile;
 import edu.iiitd.muc.sensoract.profile.WaveSegmentData;
 import edu.iiitd.muc.sensoract.profile.mongo.ActuatorMongo;
 import edu.iiitd.muc.sensoract.profile.mongo.DeviceProfileMongo;
+import edu.iiitd.muc.sensoract.profile.mongo.UserProfileMongo;
 import edu.iiitd.muc.sensoract.profile.mongo.WaveSegmentDataMongo;
 import edu.iiitd.muc.sensoract.profile.rdbms.DeviceProfileRDBMS;
 import edu.iiitd.muc.sensoract.profile.rdbms.UserProfileRDBMS;
@@ -130,17 +131,19 @@ public class SensorActAPI extends Application {
 
 	public static Test test = new Test();
 
-	public static UserProfile userProfile = new UserProfileRDBMS();
+	//public static UserProfile userProfile = new UserProfileRDBMS();
+	public static UserProfile userProfile = new UserProfileMongo();
 
-	public static DeviceProfile deviceProfile = new DeviceProfileRDBMS();
-	//public static DeviceProfile deviceProfile = new DeviceProfileMongo();
+	//public static DeviceProfile deviceProfile = new DeviceProfileRDBMS();
+	public static DeviceProfile deviceProfile = new DeviceProfileMongo();
 	
 	public static WaveSegmentData waveSegmentData = new WaveSegmentDataMongo();
 	public static Actuator actuator = new ActuatorMongo();
 
 	public static DeviceEvent deviceEvent = new DeviceEvent();
 
-	public static TaskletManager taskletManager = new TaskletManagerRImpl();
+	public static TaskletManager taskletManager = new TaskletManagerImpl();
+	//public static TaskletManager taskletManager = new TaskletManagerRImpl();
 	
 	
 	/*

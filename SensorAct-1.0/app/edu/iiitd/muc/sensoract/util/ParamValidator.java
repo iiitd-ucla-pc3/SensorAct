@@ -199,7 +199,7 @@ public class ParamValidator extends SensorActAPI {
 	 */
 	public void validateDeviceProfileName(final String name) {
 		validateString(name,
-				Const.PARAM_DEVICEPROFILE + "." + Const.PARAM_NAME,
+				Const.PARAM_DEVICEPROFILE + "." + Const.PARAM_DEVICENAME,
 				Const.DEVICEPROFILENAME_MIN_LENGTH,
 				Const.DEVICEPROFILENAME_MAX_LENGTH);
 	}
