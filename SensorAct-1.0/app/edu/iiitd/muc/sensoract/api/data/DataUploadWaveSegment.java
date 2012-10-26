@@ -82,11 +82,12 @@ public class DataUploadWaveSegment extends SensorActAPI {
 	 */
 	private void persistWaveSegment(final WaveSegmentFormat waveSegment) {
 
-		WaveSegmentRModel ws = new WaveSegmentRModel(waveSegment);
-		ws.save();
+		//WaveSegmentRModel ws = new WaveSegmentRModel(waveSegment);
+		//ws.save();
 		
-		//WaveSegmentModel waveSegmentModel = new WaveSegmentModel(waveSegment);
-		//waveSegmentModel.save();
+		WaveSegmentModel waveSegmentModel = new WaveSegmentModel(waveSegment);
+		waveSegmentModel.save();
+		
 		System.out.println(System.currentTimeMillis() + " " + waveSegment.data.sid + " notifing...");
 		deviceEvent.notifyWaveSegmentArrived(waveSegment);
 		System.out.println(System.currentTimeMillis() + " " + waveSegment.data.sid + " notified...");
