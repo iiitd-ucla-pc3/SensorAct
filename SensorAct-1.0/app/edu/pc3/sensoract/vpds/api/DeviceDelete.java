@@ -98,13 +98,13 @@ public class DeviceDelete extends SensorActAPI {
 			}
 
 			if (!deviceProfile.deleteDevice(deviceDeleteRequest.secretkey,
-					deviceDeleteRequest.templatename)) {
+					deviceDeleteRequest.devicename)) {
 				response.sendFailure(Const.API_DEVICE_DELETE,
 						ErrorType.DEVICE_NOTFOUND,
-						deviceDeleteRequest.templatename);
+						deviceDeleteRequest.devicename);
 			}
 			response.SendSuccess(Const.API_DEVICE_DELETE, Const.DEVICE_DELETED,
-					deviceDeleteRequest.templatename);
+					deviceDeleteRequest.devicename);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_DEVICE_DELETE,
