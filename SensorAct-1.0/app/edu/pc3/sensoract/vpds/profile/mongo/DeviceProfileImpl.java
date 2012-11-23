@@ -102,8 +102,7 @@ public class DeviceProfileImpl implements DeviceProfile {
 	 */
 
 	@Override
-	public boolean deleteDevice(final String secretkey,
-			final String devicename) {
+	public boolean deleteDevice(final String secretkey, final String devicename) {
 
 		// TODO: Include other params to uniquely identify device profile
 		// TODO: Inconsistent way with play's jpa Model
@@ -192,10 +191,10 @@ public class DeviceProfileImpl implements DeviceProfile {
 		if (null == templateList || 0 == templateList.size()) {
 			return null;
 		}
-		
-		//return new DeviceProfileFormat(templateList.get(0));
-		return null;
-		
+
+		return new DeviceProfileFormat(templateList.get(0));
+		// return null;
+
 	}
 
 	/**
@@ -224,7 +223,7 @@ public class DeviceProfileImpl implements DeviceProfile {
 		// }
 
 		List<DeviceProfileFormat> list = new ArrayList<DeviceProfileFormat>();
-		for(DeviceModel dm: deviceList) {
+		for (DeviceModel dm : deviceList) {
 			list.add(new DeviceProfileFormat(dm));
 		}
 		return list;
@@ -250,8 +249,12 @@ public class DeviceProfileImpl implements DeviceProfile {
 			return null;
 		}
 
-		//return templateList;
-		return null;
+		List<DeviceProfileFormat> tlist = new ArrayList<DeviceProfileFormat>();
+		for (DeviceTemplateModel dm : templateList) {
+			tlist.add(new DeviceProfileFormat(dm));
+		}
+		
+		return tlist;
 	}
 
 	/**
@@ -273,8 +276,12 @@ public class DeviceProfileImpl implements DeviceProfile {
 			return null;
 		}
 
-		//return templateList;
-		return null;
+		List<DeviceProfileFormat> tlist = new ArrayList<DeviceProfileFormat>();
+		for (DeviceTemplateModel dm : templateList) {
+			tlist.add(new DeviceProfileFormat(dm));
+		}
+		
+		return tlist;
 	}
 
 	/**
@@ -306,8 +313,7 @@ public class DeviceProfileImpl implements DeviceProfile {
 	 */
 
 	@Override
-	public boolean isDeviceTemplateExists(
-			final DeviceAddFormat newTemplate) {
+	public boolean isDeviceTemplateExists(final DeviceAddFormat newTemplate) {
 
 		// TODO: Check the uniqueness against id, ip, etc also
 		return 0 == DeviceTemplateModel.count("bySecretkeyAndTemplatename",

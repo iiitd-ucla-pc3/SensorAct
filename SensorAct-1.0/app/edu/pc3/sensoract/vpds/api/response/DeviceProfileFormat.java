@@ -49,7 +49,9 @@ import edu.pc3.sensoract.vpds.api.request.DeviceAddFormat.DeviceSensor;
 import edu.pc3.sensoract.vpds.model.DeviceActuatorModel;
 import edu.pc3.sensoract.vpds.model.DeviceChannelModel;
 import edu.pc3.sensoract.vpds.model.DeviceModel;
+import edu.pc3.sensoract.vpds.model.DeviceProfileModel;
 import edu.pc3.sensoract.vpds.model.DeviceSensorModel;
+import edu.pc3.sensoract.vpds.model.DeviceTemplateModel;
 import edu.pc3.sensoract.vpds.model.rdbms.DeviceActuatorRModel;
 import edu.pc3.sensoract.vpds.model.rdbms.DeviceChannelRModel;
 import edu.pc3.sensoract.vpds.model.rdbms.DeviceRModel;
@@ -63,16 +65,24 @@ import edu.pc3.sensoract.vpds.model.rdbms.DeviceSensorRModel;
  */
 public class DeviceProfileFormat extends DeviceFormat {
 
-	public DeviceProfileFormat(DeviceModel device) {
+	public DeviceProfileFormat(DeviceTemplateModel device) {
+		templatename = device.templatename;
+		setDeviceProfileAttributes(device);
+	}
 
+	public DeviceProfileFormat(DeviceModel device) {
 		devicename = device.devicename;
+		setDeviceProfileAttributes(device);
+	}
+
+	private void setDeviceProfileAttributes(DeviceProfileModel device) {
 		isglobal = device.isglobal;
 		IP = device.IP;
 		location = device.location;
 		tags = device.tags;
 		latitude = device.latitude;
 		longitude = device.longitude;
-
+		
 		if (device.sensors != null) {
 			sensors = new ArrayList<DeviceSensor>();
 			for (DeviceSensorModel s : device.sensors) {
@@ -93,7 +103,6 @@ public class DeviceProfileFormat extends DeviceFormat {
 		}
 
 		if (device.actuators != null) {
-
 			actuators = new ArrayList<DeviceActuator>();
 			for (DeviceActuatorModel a : device.actuators) {
 				DeviceActuator da = new DeviceActuator();
@@ -102,7 +111,9 @@ public class DeviceProfileFormat extends DeviceFormat {
 				actuators.add(da);
 			}
 		}
+
 	}
+
 
 	public DeviceProfileFormat(DeviceRModel device) {
 		devicename = device.devicename;
@@ -114,29 +125,33 @@ public class DeviceProfileFormat extends DeviceFormat {
 		latitude = device.latitude;
 		longitude = device.longitude;
 
-		sensors = new ArrayList<DeviceSensor>();
-		for (DeviceSensorRModel s : device.sensors) {
-			DeviceSensor ds = new DeviceSensor();
-			ds.name = s.name;
-			ds.sid = Integer.parseInt(s.sid);
-			ds.channels = new ArrayList<DeviceChannel>();
-			for (DeviceChannelRModel c : s.channels) {
-				DeviceChannel dc = new DeviceChannel();
-				dc.name = c.name;
-				dc.type = c.type;
-				dc.unit = c.unit;
-				dc.samplingperiod = c.samplingperiod;
-				ds.channels.add(dc);
+		if (device.sensors != null) {
+			sensors = new ArrayList<DeviceSensor>();
+			for (DeviceSensorRModel s : device.sensors) {
+				DeviceSensor ds = new DeviceSensor();
+				ds.name = s.name;
+				ds.sid = Integer.parseInt(s.sid);
+				ds.channels = new ArrayList<DeviceChannel>();
+				for (DeviceChannelRModel c : s.channels) {
+					DeviceChannel dc = new DeviceChannel();
+					dc.name = c.name;
+					dc.type = c.type;
+					dc.unit = c.unit;
+					dc.samplingperiod = c.samplingperiod;
+					ds.channels.add(dc);
+				}
+				sensors.add(ds);
 			}
-			sensors.add(ds);
 		}
 
-		actuators = new ArrayList<DeviceActuator>();
-		for (DeviceActuatorRModel a : device.actuators) {
-			DeviceActuator da = new DeviceActuator();
-			da.name = a.name;
-			da.aid = a.aid;
-			actuators.add(da);
+		if (device.actuators != null) {
+			actuators = new ArrayList<DeviceActuator>();
+			for (DeviceActuatorRModel a : device.actuators) {
+				DeviceActuator da = new DeviceActuator();
+				da.name = a.name;
+				da.aid = a.aid;
+				actuators.add(da);
+			}
 		}
 	}
 }
