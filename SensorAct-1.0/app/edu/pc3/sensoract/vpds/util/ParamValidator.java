@@ -347,13 +347,13 @@ public class ParamValidator extends SensorActAPI {
 			final int sIndex) {
 
 		if (null == sensorId) {
-			validator.addError(Const.PARAM_ID, Const.PARAM_DEVICEPROFILE + "."
+			validator.addError(Const.PARAM_SID, Const.PARAM_DEVICEPROFILE + "."
 					+ Const.PARAM_SENSORS + "[" + sIndex + "]."
-					+ Const.PARAM_ID + Const.MSG_REQUIRED);
+					+ Const.PARAM_SID + Const.MSG_REQUIRED);
 		} else {
 			validateNumber(sensorId.intValue(), Const.PARAM_DEVICEPROFILE + "."
 					+ Const.PARAM_SENSORS + "[" + sIndex + "]."
-					+ Const.PARAM_ID, Const.SENSORID_MIN_VALUE,
+					+ Const.PARAM_SID, Const.SENSORID_MIN_VALUE,
 					Const.SENSORID_MAX_VALUE);
 		}
 	}

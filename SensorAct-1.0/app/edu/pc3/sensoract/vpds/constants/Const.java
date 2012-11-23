@@ -138,7 +138,7 @@ public class Const {
 	public static final String PARAM_LONGITUDE = "longitude";
 	public static final String PARAM_SENSORS = "sensors";
 	public static final String PARAM_ACTUATORS = "actuators";	
-	public static final String PARAM_ID = "id";
+	public static final String PARAM_SID = "sid";
 	public static final String PARAM_CHANNELS = "channels";
 	public static final String PARAM_TYPE = "type";
 	public static final String PARAM_UNIT = "unit";

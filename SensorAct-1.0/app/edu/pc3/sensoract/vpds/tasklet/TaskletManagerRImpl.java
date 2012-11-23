@@ -45,7 +45,7 @@ import java.util.List;
 import play.modules.morphia.Model.MorphiaQuery;
 import edu.pc3.sensoract.vpds.api.request.TaskletAddFormat;
 import edu.pc3.sensoract.vpds.model.TaskletModel;
-import edu.pc3.sensoract.vpds.model.TaskletRModel;
+import edu.pc3.sensoract.vpds.model.rdbms.TaskletRModel;
 
 /**
  * Task managements

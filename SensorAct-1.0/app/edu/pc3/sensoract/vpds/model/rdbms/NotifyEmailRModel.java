@@ -1,12 +1,12 @@
 /**
  * 
  */
-package edu.pc3.sensoract.vpds.model;
+package edu.pc3.sensoract.vpds.model.rdbms;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
-import edu.pc3.sensoract.vpds.model.rdbms.DeviceRModel;
+import edu.pc3.sensoract.vpds.model.NotifyEmailModel;
 
 import play.data.validation.Required;
 import play.db.jpa.Model;

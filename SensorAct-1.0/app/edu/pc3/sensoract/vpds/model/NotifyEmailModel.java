@@ -5,6 +5,8 @@ package edu.pc3.sensoract.vpds.model;
 
 import com.google.code.morphia.annotations.Converters;
 
+import edu.pc3.sensoract.vpds.model.rdbms.NotifyEmailRModel;
+
 @Converters(NotifyEmailModelConverter.class)
 public class NotifyEmailModel {
 

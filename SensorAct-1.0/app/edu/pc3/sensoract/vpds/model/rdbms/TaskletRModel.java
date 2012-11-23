@@ -38,7 +38,7 @@
  * Date: 2012-07-20
  * Author: Pandarasamy Arjunan
  */
-package edu.pc3.sensoract.vpds.model;
+package edu.pc3.sensoract.vpds.model.rdbms;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,6 +58,7 @@ import javax.persistence.JoinColumn;
 import play.data.validation.Required;
 import play.db.jpa.Model;
 import edu.pc3.sensoract.vpds.api.request.TaskletAddFormat;
+import edu.pc3.sensoract.vpds.model.TaskletType;
 
 /**
  * Model class for tasklet script management.

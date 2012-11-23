@@ -48,6 +48,7 @@ import play.modules.morphia.Model;
 import com.google.code.morphia.annotations.Entity;
 
 import edu.pc3.sensoract.vpds.api.request.TaskletAddFormat;
+import edu.pc3.sensoract.vpds.model.rdbms.TaskletRModel;
 
 /**
  * Model class for tasklet script management.
