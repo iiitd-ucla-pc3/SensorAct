@@ -78,11 +78,11 @@ public class DeviceTemplateAdd extends DeviceAdd {
 			if (deviceProfile.isDeviceTemplateExists(newDevice)) {
 				response.sendFailure(Const.API_DEVICE_TEMPLATE_ADD,
 						ErrorType.DEVICE_TEMPLATE_ALREADYEXISTS,
-						newDevice.deviceprofile.devicename);
+						newDevice.deviceprofile.templatename);
 			}
 			deviceProfile.addDeviceTemplate(newDevice);
 			response.SendSuccess(Const.API_DEVICE_TEMPLATE_ADD,
-					Const.DEVICE_TEMPLATE_ADDED, newDevice.deviceprofile.devicename);
+					Const.DEVICE_TEMPLATE_ADDED, newDevice.deviceprofile.templatename);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_DEVICE_TEMPLATE_ADD,

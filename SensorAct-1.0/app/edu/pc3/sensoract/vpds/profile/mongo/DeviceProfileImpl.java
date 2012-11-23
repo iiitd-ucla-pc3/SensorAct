@@ -271,7 +271,7 @@ public class DeviceProfileImpl implements DeviceProfile {
 
 		// TODO: Inconsistent way with play's jpa Model
 		List<DeviceTemplateModel> templateList = DeviceTemplateModel.find(
-				"isglobal", false).fetchAll();
+				"isglobal", true).fetchAll();
 		if (null == templateList || 0 == templateList.size()) {
 			return null;
 		}
@@ -317,7 +317,7 @@ public class DeviceProfileImpl implements DeviceProfile {
 
 		// TODO: Check the uniqueness against id, ip, etc also
 		return 0 == DeviceTemplateModel.count("bySecretkeyAndTemplatename",
-				newTemplate.secretkey, newTemplate.deviceprofile.devicename) ? false
+				newTemplate.secretkey, newTemplate.deviceprofile.templatename) ? false
 				: true;
 	}
 
