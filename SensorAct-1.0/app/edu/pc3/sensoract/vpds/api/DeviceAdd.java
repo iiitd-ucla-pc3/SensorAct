@@ -178,7 +178,13 @@ public class DeviceAdd extends SensorActAPI {
 			List sensors = deviceProfile.sensors;
 			List actuators = deviceProfile.actuators;
 
-			validator.validateDeviceProfileName(deviceProfile.devicename);
+			if(Const.API_DEVICE_ADD.equalsIgnoreCase(apiname)) {
+				validator.validateDeviceProfileDeviceName(deviceProfile.devicename);	
+			}
+			if(Const.API_DEVICE_TEMPLATE_ADD.equalsIgnoreCase(apiname)) {
+				validator.validateDeviceProfileTemplateName(deviceProfile.templatename);	
+			}			
+			
 			validator.validateDeviceProfileLocation(deviceProfile.location);
 			validator.validateDeviceProfileTags(deviceProfile.tags);
 			validator.validateDeviceProfileLatitude(deviceProfile.latitude);
