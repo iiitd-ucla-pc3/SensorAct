@@ -60,7 +60,7 @@ public class DeviceTemplateModel extends DeviceProfileModel {
 	 */
 	public DeviceTemplateModel(DeviceAddFormat newDevice) {		
 		super(newDevice);
-		templatename = newDevice.deviceprofile.devicename;
+		templatename = newDevice.deviceprofile.templatename;
 	}
 
 	public DeviceTemplateModel() {
