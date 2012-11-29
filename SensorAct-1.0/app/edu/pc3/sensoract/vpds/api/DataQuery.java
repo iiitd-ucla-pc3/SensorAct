@@ -126,7 +126,7 @@ public class DataQuery extends SensorActAPI {
 		}
 
 		// response.SendJSON(of);
-		System.out.println(outList.toString());
+		//System.out.println(outList.toString());
 		renderText("{\"wavesegmentArray\":" + outList.toString() + "}");
 		// response.SendJSON(outList.toString());
 	}
