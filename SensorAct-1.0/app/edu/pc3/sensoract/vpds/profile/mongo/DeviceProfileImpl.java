@@ -135,7 +135,7 @@ public class DeviceProfileImpl implements DeviceProfile {
 		// TODO: Include other params to uniquely identify device profile
 		// TODO: Inconsistent way with play's jpa Model
 		MorphiaQuery mq = DeviceTemplateModel.find(
-				"bySecretkeyAndTemplatename", secretkey, templatename);
+				"bySecretkeyAndTemplatenameAndIsglobal", secretkey, templatename, false);
 		if (0 == mq.count()) {
 			return false;
 		}
