@@ -32,42 +32,26 @@
  *
  */
 /*
- * Name: TaskletAddFormat.java
+ * Name: DeviceActuateFormat.java
  * Project: SensorAct-VPDS
- * Version: 1.0
- * Date: 2012-05-14
- * Author: Pandarasamy Arjunan
+ * Version: 1.1
+ * Date: 2012-12-10
+ * Author: Manaswi Saha
  */
 package edu.pc3.sensoract.vpds.api.request;
 
-import java.util.Map;
-
-import edu.pc3.sensoract.vpds.model.NotifyEmailModel;
-import edu.pc3.sensoract.vpds.model.TaskletType;
-
 /**
- * Defines the request format for tasklet/add API.
+ * Defines the request format for device/actuate API.
  *
- * @author Pandarasamy Arjunan
- * @version 1.0
+ * @author Manaswi Saha
+ * @version 1.1
  */
-public class TaskletAddFormat {
+public class DeviceActuateFormat {
 
-	public int taskcount = 0;
-
-	public String secretkey = null;	
-	public String taskletname = null;
-	public String desc = null;
-
-	public Map<String,String> param = null;
-	public Map<String,NotifyEmailModel> email = null;
-	public Map<String,String> input = null;
-
-	public String when = null;
-	public String execute = null;
-	
-	public String source = null;
-	public String taskletId = null;
-	public TaskletType tasklet_type = null;
+	public String secretkey = null;
+	public String devicename = null;
+	public String actuatorname = null;
+	public String actuatorid = null;
+	public String status = null;
 	
 }

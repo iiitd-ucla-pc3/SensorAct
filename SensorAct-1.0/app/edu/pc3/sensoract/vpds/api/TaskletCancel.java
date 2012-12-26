@@ -48,9 +48,9 @@ import edu.pc3.sensoract.vpds.tasklet.TaskletScheduler;
 import edu.pc3.sensoract.vpds.util.TaskletParamValidator;
 
 /**
- * tasklet/execute API: Cancels a tasklet
+ * tasklet/cancel API: Cancels a tasklet
  * 
- * @author Pandarasamy Arjunan
+ * @author Pandarasamy Arjunan, Manaswi Saha
  * @version 1.0
  */
 public class TaskletCancel extends SensorActAPI {
@@ -100,8 +100,11 @@ public class TaskletCancel extends SensorActAPI {
 					.cancelTasklet(taskletCancel.taskletid);
 			
 			if (taskletCancled) {
-				response.SendSuccess(Const.API_TASKLET_CANCEL,
-						Const.TASKLET_CANCELED, taskletCancel.taskletid);
+				boolean taskletRemove = taskletManager.removeTaskletById(taskletCancel.secretkey, taskletCancel.taskletid);
+				if (taskletRemove)
+					log.info(Const.API_TASKLET_CANCEL + Const.DELIM1 + Const.TASKLET_CANCELED + Const.DELIM2 + taskletCancel.taskletid);
+				//response.SendSuccess(Const.API_TASKLET_CANCEL,
+					//	Const.TASKLET_CANCELED, taskletCancel.taskletid);
 			}
 
 		} catch (InvalidJsonException e) {

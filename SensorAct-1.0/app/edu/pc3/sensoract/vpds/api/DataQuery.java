@@ -99,17 +99,17 @@ public class DataQuery extends SensorActAPI {
 					ErrorType.UNREGISTERED_USERNAME, "");
 		}
 
-		log.info("QueryDAta : \n" + json.toJson(queryObj));
+		log.info("QueryData : \n" + json.toJson(queryObj));
 
 		List<WaveSegmentModel> allWaveSegments = WaveSegmentModel.q()
 				.filter("secretkey", secretkey)
 				.filter("data.dname", queryObj.devicename)
 				.filter("data.sname", queryObj.sensorname)
-				// .filter("data.sid", queryObj.sensorid)
-				// .filter("data.timestamp >=", queryObj.conditions.fromtime)
-				// .filter("data.timestamp <=", queryObj.conditions.totime)
-				.order("-data.timestamp").fetch(1);
-		// .fetchAll();
+				//.filter("data.sid", queryObj.sensorid)
+				.filter("data.timestamp >=", queryObj.conditions.fromtime)
+				.filter("data.timestamp <=", queryObj.conditions.totime)
+				.order("-data.timestamp").fetchAll();
+		 //.fetchAll();
 
 		Iterator<WaveSegmentModel> iteratorData = allWaveSegments.iterator();
 		ArrayList<String> outList = new ArrayList<String>();

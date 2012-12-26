@@ -187,7 +187,7 @@ public class ParamValidator extends SensorActAPI {
 	}
 
 	/**
-	 * Validates ke parameter and sets the corresponding error message, if
+	 * Validates key parameter and sets the corresponding error message, if
 	 * validation fails.
 	 * 
 	 * @param key
@@ -478,6 +478,18 @@ public class ParamValidator extends SensorActAPI {
 				+ Const.PARAM_ACTUATORS + "[" + aIndex + "]."
 				+ Const.PARAM_NAME, Const.ACTUATORNAME_MIN_LENGTH,
 				Const.ACTUATORNAME_MAX_LENGTH);
+	}
+	
+	/**
+	 * Validates actuator status parameter and sets the corresponding error message, if
+	 * validation fails.
+	 * 
+	 * @param status
+	 *            to validate actuator status
+	 */
+	public void validateActuatorStatus(final String status) {
+		validateString(status, Const.PARAM_KEY, Const.SECRETKEY_MIN_LENGTH,
+				Const.SECRETKEY_MAX_LENGTH);
 	}
 
 }

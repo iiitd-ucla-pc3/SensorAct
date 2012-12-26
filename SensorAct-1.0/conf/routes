@@ -27,6 +27,10 @@ POST    /device/list                            Application.deviceList
 POST    /device/share                           Application.deviceShare
 POST    /device/search                          Application.deviceSearch
 
+POST    /device/actuate                         Application.deviceActuate
+POST	/device/actuationrequest/list			Application.deviceListActuationRequest
+POST	/device/actuationrequest/cancel			Application.deviceCancelActuationRequest
+
 POST    /device/template/add                    Application.deviceTemplateAdd
 POST    /device/template/delete                 Application.deviceTemplateDelete
 POST    /device/template/get                    Application.deviceTemplateGet

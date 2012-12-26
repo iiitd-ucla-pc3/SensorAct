@@ -320,5 +320,26 @@ public class DeviceProfileImpl implements DeviceProfile {
 				newTemplate.secretkey, newTemplate.deviceprofile.templatename) ? false
 				: true;
 	}
+	
+	/**
+	 * Retrieves the actuator's IP from the repository corresponding to the
+	 * actuator details 
+	 * 
+	 * @param secretkey
+	 * 			secret key of the owner of the device
+	 * @param devicename
+	 * @param actuatorid
+	 *            
+	 * @return actuatorIP
+	 * 
+	 * @author Manaswi Saha        
+	 */
+
+	public String getDeviceIP(final String secretkey, String devicename) {
+		List<DeviceModel> deviceList = DeviceModel.find(
+				"bySecretkeyAndDevicename", secretkey, devicename).fetchAll();
+		return deviceList.get(0).IP;
+	}
+	
 
 }

@@ -78,7 +78,7 @@ public class Test extends SensorActAPI {
 		renderText(report + "{\"wavesegmentArray\":\n\n" + outList.toString() + "}");*/
 		
 		long beforeTime = System.currentTimeMillis();
-		boolean ret = GuardRuleManager.write("haksoochoi", requestingUser, "Lab1", "Thermostat", "1", 90);
+		boolean ret = GuardRuleManager.write("haksoochoi", requestingUser, "Lab1", "Thermostat", "1", 0);
 		long afterTime = System.currentTimeMillis();
 		
 		String report = String.format("Time taken: %d ms\n\n", afterTime - beforeTime);

@@ -116,6 +116,21 @@ public interface DeviceProfile {
 	public List<DeviceProfileFormat> getGlobalDeviceTemplateList();
 
 	/**
+	 * Retrieves the actuator's IP from the repository corresponding to the
+	 * actuator details 
+	 * 
+	 * @param secretkey
+	 * 			secret key of the owner of the device
+	 * @param devicename
+	 *            
+	 * @return actuatorIP
+	 * 
+	 * @author Manaswi Saha        
+	 */
+
+	public String getDeviceIP(final String secretkey, String devicename);
+	
+	/**
 	 * Checks for duplicate devices. If device already exists in the repository,
 	 * sends corresponding failure message to the caller.
 	 * 
@@ -137,5 +152,7 @@ public interface DeviceProfile {
 	 */
 
 	public boolean isDeviceTemplateExists(final DeviceAddFormat newTemplate);
+	
+	
 
 }

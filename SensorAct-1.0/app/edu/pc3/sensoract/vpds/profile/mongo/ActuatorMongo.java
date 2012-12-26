@@ -40,8 +40,13 @@
  */
 package edu.pc3.sensoract.vpds.profile.mongo;
 
+import play.libs.WS;
+import play.libs.WS.HttpResponse;
+
+import edu.pc3.sensoract.vpds.api.response.DeviceProfileFormat;
 import edu.pc3.sensoract.vpds.api.SensorActAPI;
 import edu.pc3.sensoract.vpds.profile.Actuator;
+import edu.pc3.sensoract.vpds.util.SensorActLogger;
 
 
 /**
@@ -49,12 +54,22 @@ import edu.pc3.sensoract.vpds.profile.Actuator;
  * 
  * TODO: This class should be accessible only by guard rules
  * 
- * @author Pandarasamy Arjunan
+ * @author Pandarasamy Arjunan, Manaswi Saha
  * @version 1.0
  */
 
 public class ActuatorMongo implements Actuator {
 
+
+	public HttpResponse sendActuateRequest(String url) {
+		HttpResponse response = null;
+		try {
+				response = WS.url(url).get();
+		} catch (Exception e) {
+		}
+		return response;
+	}
+		
 	@Override
 	public boolean write(final String username,
 			final String devicename, final String actuatorname,
@@ -64,9 +79,17 @@ public class ActuatorMongo implements Actuator {
 		String secretkey = SensorActAPI.userProfile.getSecretkey(username);
 		if (null == secretkey) {
 			return false;
-		}
-
-		// TODO: actuate the actual device
+		}		
+				
+		String IP = SensorActAPI.deviceProfile.getDeviceIP(secretkey, devicename);
+		
+		String actuatorURL = "http://" + IP + "/device.cgi?" + actuatorname + "=" + value;
+		
+		SensorActLogger.info("Sending actuation request to " + actuatorURL);
+		HttpResponse response = sendActuateRequest(actuatorURL);		
+		
+		SensorActLogger.info("Actuation response " + response.getStatus());		
+		SensorActLogger.info("Actuation Process Completed!");
 		return true;
 
 	}

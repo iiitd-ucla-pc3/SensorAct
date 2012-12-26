@@ -365,5 +365,26 @@ public class DeviceProfileRDBMS implements DeviceProfile {
 				newTemplate.secretkey, newTemplate.deviceprofile.devicename) ? false
 				: true;
 	}
+	
+	/**
+	 * Retrieves the actuator's IP from the repository corresponding to the
+	 * actuator details 
+	 * 
+	 * @param secretkey
+	 * 			secret key of the owner of the device
+	 * @param devicename
+	 * @param actuatorid
+	 *            
+	 * @return actuatorIP
+	 * 
+	 * @author Manaswi Saha        
+	 */
+
+	public String getDeviceIP(final String secretkey, String devicename) {
+		List<DeviceRModel> deviceList = DeviceRModel.find(
+				"bySecretkeyAndDevicename", secretkey, devicename).fetch();
+		return deviceList.get(0).IP;
+	}
+	
 
 }

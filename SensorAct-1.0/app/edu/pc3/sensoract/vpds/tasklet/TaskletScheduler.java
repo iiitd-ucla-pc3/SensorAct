@@ -49,6 +49,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.quartz.CronTrigger;
 import org.quartz.JobDataMap;
@@ -60,6 +62,7 @@ import org.quartz.SchedulerFactory;
 import org.quartz.Trigger;
 import org.quartz.TriggerKey;
 import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.impl.matchers.GroupMatcher;
 
 import edu.pc3.sensoract.vpds.api.SensorActAPI;
 import edu.pc3.sensoract.vpds.constants.Const;
@@ -257,6 +260,24 @@ public class TaskletScheduler {
 		}
 		return true;
 	}
+	
+	public static List<String> listAllTaskletsGroupWise(final String group) {
+
+		List<String> jobKeyList = new ArrayList<String>();
+		try {			
+			 // enumerate each job in group
+			GroupMatcher<JobKey> groupMatcher = GroupMatcher.groupEquals(group);
+			 for(JobKey jobKey : scheduler.getJobKeys(groupMatcher)) {
+				 jobKeyList.add(jobKey.toString());
+				 System.out.println("Found job identified by: " + jobKey);
+			 }
+			 
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return jobKeyList;
+	}
 
 	private static boolean scheduleTasklet(final JobDetail job,
 			final Trigger trigger) {
@@ -298,8 +319,19 @@ public class TaskletScheduler {
 			break;
 
 		case PERIODIC:
-			trigger = newTrigger().withIdentity(triggerKey)
-					.withSchedule(cronSchedule("0/15 * * * * ?")).build();
+			StringTokenizer tokenizer = new StringTokenizer(tasklet.when, "||&&");
+			try{
+				String tokens = "";
+				while(tokenizer.hasMoreTokens()) {
+				    tokens = tokenizer.nextToken().trim();
+				    tasklet.input.get(tokens);
+				    System.out.println("Schedule CronExpression: " + tasklet.input.get(tokens));
+					trigger = newTrigger().withIdentity(triggerKey)
+							.withSchedule(cronSchedule(tasklet.input.get(tokens))).build();
+				}
+				    
+			}
+			catch(Exception e){}			
 			break;
 
 		case EVENT:

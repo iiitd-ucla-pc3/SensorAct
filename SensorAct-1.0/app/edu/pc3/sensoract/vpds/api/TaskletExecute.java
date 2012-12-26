@@ -77,7 +77,7 @@ public class TaskletExecute extends SensorActAPI {
 	}
 
 	/**
-	 * Services the tasklet/add API.
+	 * Services the tasklet/execute API.
 	 * 
 	 * @param taskletAddJson
 	 *            Task add request attributes in Json string
@@ -100,7 +100,7 @@ public class TaskletExecute extends SensorActAPI {
 			String username = userProfile.getUsername(taskletExecute.secretkey);
 
 			String taskletId = TaskletScheduler.scheduleTasklet(username,
-					tasklet);
+					tasklet);			
 
 			if (null == taskletId) {
 				response.sendFailure(Const.API_TASKLET_EXECUTE,
@@ -111,7 +111,8 @@ public class TaskletExecute extends SensorActAPI {
 						ErrorType.TASKLET_ALREADY_SCHEDULED,
 						taskletExecute.taskletname);
 			} else {
-				response.SendSuccess(Const.API_TASKLET_EXECUTE,
+				if (taskletManager.updateTaskletId(taskletExecute.secretkey, taskletExecute.taskletname, taskletId))
+					response.SendSuccess(Const.API_TASKLET_EXECUTE,
 						Const.TASKLET_SCHEDULED, taskletId);
 			}
 

@@ -42,6 +42,8 @@ package edu.pc3.sensoract.vpds.util;
 
 import java.util.Map;
 
+import org.quartz.CronExpression;
+
 import play.data.validation.Error;
 import edu.pc3.sensoract.vpds.api.SensorActAPI;
 import edu.pc3.sensoract.vpds.constants.Const;
@@ -88,12 +90,27 @@ public class TaskletParamValidator extends ParamValidator {
 								+ Const.TASKLET_PARAM_VALUE_MAX_LENGTH);
 	}
 
+	public boolean validateCronExpression(final String cronExp) {
+		if(CronExpression.isValidExpression(cronExp))
+			return true;
+		else {
+			validation.addError("input", "Not a valid cron expression");
+			return false;
+		}
+			
+	}
+	
 	public void validateInputValue(final String value) {
-		// TODO: add proper validation for param name
 		// validate timers 
+		/*if(!validateCronExpression(value)) {
+			String val = "0 0/1 * * * * *";
+			//SensorActLogger.info("CronExp 0 0/1 * * * * * Valid or not:" + CronExpression.isValidExpression("0 0/1 * * * * *"));
+			System.out.println(val + CronExpression.isValidExpression(val));
+			validation.addError("input", "Not a valid cron expression");
+		}*/
+		
 		validation.maxSize(value, Const.TASKLET_PARAM_VALUE_MAX_LENGTH)
-				.message(
-						value + Const.MSG_MAX_LENGTH
+				.message(value + Const.MSG_MAX_LENGTH
 								+ Const.TASKLET_PARAM_VALUE_MAX_LENGTH);
 	}
 

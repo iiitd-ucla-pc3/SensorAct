@@ -46,7 +46,7 @@ import edu.pc3.sensoract.vpds.api.SensorActAPI;
 /**
  * Application class, entry point for all APIs.
  * 
- * @author Pandarasamy Arjunan, Haksoo Choi
+ * @author Pandarasamy Arjunan, Haksoo Choi, Manaswi Saha
  * @version 1.0
  */
 
@@ -215,6 +215,21 @@ public class Application extends Controller {
 
 	public static void dataUploadWaveSegment() {
 		SensorActAPI.dataUploadWaveseg.doProcess(request.params.get("body"));
+	}
+	
+	// For Device Actuation
+	public static void deviceActuate() {
+		SensorActAPI.deviceActuate.doProcess(request.params.get("body"));
+	}
+	
+	// For Listing Actuation Requests
+	public static void deviceListActuationRequest() {
+		SensorActAPI.deviceListActuationRequest.doProcess(request.params.get("body"));
+	}
+	
+	// For Canceling Actuation Requests
+	public static void deviceCancelActuationRequest() {
+		SensorActAPI.deviceCancelActuationRequest.doProcess(request.params.get("body"));
 	}
 
 	// For development test purpose.

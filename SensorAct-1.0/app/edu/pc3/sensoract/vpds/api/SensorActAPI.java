@@ -70,7 +70,7 @@ import edu.pc3.sensoract.vpds.util.SensorActLogger;
 /**
  * Super class for all SensorAct APIs.
  * 
- * @author Pandarasamy Arjunan, Haksoo Choi
+ * @author Pandarasamy Arjunan, Haksoo Choi, Manaswi Saha
  * @version 1.0
  */
 public class SensorActAPI extends Application {
@@ -96,6 +96,9 @@ public class SensorActAPI extends Application {
 	public static DeviceList deviceList = new DeviceList();
 	public static DeviceShare deviceShare = new DeviceShare();
 	public static DeviceSearch deviceSearch = new DeviceSearch();
+	public static DeviceActuate deviceActuate = new DeviceActuate();
+	public static DeviceListActuationRequest deviceListActuationRequest = new DeviceListActuationRequest();
+	public static DeviceCancelActuationRequest deviceCancelActuationRequest = new DeviceCancelActuationRequest();
 
 	public static DeviceTemplateAdd deviceTemplateAdd = new DeviceTemplateAdd();
 	public static DeviceTemplateDelete deviceTemplateDelete = new DeviceTemplateDelete();
@@ -178,7 +181,7 @@ public class SensorActAPI extends Application {
 	}
 
 	/**
-	 * Morhphia models keep _id attributes internally. Removes those unnecessary
+	 * Morphia models keep _id attributes internally. Removes those unnecessary
 	 * _id attributes for printing.
 	 * 
 	 * @param obj
@@ -199,7 +202,7 @@ public class SensorActAPI extends Application {
 	}
 
 	/**
-	 * Morhphia models keep _id attributes internally. Removes those unnecessary
+	 * Morphia models keep _id attributes internally. Removes those unnecessary
 	 * _id attributes for printing.
 	 * 
 	 * @param obj

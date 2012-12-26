@@ -275,5 +275,50 @@ public class LuaToJavaFunctionMapper {
 		// return Math.random()*100;
 
 	}
+	
+	/**
+	 * @author Manaswi Saha
+	 * @param resource
+	 * @param status 
+	 * 	device status - ON/OFF
+	 */
+	
+	public boolean write(String resource, double status) {
+
+		//long t1 = new Date().getTime();
+
+		String username = null;
+		String devicename = null;
+		String actuatorname = null;
+		String actuatorid = null;
+
+		StringTokenizer tokenizer = new StringTokenizer(resource, ":");
+
+		try {
+			username = tokenizer.nextToken();
+			devicename = tokenizer.nextToken();
+			actuatorname = tokenizer.nextToken();
+			actuatorid = tokenizer.nextToken();
+		} catch (Exception e) {
+		}
+
+		 //System.out.println("write resource " + resource);
+		 //System.out.println("Write Resource " + username + " " + devicename + " "
+		 //+ actuatorname + " " + actuatorid + "status:" + status);
+
+		RequestingUser requestingUser = new RequestingUser(
+				"manaswis@iiitd.ac.in");
+		
+
+		//long t2 = new Date().getTime();
+		if(GuardRuleManager.write(username, requestingUser, devicename, actuatorname, actuatorid, status))
+			return true;
+		//long t3 = new Date().getTime();
+
+		//SensorActLogger.info("GuardRuleManager.write: " + (t3 - t2) + " total: "+ (t3 - t1));
+
+		return false;
+
+	}
 
 }

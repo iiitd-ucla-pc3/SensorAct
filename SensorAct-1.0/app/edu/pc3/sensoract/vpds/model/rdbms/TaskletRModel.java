@@ -116,6 +116,9 @@ public class TaskletRModel extends Model {
 
 	@Enumerated(EnumType.STRING)
 	public TaskletType tasklet_type;
+	
+	public String source;
+	public String taskletId;
 
 	public TaskletRModel(final TaskletAddFormat tasklet) {
 
@@ -139,6 +142,8 @@ public class TaskletRModel extends Model {
 			}
 		}
 		tasklet_type = tasklet.tasklet_type;
+		taskletId = tasklet.taskletId;
+		source = tasklet.source;
 	}
 
 	TaskletRModel() {

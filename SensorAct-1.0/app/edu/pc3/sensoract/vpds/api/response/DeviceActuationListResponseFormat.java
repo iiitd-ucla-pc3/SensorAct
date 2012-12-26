@@ -32,42 +32,34 @@
  *
  */
 /*
- * Name: TaskletAddFormat.java
+ * Name: DeviceListResponseFormat.java
  * Project: SensorAct-VPDS
  * Version: 1.0
- * Date: 2012-05-14
+ * Date: 2012-04-14
  * Author: Pandarasamy Arjunan
  */
-package edu.pc3.sensoract.vpds.api.request;
+package edu.pc3.sensoract.vpds.api.response;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import edu.pc3.sensoract.vpds.model.NotifyEmailModel;
-import edu.pc3.sensoract.vpds.model.TaskletType;
+import edu.pc3.sensoract.vpds.model.TaskletModel;
+import edu.pc3.sensoract.vpds.model.DeviceProfileModel;
+import edu.pc3.sensoract.vpds.model.DeviceTemplateModel;
 
 /**
- * Defines the request format for tasklet/add API.
- *
- * @author Pandarasamy Arjunan
+ * Defines the response format for device/list/actuationrequests API.
+ * 
+ * @author Manaswi Saha
  * @version 1.0
  */
-public class TaskletAddFormat {
+public class DeviceActuationListResponseFormat {
 
-	public int taskcount = 0;
+	private List<TaskletModel> deviceActuationRequestList = null;
 
-	public String secretkey = null;	
-	public String taskletname = null;
-	public String desc = null;
-
-	public Map<String,String> param = null;
-	public Map<String,NotifyEmailModel> email = null;
-	public Map<String,String> input = null;
-
-	public String when = null;
-	public String execute = null;
-	
-	public String source = null;
-	public String taskletId = null;
-	public TaskletType tasklet_type = null;
+	public void setDeviceActList(List<TaskletModel> deviceList) {
+		deviceActuationRequestList = new ArrayList<TaskletModel>();
+		deviceActuationRequestList.addAll(deviceList);
+	}	
 	
 }

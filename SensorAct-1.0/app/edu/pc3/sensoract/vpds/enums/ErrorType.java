@@ -84,6 +84,9 @@ public enum ErrorType {
 	TASKLET_NOTSCHEDULED			    (51, Const.TASKLET_NOTSCHEDULED),
 	TASKLET_ALREADY_SCHEDULED			(52, Const.TASKLET_ALREADY_SCHEDULED),
 	TASKLET_FAILED_TO_SCHEDULE   	    (53, Const.TASKLET_FAILED_TO_SCHEDULE),
+	
+	//Actuation Request Management
+	ACTREQUEST_NOTFOUND			        (60, Const.ACTREQUEST_NOTFOUND),
 
 
 	END                         (100, null);

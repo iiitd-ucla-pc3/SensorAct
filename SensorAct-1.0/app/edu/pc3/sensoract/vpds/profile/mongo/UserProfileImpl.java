@@ -129,7 +129,7 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 		List<UserProfileModel> userList = UserProfileModel.find("bySecretkey",
 				secretkey).fetchAll();
 		if (null != userList && userList.size() > 0) {
-			return userList.get(0).secretkey;
+			return userList.get(0).username;
 		}
 		return null;
 	}

@@ -40,6 +40,8 @@
  */
 package edu.pc3.sensoract.vpds.api;
 
+import java.util.StringTokenizer;
+
 import edu.pc3.sensoract.vpds.api.request.TaskletAddFormat;
 import edu.pc3.sensoract.vpds.constants.Const;
 import edu.pc3.sensoract.vpds.enums.ErrorType;
@@ -51,7 +53,7 @@ import edu.pc3.sensoract.vpds.util.TaskletParamValidator;
 /**
  * tasklet/add API: Adds a tasklet
  * 
- * @author Pandarasamy Arjunan
+ * @author Pandarasamy Arjunan, Manaswi Saha
  * @version 1.0
  */
 public class TaskletAdd extends SensorActAPI {
@@ -83,9 +85,46 @@ public class TaskletAdd extends SensorActAPI {
 					ErrorType.VALIDATION_FAILED, taskletvalidator.getErrorMessages());
 		}
 	}
+	
+	/*
+	 * Classifies the tasklets' into its type: ONESHOT, PERIODIC, EVENT, PERIODIC_AND_EVENT
+	 */
 
-	private void preProcessTaskelt(final TaskletAddFormat tasklet) {		
-		tasklet.tasklet_type = TaskletType.ONESHOT;	
+	private void preProcessTasklet(final TaskletAddFormat tasklet) {
+		if (tasklet.input.isEmpty())
+			tasklet.tasklet_type = TaskletType.ONESHOT;	
+		else {
+
+			StringTokenizer tokenizer = new StringTokenizer(tasklet.when, " ||&&");
+
+			try {
+				String tokens = "";
+				boolean flag = false;
+				while(tokenizer.hasMoreTokens()) {
+				    tokens = tokenizer.nextToken().trim();			    
+				    if(tasklet.input.containsKey(tokens)) {
+				    	//System.out.println(tokens +":"+ tasklet.input.containsKey(tokens));
+				    	//check valid cron expression
+				    	if(taskletvalidator.validateCronExpression(tasklet.input.get(tokens)))
+				    		flag = true;
+				    }
+				    else {
+				    	validation.addError("input", "input clause doesnt contain the token-" + tokens);
+				    	if (taskletvalidator.hasErrors()) {
+							response.sendFailure(Const.API_TASKLET_ADD,
+									ErrorType.VALIDATION_FAILED, taskletvalidator.getErrorMessages());
+						}
+				    	break;
+				    }
+				    	
+				}
+				if(flag)
+					tasklet.tasklet_type = TaskletType.PERIODIC;
+				System.out.println(tasklet.tasklet_type);
+				
+			} catch (Exception e) {}
+		}
+			
 	}
 	
 	/**
@@ -101,7 +140,9 @@ public class TaskletAdd extends SensorActAPI {
 			TaskletAddFormat tasklet = convertToRequestFormat(taskAddJson,
 					TaskletAddFormat.class);
 			validateRequest(tasklet);
-			preProcessTaskelt(tasklet);
+			preProcessTasklet(tasklet);
+			// Default Tasklet ID
+			tasklet.taskletId = "";
 			
 			//
 			// if (!UserProfile.isRegisteredSecretkey(tasklet.secretkey)) {
@@ -116,9 +157,9 @@ public class TaskletAdd extends SensorActAPI {
 
 			taskletManager.addTasklet(tasklet);
 
-			TaskletModel tt = taskletManager.getTasklet(tasklet.secretkey, tasklet.taskletname);
+			//TaskletModel tt = taskletManager.getTasklet(tasklet.secretkey, tasklet.taskletname);
 
-			response.sendJSON(tt);
+			//response.sendJSON(tt);
 
 			// TODO: Add tasklet
 			// response.SendSuccess(Const.API_TASK_ADD, Const.TODO);

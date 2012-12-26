@@ -367,6 +367,7 @@ public class GuardRuleManager {
 
 		if (ruleList == null || ruleList.size() == 0) {
 			// No rules for this device.
+			System.out.println("No rules for this device");
 			return false;
 		}
 
@@ -420,7 +421,7 @@ public class GuardRuleManager {
 				return false;
 			}
 		}
-		
+
 		if (decision == Decision.ALLOWED) {
 			return SensorActAPI.actuator.write(username, devicename, actuatorname, actuatorid, value);	
 		}
@@ -551,7 +552,7 @@ public class GuardRuleManager {
 		List<GuardRuleAssociationModel> gramList = GuardRuleAssociationModel
 				.find("bySecretkeyAndDevicenameAndActuatornameAndActuatorid"
 						, secretkey, devicename, actuatorname, actuatorid).fetchAll();
-		
+
 		List<String> ruleNameList = new ArrayList<String>();
 		
 		for (GuardRuleAssociationModel gram: gramList) {
