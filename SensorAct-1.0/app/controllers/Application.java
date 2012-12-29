@@ -47,7 +47,7 @@ import edu.pc3.sensoract.vpds.api.SensorActAPI;
  * Application class, entry point for all APIs.
  * 
  * @author Pandarasamy Arjunan, Haksoo Choi, Manaswi Saha
- * @version 1.0
+ * @version 1.1
  */
 
 public class Application extends Controller {

@@ -110,8 +110,7 @@ public class TaskletExecute extends SensorActAPI {
 				response.sendFailure(Const.API_TASKLET_EXECUTE,
 						ErrorType.TASKLET_ALREADY_SCHEDULED,
 						taskletExecute.taskletname);
-			} else {
-				if (taskletManager.updateTaskletId(taskletExecute.secretkey, taskletExecute.taskletname, taskletId))
+			} else {				
 					response.SendSuccess(Const.API_TASKLET_EXECUTE,
 						Const.TASKLET_SCHEDULED, taskletId);
 			}

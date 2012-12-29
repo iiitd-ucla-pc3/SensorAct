@@ -43,15 +43,24 @@ package edu.pc3.sensoract.vpds.api;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import edu.pc3.sensoract.vpds.api.request.DeviceActuateListFormat;
 import edu.pc3.sensoract.vpds.api.response.DeviceActuationListResponseFormat;
-import edu.pc3.sensoract.vpds.api.response.DeviceProfileFormat;
+import edu.pc3.sensoract.vpds.api.response.ActuateProfileFormat;
 import edu.pc3.sensoract.vpds.constants.Const;
 import edu.pc3.sensoract.vpds.enums.ErrorType;
 import edu.pc3.sensoract.vpds.exceptions.InvalidJsonException;
 import edu.pc3.sensoract.vpds.model.TaskletModel;
 import edu.pc3.sensoract.vpds.tasklet.TaskletScheduler;
+import org.quartz.JobDetail;
+import org.quartz.JobDataMap;
+import org.quartz.JobKey;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+
+import sun.util.locale.StringTokenIterator;
+
 
 /**
  * device/list API: Retries all device profiles associated to an user from the
@@ -60,7 +69,7 @@ import edu.pc3.sensoract.vpds.tasklet.TaskletScheduler;
  * @author Manaswi Saha
  * @version 1.0
  */
-public class DeviceListActuationRequest extends SensorActAPI {
+public class ActuationRequestList extends SensorActAPI {
 
 	/**
 	 * Validates the device list request format attributes. If validation fails,
@@ -88,17 +97,33 @@ public class DeviceListActuationRequest extends SensorActAPI {
 	 *            List of device profile objects to send.
 	 */
 	private void sendDeviceProfileList(
-			final List<String> deviceActList, String secretkey) {
+			final List<String> scheduledActReqList, String secretkey) {
 
-		// Get actuation requests only
-		List<TaskletModel> actList = new ArrayList<TaskletModel>();
-		List<TaskletModel> actTasklet = taskletManager.getTaskletsById(secretkey, deviceActList);
-		System.out.println(actTasklet.toString() + " "+ deviceActList.size());		
-		for (int i = 0; i < deviceActList.size(); i++ ){
+		List<ActuateProfileFormat> actList = new ArrayList<ActuateProfileFormat>();		
+		String taskletId = null;
+		String taskletname = null;
+		String desc = null;
+		
+		// Retrieve tasklet details from the scheduler
 			
-			if(actTasklet.get(i).source.equalsIgnoreCase("actuate"))
-				actList.add(i, actTasklet.get(i));
-		}
+		List<JobDetail> jbD = TaskletScheduler.getJobDetailList(scheduledActReqList);
+
+		for (int i = 0; i < scheduledActReqList.size(); i++ ){
+
+			// Retrieve tasklet relevant details from the JobDataMap of the scheduled task
+			JobDataMap dataMap = jbD.get(i).getJobDataMap();
+			taskletId = scheduledActReqList.get(i);
+			taskletname = dataMap.getString("taskletname");
+			desc = dataMap.getString("desc");
+
+			// Find the source of the tasklet from the tasklet name
+			StringTokenizer tokenizer = new StringTokenizer(taskletname,"_");
+			String source = tokenizer.nextToken();
+			System.out.println("Source:" + source);
+			if (source.equalsIgnoreCase("actuate"))
+				actList.add(new ActuateProfileFormat(secretkey, taskletId, taskletname, desc));
+		}			
+		
 		if (actList.size() > 0) {
 			DeviceActuationListResponseFormat outList = new DeviceActuationListResponseFormat();
 			outList.setDeviceActList(actList);

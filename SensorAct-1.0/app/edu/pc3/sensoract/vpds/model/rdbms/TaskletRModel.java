@@ -142,8 +142,7 @@ public class TaskletRModel extends Model {
 			}
 		}
 		tasklet_type = tasklet.tasklet_type;
-		taskletId = tasklet.taskletId;
-		source = tasklet.source;
+
 	}
 
 	TaskletRModel() {

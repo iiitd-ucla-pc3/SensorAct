@@ -280,7 +280,12 @@ public class GuardRuleManager {
 
 		List<GuardRuleModel> ruleList = getRelevantReadGuardRules(secretkey, devicename, sensorname, sensorid);
 
-		
+		if (ruleList == null || ruleList.size() == 0) {
+			// No rules for this device.
+			System.out.println("No rules");
+			return null;
+		}
+
 		long t1 = new Date().getTime();
 		List<WaveSegmentModel> wwList = SensorActAPI.waveSegmentData.read(username, devicename, sensorname, sensorid, fromtime, totime);
 //		List<WaveSegmentModel> wwList = WaveSegmentData.readLatest(username,
@@ -290,20 +295,20 @@ public class GuardRuleManager {
 		SensorActLogger.info("WaveSegmentData.read: " + (t2 - t1) + "  size: " +wwList.size());
 
 
-		if (ruleList == null || ruleList.size() == 0) {
-			// No rules for this device.
-			return null;
-		}
-
+		
 		//System.out.println("guarad size " + wwList.size());
 		
 		engine.put("USER", requestingUser);
 		
 		// Initialize decision variable
 		DecisionResult decisionResult = new DecisionResult(wwList);
+		
+		//System.out.println("DecisionResult");
 
 		// Sort rule based on priority (descending order)
 		Collections.sort(ruleList);
+		
+		//System.out.println("Collection sort");
 		
 		// Process each guard rule
 		for (GuardRuleModel rule: ruleList) {
@@ -322,6 +327,8 @@ public class GuardRuleManager {
 				SensorActLogger.error(String.format("Unsupported action: %s", rule.action));
 				return null;
 			}
+			
+			//System.out.println("RuleDecision: " + ruleDecision);
 
 			boolean result; 
 			if (rule.condition != null && (rule.condition.contains("VALUE") || rule.condition.contains("TIME"))) {

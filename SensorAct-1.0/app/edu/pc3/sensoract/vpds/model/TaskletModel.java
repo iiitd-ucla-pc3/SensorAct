@@ -91,9 +91,7 @@ public class TaskletModel extends Model {
 
 		when = tasklet.when;
 		execute = tasklet.execute;
-		
-		taskletId = tasklet.taskletId;
-		source = tasklet.source;
+
 		tasklet_type = tasklet.tasklet_type;
 	}
 
@@ -118,9 +116,7 @@ public class TaskletModel extends Model {
 
 		when = tasklet.when_;
 		execute = tasklet.execute;
-		
-		taskletId = tasklet.taskletId;
-		source = tasklet.source;
+
 		tasklet_type = tasklet.tasklet_type;
 	}
 	

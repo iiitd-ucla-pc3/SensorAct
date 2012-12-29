@@ -91,6 +91,7 @@ public class TaskletParamValidator extends ParamValidator {
 	}
 
 	public boolean validateCronExpression(final String cronExp) {
+
 		if(CronExpression.isValidExpression(cronExp))
 			return true;
 		else {
@@ -148,7 +149,7 @@ public class TaskletParamValidator extends ParamValidator {
 	}
 
 	public void validateExecute(final String execute) {
-		// TODO: validate execute clasue
+		// TODO: validate execute clause
 		validation.required(execute).message(Const.PARAM_EXECUTE + Const.MSG_REQUIRED);
 	}
 

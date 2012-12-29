@@ -225,9 +225,9 @@ public class Const {
 	public static final int TASKLETID_MAX_LENGTH = 100;
 
 	public static final int TASKLET_DESC_MIN_LENGTH = 2;
-	public static final int TASKLET_DESC_MAX_LENGTH = 50;
+	public static final int TASKLET_DESC_MAX_LENGTH = 110;
 
-	public static final int TASKLET_PARAM_MAX_LENGTH = 8;
+	public static final int TASKLET_PARAM_MAX_LENGTH = 20;
 	public static final int TASKLET_PARAM_VALUE_MAX_LENGTH = 100;
 
 	/*
@@ -294,8 +294,10 @@ public class Const {
 	public static final String TASKLET_NOTSCHEDULED = "Tasklet not scheduled";
 	
 	public static final String TASKLET_CANCELED = "Tasklet cancelled";
+	public static final String TASKLET_NOTCANCELED = "Tasklet failed to cancel";
 	public static final String TASKLET_ALREADY_SCHEDULED = "Tasklet already scheduled";
 	public static final String TASKLET_FAILED_TO_SCHEDULE = "Tasklet failed to schedule";
+	
 	
 	public static final String ACTREQUEST_NOTFOUND = "Actuation request not found";
 	

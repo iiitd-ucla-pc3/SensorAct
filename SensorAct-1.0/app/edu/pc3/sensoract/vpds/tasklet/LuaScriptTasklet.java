@@ -130,6 +130,7 @@ public class LuaScriptTasklet implements InterruptableJob {
 				// System.out.println(keys[i] + ":---------------:" +
 				// dataMap.get(keys[i]));
 				newScope.put(keys[i], dataMap.get(keys[i]));
+				//System.out.println("Key " + keys[i] + "Value: " + dataMap.get(keys[i]));
 			}
 			long t3 = new Date().getTime();
 
@@ -140,7 +141,8 @@ public class LuaScriptTasklet implements InterruptableJob {
 			} catch (SchedulerException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}	
+			}
+			
 
 			long e1 = new Date().getTime();
 			luaEngineLocal.eval(luaScript, newScope);			

@@ -41,8 +41,16 @@
 package edu.pc3.sensoract.vpds.api;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
+
+import javassist.compiler.TokenId;
+
+import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
 
 import edu.pc3.sensoract.vpds.api.request.DeviceActuateCancelFormat;
 import edu.pc3.sensoract.vpds.api.request.TaskletCancelFormat;
@@ -51,6 +59,9 @@ import edu.pc3.sensoract.vpds.enums.ErrorType;
 import edu.pc3.sensoract.vpds.exceptions.InvalidJsonException;
 import edu.pc3.sensoract.vpds.model.TaskletModel;
 import edu.pc3.sensoract.vpds.tasklet.TaskletScheduler;
+import edu.pc3.sensoract.vpds.tasklet.DeviceEventListener;
+import edu.pc3.sensoract.vpds.tasklet.DeviceId;
+import edu.pc3.sensoract.vpds.util.TaskletParamValidator;
 
 /**
  * device/list/cancelactuationrequests API: Cancels the selected requests
@@ -58,7 +69,9 @@ import edu.pc3.sensoract.vpds.tasklet.TaskletScheduler;
  * @author Manaswi Saha
  * @version 1.0
  */
-public class DeviceCancelActuationRequest extends SensorActAPI {
+public class ActuationRequestCancel extends SensorActAPI {
+	
+	TaskletParamValidator taskletvalidator = new TaskletParamValidator();
 
 	/**
 	 * Validates the device list request format attributes. If validation fails,
@@ -71,6 +84,8 @@ public class DeviceCancelActuationRequest extends SensorActAPI {
 			final String apiname) {
 
 		validator.validateSecretKey(deviceCancelListRequest.secretkey);
+		for(int index = 0; index < deviceCancelListRequest.cancelRequestList.size(); index++)
+			taskletvalidator.validateTaskletId(deviceCancelListRequest.cancelRequestList.get(index));
 
 		if (validator.hasErrors()) {
 			response.sendFailure(apiname, ErrorType.VALIDATION_FAILED,
@@ -84,17 +99,51 @@ public class DeviceCancelActuationRequest extends SensorActAPI {
 	 * @param cancelActReqList
 	 * 			List of all the ids of the actuation requests to cancel
 	 */
-	protected void cancelActRequests(final DeviceActuateCancelFormat cancelReqList) {
+	protected void cancelActRequests(DeviceActuateCancelFormat cancelReqList) {
 
-		TaskletCancelFormat cancelReq = new TaskletCancelFormat();
-		cancelReq.secretkey = cancelReqList.secretkey;
-		for(int index = 0; index < cancelReqList.deviceCancelActuationRequestList.size(); index++) {			
-			cancelReq.taskletid = cancelReqList.deviceCancelActuationRequestList.get(index);
-			System.out.println(cancelReq.taskletid);
-			SensorActAPI.taskletCancel.doProcess(json.toJson(cancelReq));
+		String taskletid = null;
+		String secretkey = null;
+		String tasklet_type = null;
+		String deviceinfo = null;
+		
+		List<JobDetail> jbD = TaskletScheduler.getJobDetailList(cancelReqList.cancelRequestList);
+		
+		for(int index = 0; index < cancelReqList.cancelRequestList.size(); index++) {
+			
+			secretkey = cancelReqList.secretkey;
+			taskletid = cancelReqList.cancelRequestList.get(index);
+			System.out.println("TaskletIDCancel: "+ taskletid);
+			
+			/*// Form the deviceId and remove the DeviceEventListener
+			JobDataMap dataMap = jbD.get(index).getJobDataMap();
+			tasklet_type = dataMap.getString("tasklet_type");
+			deviceinfo = dataMap.getString("deviceinfo");
+					
+			DeviceId dId = new DeviceId(secretkey, deviceinfo);
+			ArrayList<DeviceEventListener> listListener = DeviceEvent.mapListeners.get(dId
+					.toString());*/
+			
+			
+			
+			// Cancel Tasklet
+			boolean taskletExists = TaskletScheduler
+					.checkTaskletExists(taskletid);
+
+			if (!taskletExists) {
+				response.sendFailure(Const.API_TASKLET_CANCEL,
+						ErrorType.TASKLET_NOTSCHEDULED, taskletid);
+			}
+
+			boolean taskletCanceled = TaskletScheduler
+					.cancelTasklet(taskletid);
+			
+			if (!taskletCanceled)
+				response.sendFailure(Const.API_DEVICE_CANCEL_ACTUATION_REQUEST,
+						ErrorType.TASKLET_NOTCANCELED, taskletid);
+				
 		}
-		response.SendSuccess(Const.API_TASKLET_CANCEL,
-					Const.TASKLET_CANCELED, cancelReq.taskletid);
+		response.SendSuccess(Const.API_DEVICE_CANCEL_ACTUATION_REQUEST,
+				Const.TASKLET_CANCELED, taskletid);
 		
 	}
 	
@@ -111,19 +160,19 @@ public class DeviceCancelActuationRequest extends SensorActAPI {
 
 		try {
 
-			DeviceActuateCancelFormat deviceCancelActuateRequestList = convertToRequestFormat(
+			DeviceActuateCancelFormat cancelActuateRequestList = convertToRequestFormat(
 					deviceCancelActuateReqListJson, DeviceActuateCancelFormat.class);
-			System.out.println("Cancel Request: " + deviceCancelActuateReqListJson);			
+			System.out.println("Cancel Request: " + cancelActuateRequestList.cancelRequestList.toString());			
 
-			validateRequest(deviceCancelActuateRequestList, Const.API_DEVICE_CANCEL_ACTUATION_REQUEST);
+			validateRequest(cancelActuateRequestList, Const.API_DEVICE_CANCEL_ACTUATION_REQUEST);
 
-			if (!userProfile.isRegisteredSecretkey(deviceCancelActuateRequestList.secretkey)) {
+			if (!userProfile.isRegisteredSecretkey(cancelActuateRequestList.secretkey)) {
 				response.sendFailure(Const.API_DEVICE_CANCEL_ACTUATION_REQUEST,
 						ErrorType.UNREGISTERED_SECRETKEY,
-						deviceCancelActuateRequestList.secretkey);
+						cancelActuateRequestList.secretkey);
 			}
 
-			cancelActRequests(deviceCancelActuateRequestList);
+			cancelActRequests(cancelActuateRequestList);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_DEVICE_CANCEL_ACTUATION_REQUEST, ErrorType.INVALID_JSON,

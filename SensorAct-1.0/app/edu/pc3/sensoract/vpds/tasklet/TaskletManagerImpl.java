@@ -76,18 +76,6 @@ public class TaskletManagerImpl implements TaskletManager {
 		mq.delete();
 		return true;
 	}
-	
-	@Override
-	public boolean removeTaskletById(String secretkey, String taskletid) {
-
-		MorphiaQuery mq = TaskletModel.find("secretkey, taskletId",
-				secretkey, taskletid);
-		if (0 == mq.count()) {
-			return false;
-		}
-		mq.delete();
-		return true;
-	}
 
 	@Override
 	public TaskletModel getTasklet(String secretkey, String taskletname) {
@@ -99,32 +87,4 @@ public class TaskletManagerImpl implements TaskletManager {
 		}
 		return taskletList.get(0);
 	}
-	
-	@Override
-	public List<TaskletModel> getTaskletsById(String secretkey, List<String> taskletid) {
-		
-		List<TaskletModel> taskletList = TaskletModel.find(
-				"bySecretkey", secretkey).filter("taskletId in",taskletid).asList();
-		if (null == taskletList || 0 == taskletList.size()) {
-			return null;
-		}
-		return taskletList;
-		
-	}
-	
-	@Override
-	public boolean updateTaskletId(String secretkey, String taskletname, String taskletid) {
-		
-		TaskletModel tasklet = getTasklet(secretkey, taskletname);
-		if (null == tasklet) {
-			return false;
-		}
-		tasklet.taskletId = taskletid;
-		tasklet.save();	
-		
-		return true;
-		
-	}
-	
-
 }

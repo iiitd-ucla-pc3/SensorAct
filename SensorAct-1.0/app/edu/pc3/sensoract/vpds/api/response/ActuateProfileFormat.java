@@ -32,40 +32,34 @@
  *
  */
 /*
- * Name: TaskletAddFormat.java
+ * Name: ActuateProfileFormat.java
  * Project: SensorAct-VPDS
  * Version: 1.0
- * Date: 2012-05-14
- * Author: Pandarasamy Arjunan
+ * Date: 2012-12-29
+ * Author: Manaswi Saha
  */
-package edu.pc3.sensoract.vpds.api.request;
+package edu.pc3.sensoract.vpds.api.response;
 
-import java.util.Map;
+import java.util.ArrayList;
 
-import edu.pc3.sensoract.vpds.model.NotifyEmailModel;
-import edu.pc3.sensoract.vpds.model.TaskletType;
+import edu.pc3.sensoract.vpds.api.request.TaskletAddFormat;
 
 /**
- * Defines the request format for tasklet/add API.
- *
- * @author Pandarasamy Arjunan
+ * Defines the response format for device/actuationrequests/list API.
+ * 
+ * @author Manaswi Saha
  * @version 1.0
  */
-public class TaskletAddFormat {
-
-	public int taskcount = 0;
-
-	public String secretkey = null;	
-	public String taskletname = null;
-	public String desc = null;
-
-	public Map<String,String> param = null;
-	public Map<String,NotifyEmailModel> email = null;
-	public Map<String,String> input = null;
-
-	public String when = null;
-	public String execute = null;
+public class ActuateProfileFormat extends TaskletAddFormat {
 	
-	public TaskletType tasklet_type = null;
+	public String taskletId = null;
+	
+	public ActuateProfileFormat(String secretkey, String taskletId, String taskletname, String desc){
+		this.secretkey = secretkey;
+		this.taskletId = taskletId;
+		this.taskletname = taskletname;
+		this.desc = desc;
+	}
+
 	
 }

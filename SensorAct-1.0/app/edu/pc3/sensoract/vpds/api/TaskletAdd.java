@@ -69,64 +69,92 @@ public class TaskletAdd extends SensorActAPI {
 	 */
 	private void validateRequest(final TaskletAddFormat tasklet) {
 
-		taskletvalidator.validateSecretKey(tasklet.secretkey);		
+		taskletvalidator.validateSecretKey(tasklet.secretkey);
 		taskletvalidator.validateTaskletName(tasklet.taskletname);
 		taskletvalidator.validateTaskletDesc(tasklet.desc);
-		
+
 		taskletvalidator.validateParam(tasklet.param);
 		taskletvalidator.validateInput(tasklet.input);
 		taskletvalidator.validateEmail(tasklet.email);
-		
+
 		taskletvalidator.validateWhen(tasklet.when);
 		taskletvalidator.validateExecute(tasklet.execute);
 
 		if (taskletvalidator.hasErrors()) {
 			response.sendFailure(Const.API_TASKLET_ADD,
-					ErrorType.VALIDATION_FAILED, taskletvalidator.getErrorMessages());
+					ErrorType.VALIDATION_FAILED,
+					taskletvalidator.getErrorMessages());
 		}
 	}
-	
+
 	/*
-	 * Classifies the tasklets' into its type: ONESHOT, PERIODIC, EVENT, PERIODIC_AND_EVENT
+	 * Classifies the tasklets' into its type: ONESHOT, PERIODIC, EVENT,
+	 * PERIODIC_AND_EVENT
 	 */
 
-	private void preProcessTasklet(final TaskletAddFormat tasklet) {
-		if (tasklet.input.isEmpty())
-			tasklet.tasklet_type = TaskletType.ONESHOT;	
-		else {
+	public void preProcessTasklet(final TaskletAddFormat tasklet) {
 
-			StringTokenizer tokenizer = new StringTokenizer(tasklet.when, " ||&&");
-
-			try {
-				String tokens = "";
-				boolean flag = false;
-				while(tokenizer.hasMoreTokens()) {
-				    tokens = tokenizer.nextToken().trim();			    
-				    if(tasklet.input.containsKey(tokens)) {
-				    	//System.out.println(tokens +":"+ tasklet.input.containsKey(tokens));
-				    	//check valid cron expression
-				    	if(taskletvalidator.validateCronExpression(tasklet.input.get(tokens)))
-				    		flag = true;
-				    }
-				    else {
-				    	validation.addError("input", "input clause doesnt contain the token-" + tokens);
-				    	if (taskletvalidator.hasErrors()) {
-							response.sendFailure(Const.API_TASKLET_ADD,
-									ErrorType.VALIDATION_FAILED, taskletvalidator.getErrorMessages());
-						}
-				    	break;
-				    }
-				    	
-				}
-				if(flag)
-					tasklet.tasklet_type = TaskletType.PERIODIC;
-				System.out.println(tasklet.tasklet_type);
-				
-			} catch (Exception e) {}
+		if (tasklet.input.isEmpty()) {
+			tasklet.tasklet_type = TaskletType.ONESHOT;
+			return;
 		}
-			
+
+		StringTokenizer tokenizer = new StringTokenizer(tasklet.when, " ||&&");
+
+		try {
+			String tokens = "";
+			boolean flagP = false, flagE = false;
+			while (tokenizer.hasMoreTokens()) {
+				tokens = tokenizer.nextToken().trim();
+				if (tasklet.input.containsKey(tokens)) {
+
+					// Check its a valid CRON expression only it contains
+					// spaces
+					StringTokenizer tokenizerCE = new StringTokenizer(
+							tasklet.input.get(tokens), ":");
+					System.out.println("Token Count:"
+							+ tokenizerCE.countTokens());
+					if (tokenizerCE.countTokens() > 2 && tokenizerCE.countTokens() <= 4) {
+						flagE = true;
+					}
+					else {
+						// check valid CRON expression
+						if (taskletvalidator
+								.validateCronExpression(tasklet.input
+										.get(tokens)))
+							flagP = true;
+						else {
+							response.sendFailure(Const.API_TASKLET_ADD,
+									ErrorType.VALIDATION_FAILED,
+									taskletvalidator.getErrorMessages());
+						}
+					}
+
+				} else {
+					validation.addError("input",
+							"input clause doesnt contain the token-" + tokens);
+					if (taskletvalidator.hasErrors()) {
+						response.sendFailure(Const.API_TASKLET_ADD,
+								ErrorType.VALIDATION_FAILED,
+								taskletvalidator.getErrorMessages());
+					}
+					break;
+				}
+
+			}
+			if (flagP & !flagE)
+				tasklet.tasklet_type = TaskletType.PERIODIC;
+			else if (!flagP & flagE)
+				tasklet.tasklet_type = TaskletType.EVENT;
+			else if (flagP & flagE)
+				tasklet.tasklet_type = TaskletType.PERIODIC_AND_EVENT;
+			System.out.println(tasklet.tasklet_type);
+
+		} catch (Exception e) {
+		}
+
 	}
-	
+
 	/**
 	 * Services the tasklet/add API.
 	 * 
@@ -141,25 +169,25 @@ public class TaskletAdd extends SensorActAPI {
 					TaskletAddFormat.class);
 			validateRequest(tasklet);
 			preProcessTasklet(tasklet);
-			// Default Tasklet ID
-			tasklet.taskletId = "";
-			
+
 			//
 			// if (!UserProfile.isRegisteredSecretkey(tasklet.secretkey)) {
 			// response.sendFailure(Const.API_TASK_ADD,
 			// ErrorType.UNREGISTERED_SECRETKEY, tasklet.secretkey);
 			// }
 			//
-			
-			//response.sendJSON(tasklet);
-			
-			taskletManager.removeTasklet(tasklet.secretkey, tasklet.taskletname);
+
+			// response.sendJSON(tasklet);
+
+			taskletManager
+					.removeTasklet(tasklet.secretkey, tasklet.taskletname);
 
 			taskletManager.addTasklet(tasklet);
 
-			//TaskletModel tt = taskletManager.getTasklet(tasklet.secretkey, tasklet.taskletname);
+			 TaskletModel tt = taskletManager.getTasklet(tasklet.secretkey,
+			 tasklet.taskletname);
 
-			//response.sendJSON(tt);
+			response.sendJSON(tt);
 
 			// TODO: Add tasklet
 			// response.SendSuccess(Const.API_TASK_ADD, Const.TODO);

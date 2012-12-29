@@ -45,12 +45,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import org.quartz.JobExecutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.pc3.sensoract.vpds.api.SensorActAPI;
+import edu.pc3.sensoract.vpds.api.response.DeviceProfileFormat;
 import edu.pc3.sensoract.vpds.guardrule.GuardRuleManager;
 import edu.pc3.sensoract.vpds.guardrule.RequestingUser;
 import edu.pc3.sensoract.vpds.model.WaveSegmentChannelModel;
@@ -121,6 +124,7 @@ public class LuaToJavaFunctionMapper {
 			return null;
 
 		Map map = new HashMap();
+		int i = 0;
 
 		for (WaveSegmentModel ws : wsList) {
 
@@ -130,7 +134,9 @@ public class LuaToJavaFunctionMapper {
 
 			for (WaveSegmentChannelModel ch : ws.data.channels) {
 				for (Double d : ch.readings) {
-					map.put(time, d.doubleValue());
+					map.put(i, d.doubleValue());
+					//map.put(time, d.doubleValue());
+					i++;
 				}
 			}
 		}
@@ -180,6 +186,63 @@ public class LuaToJavaFunctionMapper {
 		// List<WaveSegmentModel> wsList = WaveSegmentData.readLatest(username,
 		// devicename,
 		// sensorname, sensorid);
+		long t3 = new Date().getTime();
+
+		SensorActLogger.info("GuardRuleManager.read: " + (t3 - t2) + " total: "
+				+ (t3 - t1));
+
+		if (null == wsList)
+			return null;
+
+		return toMap(wsList);
+
+	}
+	
+	/**
+	 * Reads wave segments from 'fromTime' to current time	 
+	 * 
+	 * @author 
+	 * 		Manaswi Saha
+	 * @param
+	 * 		resource
+	 * 		fromTime
+	 * 		toTime
+	 */
+	
+	public Map readPastToNow(String resource, long fromTime, long toTime) {
+
+		long t1 = new Date().getTime();
+		
+		System.out.println("Lua: fromtime: " + fromTime + " ToTime: " + toTime);
+
+
+		String username = null;
+		String devicename = null;
+		String sensorname = null;
+		String sensorid = null;
+		//String channelname = null;
+
+		StringTokenizer tokenizer = new StringTokenizer(resource, ":");
+
+		try {
+			username = tokenizer.nextToken();
+			devicename = tokenizer.nextToken();
+			sensorname = tokenizer.nextToken();
+			sensorid = tokenizer.nextToken();
+			//channelname = tokenizer.nextToken();
+		} catch (Exception e) {
+		}
+
+		RequestingUser requestingUser = new RequestingUser(
+				"manaswis@iiitd.ac.in");
+
+		long t2 = new Date().getTime();
+		List<WaveSegmentModel> wsList = GuardRuleManager.read(username,
+				requestingUser, devicename, sensorname, sensorid, fromTime,
+				toTime);
+		
+		System.out.println("No of readings got:" + wsList.size());
+
 		long t3 = new Date().getTime();
 
 		SensorActLogger.info("GuardRuleManager.read: " + (t3 - t2) + " total: "
@@ -320,5 +383,7 @@ public class LuaToJavaFunctionMapper {
 		return false;
 
 	}
+	
+
 
 }

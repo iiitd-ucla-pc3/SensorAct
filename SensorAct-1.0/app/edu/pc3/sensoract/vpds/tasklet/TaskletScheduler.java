@@ -278,6 +278,22 @@ public class TaskletScheduler {
 		}
 		return jobKeyList;
 	}
+	
+	public static List<JobDetail> getJobDetailList(List<String> jobKeyList) {
+		List<JobDetail> jbDList = new ArrayList<JobDetail>();
+		
+		try {
+			for(int i = 0; i < jobKeyList.size(); i++)
+				jbDList.add(scheduler.getJobDetail(toJobKey(jobKeyList.get(i))));			
+		}
+		catch (SchedulerException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		return jbDList;
+	}
+	
 
 	private static boolean scheduleTasklet(final JobDetail job,
 			final Trigger trigger) {
@@ -301,10 +317,14 @@ public class TaskletScheduler {
 
 		JobDataMap jobDataMap = new JobDataMap();
 		jobDataMap.putAll(tasklet.param);
+		jobDataMap.putAll(tasklet.input);
 
 		JobDetail jobDetail = newJob(LuaScriptTasklet.class)
 				.withIdentity(jobKey)
 				.usingJobData(LuaScriptTasklet.LUASCRIPT, tasklet.execute)
+				.usingJobData("taskletname", tasklet.taskletname)
+				.usingJobData("desc", tasklet.desc)
+				.usingJobData("tasklet_type", tasklet.tasklet_type.toString())
 				.usingJobData(jobDataMap).build();
 
 		Trigger trigger = null;
@@ -324,7 +344,6 @@ public class TaskletScheduler {
 				String tokens = "";
 				while(tokenizer.hasMoreTokens()) {
 				    tokens = tokenizer.nextToken().trim();
-				    tasklet.input.get(tokens);
 				    System.out.println("Schedule CronExpression: " + tasklet.input.get(tokens));
 					trigger = newTrigger().withIdentity(triggerKey)
 							.withSchedule(cronSchedule(tasklet.input.get(tokens))).build();
@@ -336,19 +355,35 @@ public class TaskletScheduler {
 
 		case EVENT:
 		case PERIODIC_AND_EVENT:
-			trigger = newTrigger().withIdentity(triggerKey)
-			.withSchedule(cronSchedule("* * * * * ? 2099")).build();
+			
+			try{
+				/*
+				 tokenizer = new StringTokenizer(tasklet.when, "||&&");
+				 String tokens = "";
+				while(tokenizer.hasMoreTokens()) {
+				    tokens = tokenizer.nextToken().trim();
+				    System.out.println("Schedule PE CronExpression: " + tasklet.input.get(tokens));
+					trigger = newTrigger().withIdentity(triggerKey)
+							.withSchedule(cronSchedule(tasklet.input.get(tokens))).build();
+				}*/
+				
+				trigger = newTrigger().withIdentity(triggerKey)
+						.withSchedule(cronSchedule("* * * * * ? 2099")).build();
 
-			DeviceEventListener deListener = new DeviceEventListener(jobDetail);
-			for (String key : tasklet.input.keySet()) {
-				DeviceId deviceId = new DeviceId(tasklet.secretkey,
-						tasklet.input.get(key));
-				System.out.println("adding " + deviceId
-						+ " to DeviceEventListener");
-				SensorActAPI.deviceEvent.addDeviceEventListener(deviceId,
-						deListener);
-				System.out.println("adding done..");
+				DeviceEventListener deListener = new DeviceEventListener(jobDetail);
+				for (String key : tasklet.input.keySet()) {
+						DeviceId deviceId = new DeviceId(tasklet.secretkey,
+								tasklet.input.get(key));
+						System.out.println("adding " + deviceId
+								+ " to DeviceEventListener");
+						SensorActAPI.deviceEvent.addDeviceEventListener(deviceId,
+								deListener);
+						System.out.println("adding done..");
+				}
+				    
 			}
+			catch(Exception e){}
+			
 			//return addTasklet(jobDetail) ? jobKey.toString() : null;
 		}
 

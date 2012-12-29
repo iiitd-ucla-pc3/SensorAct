@@ -85,10 +85,10 @@ public class ActuatorMongo implements Actuator {
 		
 		String actuatorURL = "http://" + IP + "/device.cgi?" + actuatorname + "=" + value;
 		
-		SensorActLogger.info("Sending actuation request to " + actuatorURL);
-		HttpResponse response = sendActuateRequest(actuatorURL);		
+		SensorActLogger.info("Sending actuation request to turn " + value + " to " + actuatorURL);
+		/*HttpResponse response = sendActuateRequest(actuatorURL);		
 		
-		SensorActLogger.info("Actuation response " + response.getStatus());		
+		SensorActLogger.info("Actuation response " + response.getStatus());*/		
 		SensorActLogger.info("Actuation Process Completed!");
 		return true;
 

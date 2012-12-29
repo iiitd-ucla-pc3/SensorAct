@@ -76,16 +76,16 @@ public class TaskletCancel extends SensorActAPI {
 	}
 
 	/**
-	 * Services the tasklet/add API.
+	 * Services the tasklet/cancel API.
 	 * 
-	 * @param taskletAddJson
-	 *            Task add request attributes in Json string
+	 * @param taskletCancelJson
+	 *            Task cancel request attributes in Json string
 	 */
-	public void doProcess(final String taskletAddJson) {
+	public void doProcess(final String taskletCancelJson) {
 
 		try {
 			TaskletCancelFormat taskletCancel = convertToRequestFormat(
-					taskletAddJson, TaskletCancelFormat.class);
+					taskletCancelJson, TaskletCancelFormat.class);
 			validateRequest(taskletCancel);
 
 			boolean taskletExists = TaskletScheduler
@@ -96,15 +96,13 @@ public class TaskletCancel extends SensorActAPI {
 						ErrorType.TASKLET_NOTSCHEDULED, taskletCancel.taskletid);
 			}
 
-			boolean taskletCancled = TaskletScheduler
+			boolean taskletCanceled = TaskletScheduler
 					.cancelTasklet(taskletCancel.taskletid);
 			
-			if (taskletCancled) {
-				boolean taskletRemove = taskletManager.removeTaskletById(taskletCancel.secretkey, taskletCancel.taskletid);
-				if (taskletRemove)
-					log.info(Const.API_TASKLET_CANCEL + Const.DELIM1 + Const.TASKLET_CANCELED + Const.DELIM2 + taskletCancel.taskletid);
-				//response.SendSuccess(Const.API_TASKLET_CANCEL,
-					//	Const.TASKLET_CANCELED, taskletCancel.taskletid);
+			if (taskletCanceled) {
+				log.info(Const.API_TASKLET_CANCEL + Const.DELIM1 + Const.TASKLET_CANCELED + Const.DELIM2 + taskletCancel.taskletid);
+				response.SendSuccess(Const.API_TASKLET_CANCEL,
+						Const.TASKLET_CANCELED, taskletCancel.taskletid);
 			}
 
 		} catch (InvalidJsonException e) {

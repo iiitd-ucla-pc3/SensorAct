@@ -54,6 +54,6 @@ import edu.pc3.sensoract.vpds.model.TaskletModel;
 public class DeviceActuateCancelFormat {
 
 	public String secretkey = null;
-	public List<String> deviceCancelActuationRequestList = new ArrayList<String>();
+	public List<String> cancelRequestList = new ArrayList<String>();
 
 }

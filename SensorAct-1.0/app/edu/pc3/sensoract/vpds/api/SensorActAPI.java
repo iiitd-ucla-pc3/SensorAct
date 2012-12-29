@@ -71,7 +71,7 @@ import edu.pc3.sensoract.vpds.util.SensorActLogger;
  * Super class for all SensorAct APIs.
  * 
  * @author Pandarasamy Arjunan, Haksoo Choi, Manaswi Saha
- * @version 1.0
+ * @version 1.1
  */
 public class SensorActAPI extends Application {
 
@@ -97,8 +97,8 @@ public class SensorActAPI extends Application {
 	public static DeviceShare deviceShare = new DeviceShare();
 	public static DeviceSearch deviceSearch = new DeviceSearch();
 	public static DeviceActuate deviceActuate = new DeviceActuate();
-	public static DeviceListActuationRequest deviceListActuationRequest = new DeviceListActuationRequest();
-	public static DeviceCancelActuationRequest deviceCancelActuationRequest = new DeviceCancelActuationRequest();
+	public static ActuationRequestList deviceListActuationRequest = new ActuationRequestList();
+	public static ActuationRequestCancel deviceCancelActuationRequest = new ActuationRequestCancel();
 
 	public static DeviceTemplateAdd deviceTemplateAdd = new DeviceTemplateAdd();
 	public static DeviceTemplateDelete deviceTemplateDelete = new DeviceTemplateDelete();

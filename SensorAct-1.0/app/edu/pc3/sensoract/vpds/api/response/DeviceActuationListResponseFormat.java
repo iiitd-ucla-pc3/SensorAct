@@ -55,10 +55,10 @@ import edu.pc3.sensoract.vpds.model.DeviceTemplateModel;
  */
 public class DeviceActuationListResponseFormat {
 
-	private List<TaskletModel> deviceActuationRequestList = null;
+	private List<ActuateProfileFormat> deviceActuationRequestList = null;
 
-	public void setDeviceActList(List<TaskletModel> deviceList) {
-		deviceActuationRequestList = new ArrayList<TaskletModel>();
+	public void setDeviceActList(List<ActuateProfileFormat> deviceList) {
+		deviceActuationRequestList = new ArrayList<ActuateProfileFormat>();
 		deviceActuationRequestList.addAll(deviceList);
 	}	
 	

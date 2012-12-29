@@ -28,6 +28,7 @@ POST    /device/share                           Application.deviceShare
 POST    /device/search                          Application.deviceSearch
 
 POST    /device/actuate                         Application.deviceActuate
+POST    /device/presenceactuate                 Application.presenceActuate
 POST	/device/actuationrequest/list			Application.deviceListActuationRequest
 POST	/device/actuationrequest/cancel			Application.deviceCancelActuationRequest
 
