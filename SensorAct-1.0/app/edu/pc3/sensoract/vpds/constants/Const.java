@@ -282,6 +282,7 @@ public class Const {
 	public static final String UPLOAD_WAVESEGMENT_SUCCESS = "Wavesegment stored successfully";
 
 	public static final String GUARDRULE_ADDED = "New guard rule added";
+	public static final String GUARDRULE_ALREADYEXISTS = "Guard rule exists";
 	public static final String GUARDRULE_DELETED = "Guard rule successfully deleted";
 	public static final String GUARDRULE_ASSOCIATION_ADDED = "Guard rule successfully associated";
 	public static final String GUARDRULE_ASSOCIATION_DELETED = "Guard rule successfully dissociated";

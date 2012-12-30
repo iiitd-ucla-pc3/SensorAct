@@ -90,6 +90,12 @@ public class GuardRuleAdd extends SensorActAPI {
 				response.sendFailure(Const.API_GUARDRULE_ADD,
 						ErrorType.UNREGISTERED_SECRETKEY, guardRule.secretkey);
 			}
+			
+			if (GuardRuleManager.isGuardRuleExists(guardRule)) {
+				response.sendFailure(Const.API_GUARDRULE_ADD,
+						ErrorType.GUARDRULE_ALREADYEXISTS,
+						guardRule.rule.name);
+			}
 
 			GuardRuleManager.addGuardRule(guardRule);
 			response.SendSuccess(Const.API_GUARDRULE_ADD, Const.GUARDRULE_ADDED, guardRule.rule.name);

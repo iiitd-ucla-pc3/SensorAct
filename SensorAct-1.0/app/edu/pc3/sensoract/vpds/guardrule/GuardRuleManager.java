@@ -52,6 +52,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import edu.pc3.sensoract.vpds.api.SensorActAPI;
+import edu.pc3.sensoract.vpds.api.request.DeviceAddFormat;
 import edu.pc3.sensoract.vpds.api.request.GuardRuleAddFormat;
 import edu.pc3.sensoract.vpds.api.request.GuardRuleAssociationAddFormat;
 import edu.pc3.sensoract.vpds.api.request.GuardRuleAssociationDeleteFormat;
@@ -193,6 +194,23 @@ public class GuardRuleManager {
 			return null;
 		}
 		return rules;
+	}
+	
+	/**
+	 * Checks for duplicate guard rules. If it already exists in the repository,
+	 * sends corresponding failure message to the caller.
+	 * 
+	 * @param newGuardRule
+	 *            Device object to check for duplicates.
+	 * @return True, if device profile exists in the repository, otherwise
+	 *         false.
+	 */
+	public static boolean isGuardRuleExists(final GuardRuleAddFormat newGuardRule) {
+
+		// TODO: Check the uniqueness against id, ip, etc also
+		return 0 == GuardRuleModel.count("bySecretkeyAndName",
+				newGuardRule.secretkey, newGuardRule.rule.name) ? false
+				: true;
 	}
 
 	/**
