@@ -65,7 +65,9 @@ public class ActuatorMongo implements Actuator {
 		HttpResponse response = null;
 		try {
 				response = WS.url(url).get();
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
+			SensorActLogger.error("Sending Actuation request exception:" + e.getMessage());
 		}
 		return response;
 	}
@@ -83,12 +85,17 @@ public class ActuatorMongo implements Actuator {
 				
 		String IP = SensorActAPI.deviceProfile.getDeviceIP(secretkey, devicename);
 		
-		String actuatorURL = "http://" + IP + "/device.cgi?" + actuatorname + "=" + value;
+		String actuatorURL = "http://" + IP + "/actuate.cgi?" + actuatorname + "=" + value;
 		
 		SensorActLogger.info("Sending actuation request to turn " + value + " to " + actuatorURL);
-		/*HttpResponse response = sendActuateRequest(actuatorURL);		
-		
-		SensorActLogger.info("Actuation response " + response.getStatus());*/		
+		try{
+			HttpResponse response = sendActuateRequest(actuatorURL);
+			SensorActLogger.info("Actuation response " + response.getStatus());
+		}
+		catch(Exception e){			
+				SensorActLogger.error("Actuation Exception:" + e.getMessage());			
+		}
+				
 		SensorActLogger.info("Actuation Process Completed!");
 		return true;
 

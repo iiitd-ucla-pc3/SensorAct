@@ -112,8 +112,8 @@ public class TaskletAdd extends SensorActAPI {
 					// spaces
 					StringTokenizer tokenizerCE = new StringTokenizer(
 							tasklet.input.get(tokens), ":");
-					System.out.println("Token Count:"
-							+ tokenizerCE.countTokens());
+					//System.out.println("Token Count:"
+						//	+ tokenizerCE.countTokens());
 					if (tokenizerCE.countTokens() > 2 && tokenizerCE.countTokens() <= 4) {
 						flagE = true;
 					}
@@ -148,7 +148,7 @@ public class TaskletAdd extends SensorActAPI {
 				tasklet.tasklet_type = TaskletType.EVENT;
 			else if (flagP & flagE)
 				tasklet.tasklet_type = TaskletType.PERIODIC_AND_EVENT;
-			System.out.println(tasklet.tasklet_type);
+			
 
 		} catch (Exception e) {
 		}

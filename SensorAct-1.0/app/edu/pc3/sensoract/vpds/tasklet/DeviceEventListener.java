@@ -28,7 +28,7 @@ public class DeviceEventListener {
 
 	public void deviceDataReceived(WaveSegmentFormat ws) {
 		System.out.println("deviceDataReceived " + ws.secretkey + ws.data.dname);
-		System.out.println("deviceDataReceived scheduling.. " + jobDetail.getKey().getName());
+		System.out.println("deviceDataReceived scheduling.. " + jobDetail.getKey().getName() + "\n");
 		TaskletScheduler.triggerTasklet(jobDetail);
 	}
 

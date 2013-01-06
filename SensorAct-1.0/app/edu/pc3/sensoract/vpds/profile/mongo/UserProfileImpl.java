@@ -133,6 +133,24 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 		}
 		return null;
 	}
+	
+	/**
+	 * Retrieves the username corresponding to the given secretkey.
+	 * 
+	 * @param email
+	 *            User name
+	 * @return Username of the secrectkey, if already registered, otherwise null.
+	 */
+	@Override
+	public String getUsernameByEmail(final String email) {
+
+		List<UserProfileModel> userList = UserProfileModel.find("byEmail",
+				email).fetchAll();
+		if (null != userList && userList.size() > 0) {
+			return userList.get(0).username;
+		}
+		return null;
+	}
 
 	/**
 	 * Retrieves the secretkey corresponding to the given username and password.
@@ -166,6 +184,24 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 				username).fetchAll();
 		if (null != userList && userList.size() > 0) {
 			return userList.get(0).secretkey;
+		}
+		return null;
+	}
+	
+	/**
+	 * Retrieves the email address corresponding to the given username.
+	 * 
+	 * @param username
+	 *            User name
+	 * @return email address of the user, if already registered, otherwise null.
+	 */
+	@Override
+	public String getEmail(final String username) {
+
+		List<UserProfileModel> userList = UserProfileModel.find("byUsername",
+				username).fetchAll();
+		if (null != userList && userList.size() > 0) {
+			return userList.get(0).email;
 		}
 		return null;
 	}

@@ -225,7 +225,7 @@ public class Const {
 	public static final int TASKLETID_MAX_LENGTH = 100;
 
 	public static final int TASKLET_DESC_MIN_LENGTH = 2;
-	public static final int TASKLET_DESC_MAX_LENGTH = 110;
+	public static final int TASKLET_DESC_MAX_LENGTH = 200;
 
 	public static final int TASKLET_PARAM_MAX_LENGTH = 20;
 	public static final int TASKLET_PARAM_VALUE_MAX_LENGTH = 100;
@@ -286,6 +286,7 @@ public class Const {
 	public static final String GUARDRULE_DELETED = "Guard rule successfully deleted";
 	public static final String GUARDRULE_ASSOCIATION_ADDED = "Guard rule successfully associated";
 	public static final String GUARDRULE_ASSOCIATION_DELETED = "Guard rule successfully dissociated";
+	public static final String GUARDRULE_ASSOCIATION_NOTDELETED = "Guard rule unsuccessful dissociation";
 	
 	public static final String GUARDRULE_NOTFOUND = "No guard rule found";
 	public static final String GUARDRULE_ASSOCIATION_NOTFOUND = "No guard rule association found";
@@ -301,6 +302,7 @@ public class Const {
 	
 	
 	public static final String ACTREQUEST_NOTFOUND = "Actuation request not found";
+	public static final String ACTREQUEST_LISTFAILED = "Failed to retrieve the list at this time.";
 	
 	private Const() {
 	}

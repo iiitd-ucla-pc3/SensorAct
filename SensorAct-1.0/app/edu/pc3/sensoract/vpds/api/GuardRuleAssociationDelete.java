@@ -89,8 +89,8 @@ public class GuardRuleAssociationDelete extends SensorActAPI {
 						ErrorType.UNREGISTERED_SECRETKEY, guardRuleAssociationDeleteFormat.secretkey);
 			}
 
-			GuardRuleManager.deleteAssociation(guardRuleAssociationDeleteFormat);
-			response.SendSuccess(Const.API_GUARDRULE_ASSOCIATION_DELETE, Const.GUARDRULE_ASSOCIATION_DELETED);
+			if(GuardRuleManager.deleteAssociation(guardRuleAssociationDeleteFormat))
+				response.SendSuccess(Const.API_GUARDRULE_ASSOCIATION_DELETE, Const.GUARDRULE_ASSOCIATION_DELETED);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_GUARDRULE_ASSOCIATION_DELETE,

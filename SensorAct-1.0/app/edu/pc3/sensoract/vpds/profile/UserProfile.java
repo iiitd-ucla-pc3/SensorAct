@@ -41,6 +41,15 @@ public interface UserProfile <T> {
 	 * @return Username of the secrectkey, if already registered, otherwise null.
 	 */
 	public String getUsername(final String secretkey);
+	
+	/**
+	 * Retrieves the username corresponding to the given email.
+	 * 
+	 * @param email
+	 *            email of the user
+	 * @return Username, if already registered, otherwise null.
+	 */
+	public String getUsernameByEmail(final String email);
 
 	/**
 	 * Retrieves the secretkey corresponding to the given username and password.
@@ -59,6 +68,15 @@ public interface UserProfile <T> {
 	 * @return Secretkey of the user, if already registered, otherwise null.
 	 */
 	public String getSecretkey(final String username);
+	
+	/**
+	 * Retrieves the email address corresponding to the given username.
+	 * 
+	 * @param username
+	 *            User name
+	 * @return email address of the user, if already registered, otherwise null.
+	 */
+	public String getEmail(final String username);
 
 	/**
 	 * Helper method for other APIs to check whether the given secretkey is a

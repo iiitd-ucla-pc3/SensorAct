@@ -51,6 +51,9 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import edu.pc3.sensoract.vpds.api.SensorActAPI;
 import edu.pc3.sensoract.vpds.api.request.DeviceAddFormat;
 import edu.pc3.sensoract.vpds.api.request.GuardRuleAddFormat;
@@ -61,6 +64,9 @@ import edu.pc3.sensoract.vpds.api.request.GuardRuleAssociationListFormat;
 import edu.pc3.sensoract.vpds.api.request.GuardRuleDeleteFormat;
 import edu.pc3.sensoract.vpds.api.request.GuardRuleGetFormat;
 import edu.pc3.sensoract.vpds.api.request.GuardRuleListFormat;
+import edu.pc3.sensoract.vpds.api.request.DeviceAddFormat.DeviceActuator;
+import edu.pc3.sensoract.vpds.constants.Const;
+import edu.pc3.sensoract.vpds.enums.ErrorType;
 import edu.pc3.sensoract.vpds.model.DeviceModel;
 import edu.pc3.sensoract.vpds.model.GuardRuleAssociationModel;
 import edu.pc3.sensoract.vpds.model.GuardRuleModel;
@@ -151,7 +157,7 @@ public class GuardRuleManager {
 	 * @param newRule
 	 */
 	public static void addGuardRule(final GuardRuleAddFormat newRule) {
-		//TODO: check duplicate rule name.
+		//TODO: check duplicate rule name. UPDATE: checking done in /addguardrule api
 		GuardRuleModel rule = new GuardRuleModel(newRule);
 		rule.save();
 	}
@@ -247,7 +253,7 @@ public class GuardRuleManager {
 
 	/**
 	 * Get associations.
-	 * 
+	 * @author Manaswi Saha
 	 * @param format
 	 * @return True
 	 */
@@ -256,9 +262,9 @@ public class GuardRuleManager {
 			return GuardRuleAssociationModel.find("bySecretkeyAndRulename", format.secretkey, format.rulename).fetchAll();
 		} else if (format.devicename != null) {
 			if (format.sensorname != null && format.sensorid != null) {
-				return GuardRuleAssociationModel.find("bySecretkeyAndSensornameAndSensorid", format.secretkey, format.sensorname, format.sensorid).fetchAll();
+				return GuardRuleAssociationModel.find("bySecretkeyAndDevicenameAndSensornameAndSensorid", format.secretkey, format.devicename, format.sensorname, format.sensorid).fetchAll();
 			} else if (format.actuatorname != null && format.actuatorid != null) {
-				return GuardRuleAssociationModel.find("bySecretkeyAndActuatornameAndActuatorid", format.secretkey, format.actuatorname, format.actuatorid).fetchAll();
+				return GuardRuleAssociationModel.find("bySecretkeyAndDevicenameAndActuatornameAndActuatorid", format.secretkey, format.devicename, format.actuatorname, format.actuatorid).fetchAll();
 			}
 		}
 		return null;
@@ -272,6 +278,63 @@ public class GuardRuleManager {
 	 */
 	public static List<GuardRuleAssociationModel> listAssociation(final GuardRuleAssociationListFormat format) {
 		return GuardRuleAssociationModel.find("bySecretkey", format.secretkey).fetchAll();
+	}
+	
+	/**
+	 * Get all device associations.
+	 * 
+	 * @param devicename
+	 * @param secretkey
+	 * @return True, if associations deleted 
+	 */
+	public static List<GuardRuleAssociationModel> getDeviceAssociations(String secretkey, String devicename) {
+		if (devicename != null) {
+			return GuardRuleAssociationModel.find("bySecretkeyAndDevicename", secretkey, devicename).fetchAll();
+		}
+		return null;
+	}
+	
+	/**
+	 * Delete all device associations.
+	 * 
+	 * @author Manaswi Saha
+	 * @param devicename
+	 * @param secretkey
+	 * @return True, if associations deleted 
+	 */
+	public static boolean deleteDeviceAssociations(String secretkey, String devicename) {
+		
+		List<GuardRuleAssociationModel> deviceAssociations = getDeviceAssociations(secretkey, devicename);
+		
+		//List<GuardRuleAssociationDeleteFormat> toDeleteList = new ArrayList<GuardRuleAssociationDeleteFormat>();
+		
+		GuardRuleAssociationDeleteFormat todelete = new GuardRuleAssociationDeleteFormat();
+		todelete.secretkey = secretkey;
+		todelete.devicename = devicename;
+		
+		for(GuardRuleAssociationModel association: deviceAssociations){
+			if (association.sensorname != null && association.sensorid != null){
+				
+				todelete.actuatorid = null;
+				todelete.actuatorname = null;
+				todelete.sensorid = association.sensorid;
+				todelete.sensorname = association.sensorname;
+				todelete.rulename = association.rulename;
+			}
+			else if (association.actuatorname != null && association.actuatorid != null){
+				
+				todelete.actuatorid = association.actuatorid;
+				todelete.actuatorname = association.actuatorname;
+				todelete.sensorid = null;
+				todelete.sensorname = null;
+				todelete.rulename = association.rulename;
+			}
+			
+			if(!deleteAssociation(todelete))
+				return false;			
+		}
+		
+		return true;
 	}
 
 	/**
@@ -392,7 +455,7 @@ public class GuardRuleManager {
 
 		if (ruleList == null || ruleList.size() == 0) {
 			// No rules for this device.
-			System.out.println("No rules for this device");
+			SensorActLogger.error("No rules for this device");
 			return false;
 		}
 
@@ -414,7 +477,10 @@ public class GuardRuleManager {
 		Collections.sort(ruleList);
 		
 		// Process each guard rule
-		Decision decision = Decision.NOT_DECIDED;
+		List<Decision> decision = new ArrayList<Decision>();
+		for(int i = 0; i < ruleList.size(); i++)
+			decision.add(Decision.NOT_DECIDED);
+		int index = 0;
 		for (GuardRuleModel rule: ruleList) {
 
 			if (!putRuleConditionIntoScriptEngine(rule)) {
@@ -436,7 +502,7 @@ public class GuardRuleManager {
 			try {
 				result = (Boolean) inv.invokeFunction("evaluate");
 				if (result) {
-					decision = ruleDecision;
+					decision.add(index, ruleDecision);
 				}
 			} catch (ScriptException e) {
 				e.printStackTrace();
@@ -445,12 +511,17 @@ public class GuardRuleManager {
 				e.printStackTrace();
 				return false;
 			}
+			index++;
 		}
-
-		if (decision == Decision.ALLOWED) {
-			return SensorActAPI.actuator.write(username, devicename, actuatorname, actuatorid, value);	
+		int countDecision = 0;
+		for(int i = 0; i < ruleList.size(); i++) {
+			if (decision.get(i) == Decision.ALLOWED) 
+				countDecision++;
+			System.out.println("Rule decision:" + decision.get(i));
 		}
 		
+		if(countDecision == ruleList.size())
+			return SensorActAPI.actuator.write(username, devicename, actuatorname, actuatorid, value);
 		return false;
 	}
 
@@ -655,7 +726,7 @@ public class GuardRuleManager {
 		}
 		
 		try {
-			//System.out.println("rule.condition " + rule.condition);
+			SensorActLogger.info("Rule condition being evaluated::  " + rule.condition);
 			engine.eval(function);
 		} catch (ScriptException e) {
 			e.printStackTrace();

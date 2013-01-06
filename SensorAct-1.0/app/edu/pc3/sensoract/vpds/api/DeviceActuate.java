@@ -102,7 +102,6 @@ public class DeviceActuate extends SensorActAPI {
 		try {
 			TaskletAddFormat tasklet = convertToRequestFormat(actuateDeviceJson,
 					TaskletAddFormat.class);
-			String source = "actuate";
 
 			validateRequest(tasklet);
 			SensorActAPI.taskletAdd.preProcessTasklet(tasklet);

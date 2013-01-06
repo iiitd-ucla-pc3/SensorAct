@@ -40,6 +40,9 @@
  */
 package edu.pc3.sensoract.vpds.api;
 
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
+
 import edu.pc3.sensoract.vpds.api.request.GuardRuleGetFormat;
 import edu.pc3.sensoract.vpds.constants.Const;
 import edu.pc3.sensoract.vpds.enums.ErrorType;
@@ -101,6 +104,10 @@ public class GuardRuleGet extends SensorActAPI {
 			}
 
 			guardRule.secretkey = null;
+			
+			String condition = updateGuardRuleCondition(guardRule.condition);
+			guardRule.condition = condition.substring(0, condition.length()-1);	
+			
 			renderText(remove_Id(guardRule));
 
 		} catch (InvalidJsonException e) {
@@ -110,6 +117,40 @@ public class GuardRuleGet extends SensorActAPI {
 			response.sendFailure(Const.API_GUARDRULE_GET,
 					ErrorType.SYSTEM_ERROR, e.getMessage());
 		}
+	}
+
+	private String updateGuardRuleCondition(String condition) {
+		//Get the email of the user from the condition
+		String email = null;
+		StringTokenizer tokenizer = new StringTokenizer(condition,"||");
+		StringTokenizer tokenizer1 = null;
+		String cond = "";
+		while(tokenizer.hasMoreTokens()){
+			try{
+				String token = tokenizer.nextToken();
+				System.out.println("OuterToken:" + token);
+				try{
+					tokenizer1 = new StringTokenizer(token,"==");
+					String token2 = tokenizer1.nextToken();
+					System.out.println("InnerToken:" + token2);
+					if (token2.equals("USER.email")) {
+
+						email = tokenizer1.nextToken();
+						email = email.substring(1, email.length()-1);
+					}						
+				}
+				catch(NoSuchElementException e){
+					System.out.println("Inner token exception" + e.getMessage());
+				}
+				//Update the condition with just the username
+				String username = SensorActAPI.userProfile.getUsernameByEmail(email);
+				cond = cond + username + ",";
+			}
+			catch(NoSuchElementException e){
+				System.out.println("Outer token exception" + e.getMessage());
+			}
+		}
+		return cond;
 	}
 
 }

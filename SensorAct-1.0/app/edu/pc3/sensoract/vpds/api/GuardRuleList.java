@@ -40,7 +40,10 @@
  */
 package edu.pc3.sensoract.vpds.api;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -77,6 +80,8 @@ public class GuardRuleList extends SensorActAPI {
 					ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
 		}
 	}
+	
+	
 
 	/**
 	 * Services the guardrule/list API.
@@ -101,11 +106,13 @@ public class GuardRuleList extends SensorActAPI {
 
 			List<GuardRuleModel> rules = GuardRuleManager.getGuardRuleList(guardRuleListRequest);
 			if (null == rules || rules.size() <= 0) {
-				response.sendFailure(Const.API_GUARDRULE_GET, 
+				response.sendFailure(Const.API_GUARDRULE_LIST, 
 						ErrorType.GUARDRULE_NOTFOUND, Const.MSG_NONE);
 			}
 			
-			JsonArray jsRuleArray = convertFromListToJsonArrayRemovingSecretKeyAndId(rules);
+			List<GuardRuleModel> updatedRules = updateRulesWithUsernameForCondition(rules);
+			
+			JsonArray jsRuleArray = convertFromListToJsonArrayRemovingSecretKeyAndId(updatedRules);
 
 			JsonObject jsOutput = new JsonObject();
 			jsOutput.add("guardrulelist", jsRuleArray);
@@ -120,6 +127,51 @@ public class GuardRuleList extends SensorActAPI {
 			response.sendFailure(Const.API_GUARDRULE_LIST,
 					ErrorType.SYSTEM_ERROR, e.getMessage());
 		}
+	}
+
+	private List<GuardRuleModel> updateRulesWithUsernameForCondition(List<GuardRuleModel> rules) {
+		
+		List<GuardRuleModel> updatedRuleList = new ArrayList<GuardRuleModel>();
+		
+		for(GuardRuleModel rule: rules){
+			//Get the email of the user from the condition
+			String email = null;
+			String condition = rule.condition;
+			StringTokenizer tokenizer = new StringTokenizer(condition,"||");
+			StringTokenizer tokenizer1 = null;			
+			condition = "";
+			while(tokenizer.hasMoreTokens()){
+				try{
+					String token = tokenizer.nextToken();
+					System.out.println("OuterToken:" + token);
+					try{
+						tokenizer1 = new StringTokenizer(token,"==");
+						String token2 = tokenizer1.nextToken();
+						
+						if (token2.equals("USER.email")) {
+
+							email = tokenizer1.nextToken();
+							email = email.substring(1, email.length()-1);
+							System.out.println("InnerToken:" + email);
+						}						
+					}
+					catch(NoSuchElementException e){
+						System.out.println("Inner token exception" + e.getMessage());
+					}
+					//Update the condition with just the username
+					String username = SensorActAPI.userProfile.getUsernameByEmail(email);
+					condition = condition + username + ",";
+				}
+				catch(NoSuchElementException e){
+					System.out.println("Outer token exception" + e.getMessage());
+				}
+			}
+			rule.condition = condition.substring(0, condition.length()-1);
+			updatedRuleList.add(rule);
+		}
+		
+		return updatedRuleList;
+		
 	}
 
 }

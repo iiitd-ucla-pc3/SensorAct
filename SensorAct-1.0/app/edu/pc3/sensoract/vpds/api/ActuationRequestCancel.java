@@ -103,27 +103,14 @@ public class ActuationRequestCancel extends SensorActAPI {
 
 		String taskletid = null;
 		String secretkey = null;
-		String tasklet_type = null;
-		String deviceinfo = null;
 		
-		List<JobDetail> jbD = TaskletScheduler.getJobDetailList(cancelReqList.cancelRequestList);
+		//List<JobDetail> jbD = TaskletScheduler.getJobDetailList(cancelReqList.cancelRequestList);
 		
 		for(int index = 0; index < cancelReqList.cancelRequestList.size(); index++) {
 			
 			secretkey = cancelReqList.secretkey;
 			taskletid = cancelReqList.cancelRequestList.get(index);
 			System.out.println("TaskletIDCancel: "+ taskletid);
-			
-			/*// Form the deviceId and remove the DeviceEventListener
-			JobDataMap dataMap = jbD.get(index).getJobDataMap();
-			tasklet_type = dataMap.getString("tasklet_type");
-			deviceinfo = dataMap.getString("deviceinfo");
-					
-			DeviceId dId = new DeviceId(secretkey, deviceinfo);
-			ArrayList<DeviceEventListener> listListener = DeviceEvent.mapListeners.get(dId
-					.toString());*/
-			
-			
 			
 			// Cancel Tasklet
 			boolean taskletExists = TaskletScheduler

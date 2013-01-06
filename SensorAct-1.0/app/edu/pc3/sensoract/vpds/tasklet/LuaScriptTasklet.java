@@ -42,6 +42,8 @@
 package edu.pc3.sensoract.vpds.tasklet;
 
 import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
@@ -58,22 +60,28 @@ import org.quartz.JobKey;
 import org.quartz.SchedulerException;
 import org.quartz.UnableToInterruptJobException;
 
+import edu.pc3.sensoract.vpds.model.TaskletModel;
 import edu.pc3.sensoract.vpds.util.SensorActLogger;
 
 //@org.quartz.DisallowConcurrentExecution
 public class LuaScriptTasklet implements InterruptableJob {
 
 	private static ScriptEngine luaEngine = null;
+	//private static TaskletModel
+	
 	// private static LuaJavaMapper luaJavaMapper = new LuaJavaMapper();
-	private String luaScript = null;
-	public static String LUASCRIPT = "luaScript";
+	//private String luaScript = null;
+	
+	public static String TASKLETINFO = "TASKLETINFO";
+	public static String VPDS = "VPDS";
 
 	static {
 		luaEngine = new ScriptEngineManager().getEngineByName("Lua");
 		LuaToJavaFunctionMapper luaToJavaFunctionMapper = new LuaToJavaFunctionMapper();
-		luaEngine.put("PDS", luaToJavaFunctionMapper);
+		luaEngine.put(VPDS, luaToJavaFunctionMapper);
 	}
 
+	/*
 	public String getLuaScript() {
 		return luaScript;
 	}
@@ -81,26 +89,26 @@ public class LuaScriptTasklet implements InterruptableJob {
 	public void setLuaScript(String luaScript) {
 		this.luaScript = luaScript;
 	}
-
+*/
+	
 	public void execute(JobExecutionContext context) {
 
 		
 		long t1 = new Date().getTime();
-
-		if (null == luaScript) {
-			return;
-		}
-
-		JobKey key = context.getJobDetail().getKey();
-		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
-
-		SensorActLogger.info(key.getName() + " started..." );
+	
+		JobKey jobKey = context.getJobDetail().getKey();
+		JobDataMap dataMap = context.getJobDetail().getJobDataMap();		
+		TaskletModel tasklet = (TaskletModel) dataMap.get(TASKLETINFO);
+		
+		//TODO: validate the tasklet
+		
+		SensorActLogger.info(jobKey.getName() + " started..." );
 
 		try {
 
 			ScriptEngine luaEngineLocal = new ScriptEngineManager().getEngineByName("Lua");
 			LuaToJavaFunctionMapper luaToJavaFunctionMapper = new LuaToJavaFunctionMapper();
-			luaEngineLocal.put("PDS", luaToJavaFunctionMapper);
+			luaEngineLocal.put(VPDS, luaToJavaFunctionMapper);
 			
 			// Object email = dataMap.get("email");
 
@@ -123,15 +131,22 @@ public class LuaScriptTasklet implements InterruptableJob {
 
 			// luaEngine.put("PDS", LuaJavaMapper.class);
 			// luaEngine.put("email", email);
-
-			dataMap.remove(LUASCRIPT);
-			String[] keys = dataMap.getKeys();
+			
+			
+			newScope.putAll(tasklet.input);
+			newScope.putAll(tasklet.param);
+			
+			
+			/*
+			Set keys = tasklet.input.keySet();			
 			for (int i = 0; i < keys.length; ++i) {
 				// System.out.println(keys[i] + ":---------------:" +
 				// dataMap.get(keys[i]));
 				newScope.put(keys[i], dataMap.get(keys[i]));
 				//System.out.println("Key " + keys[i] + "Value: " + dataMap.get(keys[i]));
 			}
+			*/
+			
 			long t3 = new Date().getTime();
 
 			int ccount = 0;
@@ -145,7 +160,7 @@ public class LuaScriptTasklet implements InterruptableJob {
 			
 
 			long e1 = new Date().getTime();
-			luaEngineLocal.eval(luaScript, newScope);			
+			luaEngineLocal.eval(tasklet.execute, newScope);			
 			long e2 = new Date().getTime();
 			// System.out.print(" eval : " + (e2 - e1));
 
@@ -165,7 +180,7 @@ public class LuaScriptTasklet implements InterruptableJob {
 			// + ", " + ccount
 			// + ",   " + val);
 
-			SensorActLogger.info(key.getName() + " export: " + (t3 - t1)
+			SensorActLogger.info(jobKey.getName() + " export: " + (t3 - t1)
 					+ " lua: " + (e2 - e1) + " total: " + (e2 - t1)
 					+ " #threads: " + ccount);
 			// System.out.println( key.getName() + ": " + (e2 - t1) + " " +
@@ -174,7 +189,7 @@ public class LuaScriptTasklet implements InterruptableJob {
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			System.out.println("*********** " + key.getName());
+			System.out.println("Error while running lua script for *********** " + jobKey.getName());
 			e.printStackTrace();
 		}
 

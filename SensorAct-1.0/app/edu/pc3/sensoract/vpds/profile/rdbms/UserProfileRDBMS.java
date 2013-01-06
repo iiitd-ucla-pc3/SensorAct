@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.UUID;
 
 import edu.pc3.sensoract.vpds.api.request.UserRegisterFormat;
+import edu.pc3.sensoract.vpds.model.UserProfileModel;
 import edu.pc3.sensoract.vpds.model.rdbms.UserProfileRModel;
 import edu.pc3.sensoract.vpds.profile.UserProfile;
 
@@ -134,6 +135,24 @@ public class UserProfileRDBMS implements UserProfile<UserProfileRModel> {
 	}
 	
 	/**
+	 * Retrieves the username corresponding to the given secretkey.
+	 * 
+	 * @param email
+	 *            User name
+	 * @return Username of the secrectkey, if already registered, otherwise null.
+	 */
+	@Override
+	public String getUsernameByEmail(final String email) {
+
+		List<UserProfileRModel> userList = UserProfileRModel.find("byEmail",
+				email).fetch();
+		if (null != userList && userList.size() > 0) {
+			return userList.get(0).username;
+		}
+		return null;
+	}
+	
+	/**
 	 * Retrieves the secretkey corresponding to the given username and password.
 	 * 
 	 * @param username
@@ -165,6 +184,24 @@ public class UserProfileRDBMS implements UserProfile<UserProfileRModel> {
 				username).fetch();
 		if (null != userList && userList.size() > 0) {
 			return userList.get(0).secretkey;
+		}
+		return null;
+	}
+	
+	/**
+	 * Retrieves the email address corresponding to the given username.
+	 * 
+	 * @param username
+	 *            User name
+	 * @return email address of the user, if already registered, otherwise null.
+	 */
+	@Override
+	public String getEmail(final String username) {
+
+		List<UserProfileRModel> userList = UserProfileRModel.find("byUsername",
+				username).fetch();
+		if (null != userList && userList.size() > 0) {
+			return userList.get(0).email;
 		}
 		return null;
 	}

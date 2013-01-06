@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Observable;
 
+import org.quartz.JobDetail;
+
 import edu.pc3.sensoract.vpds.api.request.WaveSegmentFormat;
 
 /**
@@ -28,7 +30,7 @@ public class DeviceEvent extends Observable {
 	 * @param ws
 	 */
 	public void notifyWaveSegmentArrived(WaveSegmentFormat ws) {
-		
+
 		DeviceId deviceId = new DeviceId(ws.secretkey, ws.data.dname,
 				ws.data.sname, ws.data.sid);
 
@@ -41,7 +43,7 @@ public class DeviceEvent extends Observable {
 			return;
 
 		System.out.println("notifyWaveSegmentArrived.. Listeners "
-				+ listListener.size());
+				+ listListener.size() + "\n");
 
 		for (DeviceEventListener listener : listListener) {
 			listener.deviceDataReceived(ws);
@@ -78,17 +80,27 @@ public class DeviceEvent extends Observable {
 	/**
 	 * 
 	 * @param deviceId
-	 * @param listener
+	 * @param jobdetail
 	 */
-	public void removeDeviceEventListener(DeviceId deviceId,
-			DeviceEventListener listener) {
+	public boolean removeDeviceEventListener(DeviceId deviceId,
+			JobDetail jobdetail) {
 
-		ArrayList<DeviceEventListener> listListener = mapListeners
-				.get(deviceId);
+		ArrayList<DeviceEventListener> listListener = mapListeners.get(deviceId
+				.toString());
+
+		boolean result = false;
 
 		if (null != listListener) {
-			listListener.remove(listener);
-		}
+			
+			for (DeviceEventListener listener : listListener) {				
+						
+				if (listener.getJobDetail().equals(jobdetail)) {					
+					result = listListener.remove(listener);					
+					break;
+				}
+			}
+		}		
+		return result;
 	}
 
 }

@@ -58,6 +58,7 @@ import edu.pc3.sensoract.vpds.guardrule.GuardRuleManager;
 import edu.pc3.sensoract.vpds.guardrule.RequestingUser;
 import edu.pc3.sensoract.vpds.model.WaveSegmentChannelModel;
 import edu.pc3.sensoract.vpds.model.WaveSegmentModel;
+import edu.pc3.sensoract.vpds.profile.UserProfile;
 import edu.pc3.sensoract.vpds.util.SensorActLogger;
 
 public class LuaToJavaFunctionMapper {
@@ -175,9 +176,10 @@ public class LuaToJavaFunctionMapper {
 		// Double d = WaveSegmentData.readLatest(username, devicename,
 		// sensorname, sensorid);
 		// return d;
+		
+		String email = SensorActAPI.userProfile.getEmail(username);
 
-		RequestingUser requestingUser = new RequestingUser(
-				"pandarasamya@iiitd.ac.in");
+		RequestingUser requestingUser = new RequestingUser(email);
 
 		long t2 = new Date().getTime();
 		List<WaveSegmentModel> wsList = GuardRuleManager.read(username,
@@ -213,7 +215,7 @@ public class LuaToJavaFunctionMapper {
 
 		long t1 = new Date().getTime();
 		
-		System.out.println("Lua: fromtime: " + fromTime + " ToTime: " + toTime);
+		SensorActLogger.info("readPasttoNow Lua: fromtime: " + fromTime + " ToTime: " + toTime);
 
 
 		String username = null;
@@ -233,15 +235,16 @@ public class LuaToJavaFunctionMapper {
 		} catch (Exception e) {
 		}
 
-		RequestingUser requestingUser = new RequestingUser(
-				"manaswis@iiitd.ac.in");
+		String email = SensorActAPI.userProfile.getEmail(username);
+
+		RequestingUser requestingUser = new RequestingUser(email);
 
 		long t2 = new Date().getTime();
 		List<WaveSegmentModel> wsList = GuardRuleManager.read(username,
 				requestingUser, devicename, sensorname, sensorid, fromTime,
 				toTime);
 		
-		System.out.println("No of readings got:" + wsList.size());
+		SensorActLogger.info("No of readings got:" + wsList.size());
 
 		long t3 = new Date().getTime();
 
@@ -292,8 +295,9 @@ public class LuaToJavaFunctionMapper {
 		// sensorname, sensorid);
 		// return d;
 
-		RequestingUser requestingUser = new RequestingUser(
-				"pandarasamya@iiitd.ac.in");
+		String email = SensorActAPI.userProfile.getEmail(username);
+
+		RequestingUser requestingUser = new RequestingUser(email);
 
 		long t2 = new Date().getTime();
 		List<WaveSegmentModel> wsList = GuardRuleManager.read(username,
@@ -369,13 +373,16 @@ public class LuaToJavaFunctionMapper {
 		 //System.out.println("Write Resource " + username + " " + devicename + " "
 		 //+ actuatorname + " " + actuatorid + "status:" + status);
 
-		RequestingUser requestingUser = new RequestingUser(
-				"manaswis@iiitd.ac.in");
+		String email = SensorActAPI.userProfile.getEmail(username);
+
+		RequestingUser requestingUser = new RequestingUser(email);
 		
 
 		//long t2 = new Date().getTime();
 		if(GuardRuleManager.write(username, requestingUser, devicename, actuatorname, actuatorid, status))
 			return true;
+		else
+			SensorActLogger.info("GuardRuleManager:write():: unsuccessful for status "+ status);
 		//long t3 = new Date().getTime();
 
 		//SensorActLogger.info("GuardRuleManager.write: " + (t3 - t2) + " total: "+ (t3 - t1));

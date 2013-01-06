@@ -40,6 +40,8 @@
  */
 package edu.pc3.sensoract.vpds.api;
 
+import java.util.StringTokenizer;
+
 import edu.pc3.sensoract.vpds.api.request.GuardRuleAddFormat;
 import edu.pc3.sensoract.vpds.constants.Const;
 import edu.pc3.sensoract.vpds.enums.ErrorType;
@@ -49,7 +51,7 @@ import edu.pc3.sensoract.vpds.guardrule.GuardRuleManager;
 /**
  * guardrule/add API: Adds a guard rule to a device
  * 
- * @author Pandarasamy Arjunan, Haksoo Choi
+ * @author Pandarasamy Arjunan, Haksoo Choi, Manaswi Saha
  * @version 1.0
  */
 public class GuardRuleAdd extends SensorActAPI {
@@ -96,6 +98,23 @@ public class GuardRuleAdd extends SensorActAPI {
 						ErrorType.GUARDRULE_ALREADYEXISTS,
 						guardRule.rule.name);
 			}
+			
+			//Update the condition with USER.email==<emailaddressoftheuser>
+			String condition = "";
+			String email = null, token = null;
+			
+			StringTokenizer tokenizer = new StringTokenizer(guardRule.rule.condition, ",");
+			
+			while(tokenizer.hasMoreTokens()){
+				
+				token = tokenizer.nextToken();
+				System.out.println("Tokens:" + token);
+				email = SensorActAPI.userProfile.getEmail(token);
+				condition = condition + "USER.email=='" + email +"'||";
+			}
+			condition = condition.substring(0, condition.length() - 2);
+			
+			guardRule.rule.condition = condition;
 
 			GuardRuleManager.addGuardRule(guardRule);
 			response.SendSuccess(Const.API_GUARDRULE_ADD, Const.GUARDRULE_ADDED, guardRule.rule.name);

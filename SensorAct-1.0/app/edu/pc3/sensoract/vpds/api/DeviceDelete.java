@@ -40,10 +40,18 @@
  */
 package edu.pc3.sensoract.vpds.api;
 
+import java.util.List;
+
+import edu.pc3.sensoract.vpds.api.request.DeviceAddFormat.DeviceActuator;
+import edu.pc3.sensoract.vpds.api.request.DeviceAddFormat.DeviceSensor;
 import edu.pc3.sensoract.vpds.api.request.DeviceDeleteFormat;
+import edu.pc3.sensoract.vpds.api.request.GuardRuleAssociationDeleteFormat;
+import edu.pc3.sensoract.vpds.api.response.DeviceProfileFormat;
 import edu.pc3.sensoract.vpds.constants.Const;
 import edu.pc3.sensoract.vpds.enums.ErrorType;
 import edu.pc3.sensoract.vpds.exceptions.InvalidJsonException;
+import edu.pc3.sensoract.vpds.guardrule.GuardRuleManager;
+import edu.pc3.sensoract.vpds.model.GuardRuleAssociationModel;
 
 /**
  * device/delete API: Deletes an existing device profile from the repository.
@@ -103,6 +111,10 @@ public class DeviceDelete extends SensorActAPI {
 						ErrorType.DEVICE_NOTFOUND,
 						deviceDeleteRequest.devicename);
 			}
+			else{
+				GuardRuleManager.deleteDeviceAssociations(deviceDeleteRequest.secretkey, deviceDeleteRequest.devicename);
+			}
+				
 			response.SendSuccess(Const.API_DEVICE_DELETE, Const.DEVICE_DELETED,
 					deviceDeleteRequest.devicename);
 

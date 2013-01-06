@@ -158,7 +158,7 @@ public class TaskletScheduler {
 		JobDetail luaJob = newJob(LuaScriptTasklet.class)
 				.withIdentity("LuaScript" + id, "group1")
 				// .usingJobData(LuaScriptTasklet.LUASCRIPT, luaScript)
-				.usingJobData(LuaScriptTasklet.LUASCRIPT, script).build();
+				.usingJobData(LuaScriptTasklet.TASKLETINFO, script).build();
 
 		JobDataMap luaJobDataMap = luaJob.getJobDataMap();
 
@@ -228,11 +228,40 @@ public class TaskletScheduler {
 		return checkTaskletExists(jobKey);
 	}
 
+	private static boolean removeDeviceListeners(final JobDetail jobDetail) {
+
+		JobDataMap dataMap = jobDetail.getJobDataMap();
+		TaskletModel tasklet = (TaskletModel) dataMap
+				.get(LuaScriptTasklet.TASKLETINFO);
+
+		String sensor = null;
+		boolean result = false;
+		StringTokenizer tokenizer = new StringTokenizer(tasklet.when, "||");
+		try {
+			while (tokenizer.hasMoreTokens()) {
+				sensor = tokenizer.nextToken().trim();
+				DeviceId deviceId = new DeviceId(tasklet.secretkey,
+						tasklet.input.get(sensor));				
+				result = SensorActAPI.deviceEvent.removeDeviceEventListener(deviceId,
+						jobDetail);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 	public static boolean cancelTasklet(final String taskletid) {
 		JobKey jobKey = toJobKey(taskletid);
+		
 		try {
+			JobDetail jobDetail = scheduler.getJobDetail(jobKey);
 			scheduler.interrupt(jobKey);
-			return scheduler.deleteJob(jobKey);
+			boolean status = scheduler.deleteJob(jobKey);
+			if (status == true) {					
+				status = removeDeviceListeners(jobDetail);
+			}
+			return status;
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 			return false;
@@ -260,40 +289,38 @@ public class TaskletScheduler {
 		}
 		return true;
 	}
-	
+
 	public static List<String> listAllTaskletsGroupWise(final String group) {
 
 		List<String> jobKeyList = new ArrayList<String>();
-		try {			
-			 // enumerate each job in group
+		try {
+			// enumerate each job in group
 			GroupMatcher<JobKey> groupMatcher = GroupMatcher.groupEquals(group);
-			 for(JobKey jobKey : scheduler.getJobKeys(groupMatcher)) {
-				 jobKeyList.add(jobKey.toString());
-				 System.out.println("Found job identified by: " + jobKey);
-			 }
-			 
+			for (JobKey jobKey : scheduler.getJobKeys(groupMatcher)) {
+				jobKeyList.add(jobKey.toString());
+				System.out.println("Found job identified by: " + jobKey);
+			}
+
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 			return null;
 		}
 		return jobKeyList;
 	}
-	
+
 	public static List<JobDetail> getJobDetailList(List<String> jobKeyList) {
 		List<JobDetail> jbDList = new ArrayList<JobDetail>();
-		
+
 		try {
-			for(int i = 0; i < jobKeyList.size(); i++)
-				jbDList.add(scheduler.getJobDetail(toJobKey(jobKeyList.get(i))));			
-		}
-		catch (SchedulerException e) {
+			for (int i = 0; i < jobKeyList.size(); i++)
+				jbDList.add(scheduler.getJobDetail(toJobKey(jobKeyList.get(i))));
+		} catch (SchedulerException e) {
 			e.printStackTrace();
 			return null;
 		}
-		
+
 		return jbDList;
 	}
-	
 
 	private static boolean scheduleTasklet(final JobDetail job,
 			final Trigger trigger) {
@@ -315,19 +342,22 @@ public class TaskletScheduler {
 			return Const.TASKLET_ALREADY_SCHEDULED;
 		}
 
-		JobDataMap jobDataMap = new JobDataMap();
-		jobDataMap.putAll(tasklet.param);
-		jobDataMap.putAll(tasklet.input);
+		JobDataMap jobDataMap = new JobDataMap();		
+				
+		jobDataMap.put(LuaScriptTasklet.TASKLETINFO, tasklet);
 
 		JobDetail jobDetail = newJob(LuaScriptTasklet.class)
 				.withIdentity(jobKey)
-				.usingJobData(LuaScriptTasklet.LUASCRIPT, tasklet.execute)
+				// .usingJobData(LuaScriptTasklet.TASKLETINFO, tasklet)
+				// .usingJobData(LuaScriptTasklet.LUASCRIPT, tasklet.execute)
 				.usingJobData("taskletname", tasklet.taskletname)
 				.usingJobData("desc", tasklet.desc)
-				.usingJobData("tasklet_type", tasklet.tasklet_type.toString())
+				// .usingJobData("tasklet_type",
+				// tasklet.tasklet_type.toString())
 				.usingJobData(jobDataMap).build();
 
 		Trigger trigger = null;
+		StringTokenizer tokenizer = null;
 
 		// CronTrigger Ctrigger = newTrigger().withIdentity("trigger1",
 		// "group1")
@@ -339,52 +369,56 @@ public class TaskletScheduler {
 			break;
 
 		case PERIODIC:
-			StringTokenizer tokenizer = new StringTokenizer(tasklet.when, "||&&");
-			try{
+
+			// TODO: How to handle multiple timers,
+			// we will have multiple jobs. so we need to schedule and cancel
+			// them together
+			tokenizer = new StringTokenizer(tasklet.when, "||");
+			try {
 				String tokens = "";
-				while(tokenizer.hasMoreTokens()) {
-				    tokens = tokenizer.nextToken().trim();
-				    System.out.println("Schedule CronExpression: " + tasklet.input.get(tokens));
-					trigger = newTrigger().withIdentity(triggerKey)
-							.withSchedule(cronSchedule(tasklet.input.get(tokens))).build();
+				while (tokenizer.hasMoreTokens()) {
+					tokens = tokenizer.nextToken().trim();
+					System.out.println("Schedule CronExpression: "
+							+ tasklet.input.get(tokens));
+					trigger = newTrigger()
+							.withIdentity(triggerKey)
+							.withSchedule(
+									cronSchedule(tasklet.input.get(tokens)))
+							.build();
 				}
-				    
+
+			} catch (Exception e) {
 			}
-			catch(Exception e){}			
 			break;
 
 		case EVENT:
-		case PERIODIC_AND_EVENT:
-			
-			try{
-				/*
-				 tokenizer = new StringTokenizer(tasklet.when, "||&&");
-				 String tokens = "";
-				while(tokenizer.hasMoreTokens()) {
-				    tokens = tokenizer.nextToken().trim();
-				    System.out.println("Schedule PE CronExpression: " + tasklet.input.get(tokens));
-					trigger = newTrigger().withIdentity(triggerKey)
-							.withSchedule(cronSchedule(tasklet.input.get(tokens))).build();
-				}*/
-				
-				trigger = newTrigger().withIdentity(triggerKey)
-						.withSchedule(cronSchedule("* * * * * ? 2099")).build();
 
-				DeviceEventListener deListener = new DeviceEventListener(jobDetail);
-				for (String key : tasklet.input.keySet()) {
-						DeviceId deviceId = new DeviceId(tasklet.secretkey,
-								tasklet.input.get(key));
-						System.out.println("adding " + deviceId
-								+ " to DeviceEventListener");
-						SensorActAPI.deviceEvent.addDeviceEventListener(deviceId,
-								deListener);
-						System.out.println("adding done..");
+			String sensor = null;
+			DeviceEventListener deListener = new DeviceEventListener(jobDetail);
+			trigger = newTrigger().withIdentity(triggerKey)
+					.withSchedule(cronSchedule("* * * * * ? 2099")).build();
+
+			tokenizer = new StringTokenizer(tasklet.when, "||");
+			try {
+				while (tokenizer.hasMoreTokens()) {
+					sensor = tokenizer.nextToken().trim();
+					DeviceId deviceId = new DeviceId(tasklet.secretkey,
+							tasklet.input.get(sensor));
+					System.out.println("adding " + deviceId
+							+ " to DeviceEventListener");
+					SensorActAPI.deviceEvent.addDeviceEventListener(deviceId,
+							deListener);
+					System.out.println("adding done..");
 				}
-				    
+			} catch (Exception e) {
 			}
-			catch(Exception e){}
-			
-			//return addTasklet(jobDetail) ? jobKey.toString() : null;
+			break;
+
+		case PERIODIC_AND_EVENT:
+			// TODO : have to implement
+			break;
+
+		// return addTasklet(jobDetail) ? jobKey.toString() : null;
 		}
 
 		return scheduleTasklet(jobDetail, trigger) ? jobKey.toString() : null;
@@ -397,7 +431,7 @@ public class TaskletScheduler {
 		TriggerKey triggerKey = new TriggerKey(tasklet.taskletname, group);
 
 		JobDetail luaJob = newJob(LuaScriptTasklet.class).withIdentity(jobKey)
-				.usingJobData(LuaScriptTasklet.LUASCRIPT, tasklet.execute)
+				.usingJobData(LuaScriptTasklet.TASKLETINFO, tasklet.execute)
 				.build();
 
 		JobDataMap luaJobDataMap = luaJob.getJobDataMap();
@@ -423,7 +457,7 @@ public class TaskletScheduler {
 		TriggerKey triggerKey = new TriggerKey(tasklet.taskletname, group);
 
 		JobDetail luaJob = newJob(LuaScriptTasklet.class).withIdentity(jobKey)
-				.usingJobData(LuaScriptTasklet.LUASCRIPT, tasklet.execute)
+				.usingJobData(LuaScriptTasklet.TASKLETINFO, tasklet.execute)
 				.build();
 
 		JobDataMap luaJobDataMap = luaJob.getJobDataMap();
