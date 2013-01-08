@@ -108,7 +108,7 @@ public class DataQuery extends SensorActAPI {
 				//.filter("data.sid", queryObj.sensorid)
 				.filter("data.timestamp >=", queryObj.conditions.fromtime)
 				.filter("data.timestamp <=", queryObj.conditions.totime)
-				.order("-data.timestamp").fetchAll();
+				.order("data.timestamp").fetchAll();
 		 //.fetchAll();
 
 		Iterator<WaveSegmentModel> iteratorData = allWaveSegments.iterator();
@@ -131,6 +131,7 @@ public class DataQuery extends SensorActAPI {
 		// response.SendJSON(outList.toString());
 	}
 
+	@SuppressWarnings("unused")
 	private void executeRQuery(final DataQueryFormat queryObj) {
 
 		// { username : "samysamy", devicename : "device1", sensorname :

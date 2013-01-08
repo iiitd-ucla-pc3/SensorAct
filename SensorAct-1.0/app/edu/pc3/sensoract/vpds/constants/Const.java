@@ -170,7 +170,7 @@ public class Const {
 	public static final int PASSWORD_MIN_LENGTH = 8;
 	public static final int PASSWORD_MAX_LENGTH = 20;
 
-	public static final int EMAIL_MIN_LENGTH = 8;
+	public static final int EMAIL_MIN_LENGTH = 6;
 	public static final int EMAIL_MAX_LENGTH = 40;
 
 	public static final int SECRETKEY_MIN_LENGTH = 32;  // UUID length

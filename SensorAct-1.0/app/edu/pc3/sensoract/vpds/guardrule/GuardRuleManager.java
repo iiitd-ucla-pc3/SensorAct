@@ -231,9 +231,21 @@ public class GuardRuleManager {
 		associate.save();
 		return true;
 	}
+	
+	/**
+	 * Delete rule associations.
+	 * 
+	 * @param format
+	 * @return True
+	 */
+	public static void deleteRuleAssociations(String secretkey, String rulename) {
+		GuardRuleAssociationModel.find("bySecretkeyAndRulename",
+					secretkey,rulename).delete();
+			
+	}
 
 	/**
-	 * Delete associations.
+	 * Delete association.
 	 * 
 	 * @param format
 	 * @return True
@@ -374,10 +386,7 @@ public class GuardRuleManager {
 		long t2 = new Date().getTime();
 		
 		SensorActLogger.info("WaveSegmentData.read: " + (t2 - t1) + "  size: " +wwList.size());
-
-
-		
-		//System.out.println("guarad size " + wwList.size());
+		//System.out.println("guard size " + wwList.size());
 		
 		engine.put("USER", requestingUser);
 		

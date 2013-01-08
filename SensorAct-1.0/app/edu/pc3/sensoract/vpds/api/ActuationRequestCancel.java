@@ -102,13 +102,9 @@ public class ActuationRequestCancel extends SensorActAPI {
 	protected void cancelActRequests(DeviceActuateCancelFormat cancelReqList) {
 
 		String taskletid = null;
-		String secretkey = null;
-		
-		//List<JobDetail> jbD = TaskletScheduler.getJobDetailList(cancelReqList.cancelRequestList);
 		
 		for(int index = 0; index < cancelReqList.cancelRequestList.size(); index++) {
 			
-			secretkey = cancelReqList.secretkey;
 			taskletid = cancelReqList.cancelRequestList.get(index);
 			System.out.println("TaskletIDCancel: "+ taskletid);
 			

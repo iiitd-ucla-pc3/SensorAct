@@ -95,6 +95,7 @@ public class GuardRuleDelete extends SensorActAPI {
 			}
 
 			GuardRuleManager.deleteGuardRule(guardRuleDeleteRequest);
+			GuardRuleManager.deleteRuleAssociations(guardRuleDeleteRequest.secretkey, guardRuleDeleteRequest.name);
 			response.SendSuccess(Const.API_GUARDRULE_DELETE, Const.GUARDRULE_DELETED, guardRuleDeleteRequest.name);
 
 		} catch (InvalidJsonException e) {

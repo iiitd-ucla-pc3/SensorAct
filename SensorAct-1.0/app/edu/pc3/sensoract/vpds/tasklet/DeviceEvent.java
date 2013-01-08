@@ -18,11 +18,15 @@ import edu.pc3.sensoract.vpds.api.request.WaveSegmentFormat;
  * 
  */
 public class DeviceEvent extends Observable {
+	
+	//TODO: make the map thread safe for all the methods
+	// use java.util.concurrent.* classes
 
-	private Map<String, ArrayList<DeviceEventListener>> mapListeners;
+	private static Map<String, ArrayList<DeviceEventListener>> mapListeners = 
+			new HashMap<String, ArrayList<DeviceEventListener>>();
 
 	public DeviceEvent() {
-		mapListeners = new HashMap<String, ArrayList<DeviceEventListener>>();
+	//	mapListeners = new HashMap<String, ArrayList<DeviceEventListener>>();
 	}
 
 	/**

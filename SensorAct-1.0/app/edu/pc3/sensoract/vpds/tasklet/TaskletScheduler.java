@@ -259,7 +259,7 @@ public class TaskletScheduler {
 			scheduler.interrupt(jobKey);
 			boolean status = scheduler.deleteJob(jobKey);
 			if (status == true) {					
-				status = removeDeviceListeners(jobDetail);
+				removeDeviceListeners(jobDetail);
 			}
 			return status;
 		} catch (SchedulerException e) {
