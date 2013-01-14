@@ -372,6 +372,7 @@ public class GuardRuleManager {
 		}
 
 		List<GuardRuleModel> ruleList = getRelevantReadGuardRules(secretkey, devicename, sensorname, sensorid);
+		
 
 		if (ruleList == null || ruleList.size() == 0) {
 			// No rules for this device.
@@ -461,6 +462,7 @@ public class GuardRuleManager {
 		}
 		
 		List<GuardRuleModel> ruleList = getRelevantWriteGuardRules(secretkey, devicename, actuatorname, actuatorid);
+		
 
 		if (ruleList == null || ruleList.size() == 0) {
 			// No rules for this device.
@@ -672,6 +674,7 @@ public class GuardRuleManager {
 		
 		return grmList;
 	}
+	
 
 	/**
 	 * Modify wave segment according to the decision result.

@@ -8,7 +8,7 @@ Follow the below steps to set up the SensorAct repository
 
 2. Install play morphia-1.2.6a (MongoDB Integration with play)
    $ cd /opt/play-1.2.4/
-   $ sudo play install morphia-1.2.6a
+   $ sudo ./play install morphia-1.2.6a
 
 3. Download and install mongodb-2.0.5 64bit (32bit version has a limitation of 2GB data space)
    $ wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-2.0.5.tgz
@@ -26,7 +26,7 @@ Follow the below steps to set up the SensorAct repository
    $ mongodb
 
 7. Run SensorAct-1.0. Go to the home directory of SensorAct-1.0
-   $ cd SenaorAct/SensorAct-1.0
+   $ cd SensorAct/SensorAct-1.0
    $ play run
 
 8. Test it. By default SensorAct-1.0 repo will be listening on port 9000. To test it go to http://localhost:9000/
