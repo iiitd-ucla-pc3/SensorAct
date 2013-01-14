@@ -60,8 +60,6 @@ import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 
-import sun.util.locale.StringTokenIterator;
-
 
 /**
  * device/list API: Retries all device profiles associated to an user from the
