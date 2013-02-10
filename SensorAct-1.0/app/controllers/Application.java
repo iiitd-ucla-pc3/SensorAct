@@ -236,4 +236,5 @@ public class Application extends Controller {
 	public static void test() {
 		SensorActAPI.test.doProcess(request.params.get("body"));
 	}
+	
 }
