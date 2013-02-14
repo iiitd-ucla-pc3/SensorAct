@@ -40,6 +40,7 @@
  */
 package edu.pc3.sensoract.vpds.api.request;
 
+
 /**
  * Defines the request format for device/share API.
  *
@@ -49,6 +50,26 @@ package edu.pc3.sensoract.vpds.api.request;
 public class DeviceShareFormat {
 
 	public String secretkey = null;
-	// TODO: add other parameters
+	
+	public static class Device {
+		public String devicename = null;	
+		public String sensorname = null;
+		public String sensorid = null;	
+		public String actuatorname = null;
+		public String actuatorid = null;		
+	}
+
+	public static class Permission {
+		public boolean read = false;
+		public boolean write = false;
+	}
+		
+	public String vpdsname = null;
+	public Device device = null;
+	public Permission permission = null;
+
+	public String username = null;
+	public String email = null;
+	public String brokername = null;
 
 }

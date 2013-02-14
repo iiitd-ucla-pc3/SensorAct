@@ -161,6 +161,10 @@ public class Const {
 	public static final String PARAM_WHEN = "when";
 	public static final String PARAM_EXECUTE = "execute";
 	
+	public static final String PARAM_ALLOW = "allow";
+	public static final String PARAM_READ = "read";
+	public static final String PARAM_WRITE = "write";
+	
 	/*
 	 * API parameter validation limits
 	 */

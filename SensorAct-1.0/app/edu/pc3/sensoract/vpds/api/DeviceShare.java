@@ -41,9 +41,15 @@
 package edu.pc3.sensoract.vpds.api;
 
 import edu.pc3.sensoract.vpds.api.request.DeviceShareFormat;
+import edu.pc3.sensoract.vpds.api.request.GuardRuleAddFormat;
+import edu.pc3.sensoract.vpds.api.request.GuardRuleAddFormat.GuardRuleFormat;
+import edu.pc3.sensoract.vpds.api.request.GuardRuleAssociationAddFormat;
+import edu.pc3.sensoract.vpds.api.response.DeviceProfileFormat;
 import edu.pc3.sensoract.vpds.constants.Const;
 import edu.pc3.sensoract.vpds.enums.ErrorType;
 import edu.pc3.sensoract.vpds.exceptions.InvalidJsonException;
+import edu.pc3.sensoract.vpds.guardrule.GuardRuleManager;
+import edu.pc3.sensoract.vpds.model.ShareAccessModel;
 
 /**
  * device/share API: Share device profile with others
@@ -71,6 +77,77 @@ public class DeviceShare extends SensorActAPI {
 		}
 	}
 
+	private void createGuardRule(final DeviceShareFormat req) throws Exception {
+
+		GuardRuleAddFormat guardRule = new GuardRuleAddFormat();
+		GuardRuleAssociationAddFormat association = new GuardRuleAssociationAddFormat();
+
+		String accesskey = userProfile.getHashCode(req.brokername
+				+ req.username + req.email);
+
+		guardRule.secretkey = req.secretkey;
+		// TODO: what is the default priority?
+		guardRule.rule.priority = 0;
+		guardRule.rule.condition = "USER.email=='" + req.email + "'";
+		guardRule.rule.action = Const.PARAM_ALLOW;
+		// TODO: include broker name also to uniquely identify the rule name
+		guardRule.rule.name = req.device.devicename + ":" + req.username + ":";
+
+		association.secretkey = req.secretkey;
+		association.devicename = req.device.devicename;
+		association.sensorname = req.device.sensorname;
+		association.sensorid = req.device.sensorid;
+		association.actuatorname = req.device.actuatorname;
+		association.actuatorid = req.device.actuatorid;
+
+		if (req.permission.read) {
+			guardRule.rule.name += Const.PARAM_READ;
+			guardRule.rule.description = guardRule.rule.name;
+			guardRule.rule.targetOperation = Const.PARAM_READ;
+
+			association.rulename = guardRule.rule.name;
+			GuardRuleManager.addGuardRule(guardRule);
+			GuardRuleManager.addAssociation(association);
+
+			ShareAccessModel share = new ShareAccessModel(accesskey,
+					req.brokername, req.username, req.email,
+					guardRule.rule.name);
+			share.save();
+		}
+
+		if (req.permission.write) {
+
+			guardRule.rule.name += Const.PARAM_WRITE;
+			guardRule.rule.description = guardRule.rule.name;
+			guardRule.rule.targetOperation = Const.PARAM_WRITE;
+
+			association.rulename = guardRule.rule.name;
+			GuardRuleManager.addGuardRule(guardRule);
+			GuardRuleManager.addAssociation(association);
+
+			ShareAccessModel share = new ShareAccessModel(accesskey,
+					req.brokername, req.username, req.email,
+					guardRule.rule.name);
+			share.save();
+		}
+	}
+
+	private void sharedevice(DeviceShareFormat req) throws Exception {
+
+		// Step 1: Verify the device exists
+		// TODO: verify sensor/actuator also
+		DeviceProfileFormat oneDevice = deviceProfile.getDevice(req.secretkey,
+				req.device.devicename);
+		if (null == oneDevice) {
+			response.sendFailure(Const.API_DEVICE_GET,
+					ErrorType.DEVICE_NOTFOUND, req.device.devicename);
+		}
+
+		// Step 2 : Create a guard rule
+		// Step 3 : Update the table
+		createGuardRule(req);
+	}
+
 	/**
 	 * Services the device/share API.
 	 * 
@@ -80,7 +157,6 @@ public class DeviceShare extends SensorActAPI {
 	public void doProcess(final String deviceShareJson) {
 
 		try {
-
 			DeviceShareFormat deviceShareRequest = convertToRequestFormat(
 					deviceShareJson, DeviceShareFormat.class);
 			validateRequest(deviceShareRequest);
@@ -91,6 +167,8 @@ public class DeviceShare extends SensorActAPI {
 						ErrorType.UNREGISTERED_SECRETKEY,
 						deviceShareRequest.secretkey);
 			}
+
+			sharedevice(deviceShareRequest);
 
 			// TODO: share device
 			response.SendSuccess(Const.API_DEVICE_SHARE, Const.TODO);

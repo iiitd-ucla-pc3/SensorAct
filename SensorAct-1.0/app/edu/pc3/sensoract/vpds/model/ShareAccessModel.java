@@ -32,35 +32,44 @@
  *
  */
 /*
- * Name: GuardRuleAddFormat.java
+ * Name: DeviceActuatorModel.java
  * Project: SensorAct-VPDS
  * Version: 1.0
- * Date: 2012-05-14
- * Author: Pandarasamy Arjunan, Haksoo Choi
+ * Date: 2012-04-14
+ * Author: Pandarasamy Arjunan
  */
-package edu.pc3.sensoract.vpds.api.request;
+package edu.pc3.sensoract.vpds.model;
+
+import play.modules.morphia.Model;
+
+import com.google.code.morphia.annotations.Entity;
 
 /**
- * Defines the request format for guardrule/add API.
- *
- * @author Pandarasamy Arjunan, Haksoo Choi
+ * Model class for device profile (Actuator) management
+ * 
+ * @author Pandarasamy Arjunan
  * @version 1.0
  */
-public class GuardRuleAddFormat {
+@Entity(value = "ShareAccessModel", noClassnameStored = true)
+public class ShareAccessModel extends Model {
 
-	public class GuardRuleFormat {
-		public String name = null;
-		public String description = null;
-		public String targetOperation = null;
-		public int priority = -1;
-		public String condition = null;
-		public String action = null;
+	public String accesskey = null; // created by the broker
+									// hash(broker+username+email);
+	public String brokername = null;
+	public String username = null;
+	public String email = null;
+	public String guardrulename = null;
+
+	public ShareAccessModel(final String accesskey, final String brokername,
+			final String username, final String email,
+			final String guardrulename) {
+		this.accesskey = accesskey;
+		this.brokername = brokername;
+		this.username = username;
+		this.email = email;
+		this.guardrulename = guardrulename;
 	}
-	
-	public String secretkey = null;
-	public GuardRuleFormat rule= null;
-	
-	public GuardRuleAddFormat() {
-		rule = new GuardRuleFormat();
+
+	ShareAccessModel() {
 	}
 }
