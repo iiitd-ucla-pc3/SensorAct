@@ -109,6 +109,7 @@ public class DeviceShare extends SensorActAPI {
 			GuardRuleManager.addGuardRule(guardRule);
 			GuardRuleManager.addAssociation(association);
 
+			// TODO: find duplicate share
 			ShareAccessModel share = new ShareAccessModel(accesskey,
 					req.brokername, req.username, req.email,
 					guardRule.rule.name);
@@ -125,6 +126,7 @@ public class DeviceShare extends SensorActAPI {
 			GuardRuleManager.addGuardRule(guardRule);
 			GuardRuleManager.addAssociation(association);
 
+			// TODO: find duplicate share
 			ShareAccessModel share = new ShareAccessModel(accesskey,
 					req.brokername, req.username, req.email,
 					guardRule.rule.name);

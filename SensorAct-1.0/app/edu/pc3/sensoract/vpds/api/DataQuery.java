@@ -46,6 +46,9 @@ import java.util.List;
 
 import javax.persistence.TypedQuery;
 
+import controllers.Bootstrap;
+
+import play.Play;
 import play.db.jpa.JPA;
 import edu.pc3.sensoract.vpds.api.request.DataQueryFormat;
 import edu.pc3.sensoract.vpds.api.response.WaveSegmentRFormat;
@@ -93,23 +96,32 @@ public class DataQuery extends SensorActAPI {
 	private void executeQuery(final DataQueryFormat queryObj) {
 
 		// TODO: add extensive query processing options
-		String secretkey = userProfile.getSecretkey(queryObj.username);
-		if (null == secretkey) {
+		if (false == userProfile.isRegisteredSecretkey(queryObj.secretkey)
+				&& shareProfile.isAccessKeyExists(queryObj.secretkey)) {
 			response.sendFailure(Const.API_DATA_QUERY,
-					ErrorType.UNREGISTERED_USERNAME, "");
+					ErrorType.UNREGISTERED_SECRETKEY, queryObj.secretkey);
 		}
+
+		String secretkey = Play.configuration.getProperty(Const.OWNER_UPLOADKEY);
+
+		/*
+		 * String secretkey = userProfile.getSecretkey(queryObj.username); if
+		 * (null == secretkey) { response.sendFailure(Const.API_DATA_QUERY,
+		 * ErrorType.UNREGISTERED_USERNAME, ""); }
+		 */
 
 		log.info("QueryData : \n" + json.toJson(queryObj));
 
-		List<WaveSegmentModel> allWaveSegments = WaveSegmentModel.q()
+		List<WaveSegmentModel> allWaveSegments = WaveSegmentModel
+				.q()
 				.filter("secretkey", secretkey)
 				.filter("data.dname", queryObj.devicename)
 				.filter("data.sname", queryObj.sensorname)
-				//.filter("data.sid", queryObj.sensorid)
+				// .filter("data.sid", queryObj.sensorid)
 				.filter("data.timestamp >=", queryObj.conditions.fromtime)
 				.filter("data.timestamp <=", queryObj.conditions.totime)
 				.order("data.timestamp").fetchAll();
-		 //.fetchAll();
+		// .fetchAll();
 
 		Iterator<WaveSegmentModel> iteratorData = allWaveSegments.iterator();
 		ArrayList<String> outList = new ArrayList<String>();
@@ -126,7 +138,7 @@ public class DataQuery extends SensorActAPI {
 		}
 
 		// response.SendJSON(of);
-		//System.out.println(outList.toString());
+		// System.out.println(outList.toString());
 		renderText("{\"wavesegmentArray\":" + outList.toString() + "}");
 		// response.SendJSON(outList.toString());
 	}

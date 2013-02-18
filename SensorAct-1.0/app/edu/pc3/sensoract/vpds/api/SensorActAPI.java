@@ -55,10 +55,12 @@ import edu.pc3.sensoract.vpds.constants.Const;
 import edu.pc3.sensoract.vpds.exceptions.InvalidJsonException;
 import edu.pc3.sensoract.vpds.profile.Actuator;
 import edu.pc3.sensoract.vpds.profile.DeviceProfile;
+import edu.pc3.sensoract.vpds.profile.ShareProfile;
 import edu.pc3.sensoract.vpds.profile.UserProfile;
 import edu.pc3.sensoract.vpds.profile.WaveSegmentData;
 import edu.pc3.sensoract.vpds.profile.mongo.ActuatorMongo;
 import edu.pc3.sensoract.vpds.profile.mongo.DeviceProfileImpl;
+import edu.pc3.sensoract.vpds.profile.mongo.ShareProfileImpl;
 import edu.pc3.sensoract.vpds.profile.mongo.UserProfileImpl;
 import edu.pc3.sensoract.vpds.profile.mongo.WaveSegmentDataMongo;
 import edu.pc3.sensoract.vpds.tasklet.DeviceEvent;
@@ -133,7 +135,9 @@ public class SensorActAPI extends Application {
 
 	// public static DeviceProfile deviceProfile = new DeviceProfileRDBMS();
 	public static DeviceProfile deviceProfile = new DeviceProfileImpl();
-
+	
+	public static ShareProfile shareProfile = new ShareProfileImpl();
+	
 	public static WaveSegmentData waveSegmentData = new WaveSegmentDataMongo();
 	public static Actuator actuator = new ActuatorMongo();
 

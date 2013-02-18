@@ -70,7 +70,7 @@ import edu.pc3.sensoract.vpds.util.TaskletParamValidator;
  * @version 1.0
  */
 public class ActuationRequestCancel extends SensorActAPI {
-	
+
 	TaskletParamValidator taskletvalidator = new TaskletParamValidator();
 
 	/**
@@ -80,34 +80,38 @@ public class ActuationRequestCancel extends SensorActAPI {
 	 * @param deviceCancelListRequest
 	 *            List all devices request format object
 	 */
-	protected void validateRequest(final DeviceActuateCancelFormat deviceCancelListRequest,
+	protected void validateRequest(
+			final DeviceActuateCancelFormat deviceCancelListRequest,
 			final String apiname) {
 
 		validator.validateSecretKey(deviceCancelListRequest.secretkey);
-		for(int index = 0; index < deviceCancelListRequest.cancelRequestList.size(); index++)
-			taskletvalidator.validateTaskletId(deviceCancelListRequest.cancelRequestList.get(index));
+		for (int index = 0; index < deviceCancelListRequest.cancelRequestList
+				.size(); index++)
+			taskletvalidator
+					.validateTaskletId(deviceCancelListRequest.cancelRequestList
+							.get(index));
 
 		if (validator.hasErrors()) {
 			response.sendFailure(apiname, ErrorType.VALIDATION_FAILED,
 					validator.getErrorMessages());
 		}
 	}
-	
+
 	/**
 	 * Cancels the requests selected by the user
 	 * 
 	 * @param cancelActReqList
-	 * 			List of all the ids of the actuation requests to cancel
+	 *            List of all the ids of the actuation requests to cancel
 	 */
 	protected void cancelActRequests(DeviceActuateCancelFormat cancelReqList) {
 
 		String taskletid = null;
-		
-		for(int index = 0; index < cancelReqList.cancelRequestList.size(); index++) {
-			
+
+		for (int index = 0; index < cancelReqList.cancelRequestList.size(); index++) {
+
 			taskletid = cancelReqList.cancelRequestList.get(index);
-			System.out.println("TaskletIDCancel: "+ taskletid);
-			
+			System.out.println("TaskletIDCancel: " + taskletid);
+
 			// Cancel Tasklet
 			boolean taskletExists = TaskletScheduler
 					.checkTaskletExists(taskletid);
@@ -117,24 +121,23 @@ public class ActuationRequestCancel extends SensorActAPI {
 						ErrorType.TASKLET_NOTSCHEDULED, taskletid);
 			}
 
-			boolean taskletCanceled = TaskletScheduler
-					.cancelTasklet(taskletid);
-			
+			boolean taskletCanceled = TaskletScheduler.cancelTasklet(taskletid);
+
 			if (!taskletCanceled)
 				response.sendFailure(Const.API_DEVICE_CANCEL_ACTUATION_REQUEST,
 						ErrorType.TASKLET_NOTCANCELED, taskletid);
-				
+
 		}
 		response.SendSuccess(Const.API_DEVICE_CANCEL_ACTUATION_REQUEST,
 				Const.TASKLET_CANCELED, taskletid);
-		
+
 	}
-	
 
 	/**
 	 * Services the device/cancel/actuationrequest API.
 	 * 
-	 * Cancels scheduled actuation requests added by an user from the repository. 
+	 * Cancels scheduled actuation requests added by an user from the
+	 * repository.
 	 * 
 	 * @param deviceCancelActuateReqListJson
 	 *            list of cancel actuation requests in Json string
@@ -143,27 +146,42 @@ public class ActuationRequestCancel extends SensorActAPI {
 
 		try {
 
-			DeviceActuateCancelFormat cancelActuateRequestList = convertToRequestFormat(
-					deviceCancelActuateReqListJson, DeviceActuateCancelFormat.class);
-			System.out.println("Cancel Request: " + cancelActuateRequestList.cancelRequestList.toString());			
+			DeviceActuateCancelFormat req = convertToRequestFormat(
+					deviceCancelActuateReqListJson,
+					DeviceActuateCancelFormat.class);
+			System.out.println("Cancel Request: "
+					+ req.cancelRequestList.toString());
 
-			validateRequest(cancelActuateRequestList, Const.API_DEVICE_CANCEL_ACTUATION_REQUEST);
+			validateRequest(req, Const.API_DEVICE_CANCEL_ACTUATION_REQUEST);
 
-			if (!userProfile.isRegisteredSecretkey(cancelActuateRequestList.secretkey)) {
+			String username = null;
+			if (userProfile.isRegisteredSecretkey(req.secretkey)) {
+				username = userProfile.getUsername(req.secretkey);
+			}
+			if (shareProfile.isAccessKeyExists(req.secretkey)) {
+				username = shareProfile.getUsername(req.secretkey);
+			}
+			if (null == username) {
 				response.sendFailure(Const.API_DEVICE_CANCEL_ACTUATION_REQUEST,
-						ErrorType.UNREGISTERED_SECRETKEY,
-						cancelActuateRequestList.secretkey);
+						ErrorType.UNREGISTERED_SECRETKEY, req.secretkey);
 			}
 
-			cancelActRequests(cancelActuateRequestList);
+			/*
+			 * if (!userProfile.isRegisteredSecretkey(cancelActuateRequestList.
+			 * secretkey)) {
+			 * response.sendFailure(Const.API_DEVICE_CANCEL_ACTUATION_REQUEST,
+			 * ErrorType.UNREGISTERED_SECRETKEY,
+			 * cancelActuateRequestList.secretkey); }
+			 */
+			cancelActRequests(req);
 
 		} catch (InvalidJsonException e) {
-			response.sendFailure(Const.API_DEVICE_CANCEL_ACTUATION_REQUEST, ErrorType.INVALID_JSON,
-					e.getMessage());
+			response.sendFailure(Const.API_DEVICE_CANCEL_ACTUATION_REQUEST,
+					ErrorType.INVALID_JSON, e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.sendFailure(Const.API_DEVICE_CANCEL_ACTUATION_REQUEST, ErrorType.SYSTEM_ERROR,
-					e.getMessage());
+			response.sendFailure(Const.API_DEVICE_CANCEL_ACTUATION_REQUEST,
+					ErrorType.SYSTEM_ERROR, e.getMessage());
 		}
 	}
 

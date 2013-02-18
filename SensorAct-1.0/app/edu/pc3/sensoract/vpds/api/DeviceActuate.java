@@ -59,17 +59,17 @@ import edu.pc3.sensoract.vpds.util.TaskletParamValidator;
  */
 
 public class DeviceActuate extends SensorActAPI {
-	
+
 	TaskletParamValidator taskletvalidator = new TaskletParamValidator();
 
 	/**
-	 * Validates actuateDeviceJson request attributes. If validation fails, sends
-	 * corresponding failure message to the caller.
+	 * Validates actuateDeviceJson request attributes. If validation fails,
+	 * sends corresponding failure message to the caller.
 	 * 
 	 * @param actuateDeviceJson
 	 *            actuation parameters object to validate
 	 */
-	
+
 	private void validateRequest(final TaskletAddFormat tasklet) {
 
 		taskletvalidator.validateSecretKey(tasklet.secretkey);
@@ -100,22 +100,32 @@ public class DeviceActuate extends SensorActAPI {
 	public final void doProcess(final String actuateDeviceJson) {
 
 		try {
-			TaskletAddFormat tasklet = convertToRequestFormat(actuateDeviceJson,
-					TaskletAddFormat.class);
+			TaskletAddFormat tasklet = convertToRequestFormat(
+					actuateDeviceJson, TaskletAddFormat.class);
 
 			validateRequest(tasklet);
 			SensorActAPI.taskletAdd.preProcessTasklet(tasklet);
 			System.out.println("TaskletType:" + tasklet.tasklet_type);
 			System.out.println("Actuation Request Added!");
-						
+
+			String username = null;
+			if (userProfile.isRegisteredSecretkey(tasklet.secretkey)) {
+				username = userProfile.getUsername(tasklet.secretkey);
+			}
+			if (shareProfile.isAccessKeyExists(tasklet.secretkey)) {
+				username = shareProfile.getUsername(tasklet.secretkey);
+			}
+			if (null == username) {
+				response.sendFailure(Const.API_DEVICE_ADD,
+						ErrorType.UNREGISTERED_SECRETKEY, tasklet.secretkey);
+			}
+
 			// Get tasklet from the schedule
 			TaskletModel taskToSchedule = new TaskletModel(tasklet);
-			
-			String username = userProfile.getUsername(tasklet.secretkey);
 
 			String taskletId = TaskletScheduler.scheduleTasklet(username,
 					taskToSchedule);
-			
+
 			if (null == taskletId) {
 				response.sendFailure(Const.API_DEVICE_ACTUATE,
 						ErrorType.TASKLET_FAILED_TO_SCHEDULE,
@@ -124,15 +134,14 @@ public class DeviceActuate extends SensorActAPI {
 				response.sendFailure(Const.API_DEVICE_ACTUATE,
 						ErrorType.TASKLET_ALREADY_SCHEDULED,
 						tasklet.taskletname);
-			} else {				
-					response.SendSuccess(Const.API_DEVICE_ACTUATE,
+			} else {
+				response.SendSuccess(Const.API_DEVICE_ACTUATE,
 						Const.TASKLET_SCHEDULED, taskletId);
-			}		
+			}
 
 		} catch (Exception e) {
-			response.sendFailure(Const.API_DEVICE_ACTUATE, ErrorType.SYSTEM_ERROR,
-					e.getMessage());
+			response.sendFailure(Const.API_DEVICE_ACTUATE,
+					ErrorType.SYSTEM_ERROR, e.getMessage());
 		}
 	}
-	
 }

@@ -57,6 +57,8 @@ public class DataQueryFormat {
 		public long totime;
 	}
 
+	public String secretkey = null;
+	
 	public String username = null;
 	public String devicename = null;
 	public String sensorname = null;

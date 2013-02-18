@@ -71,6 +71,15 @@ public class Const {
 
 	public static final int SUCCESS = 0;
 
+	// owner.conf file keys
+	public static final String OWNER_CONFIG_FILENAME = "owner.conf";
+	public static final String OWNER_NAME = "owner.name";
+	public static final String OWNER_PASSWORD = "owner.password";
+	public static final String OWNER_EMAIL = "owner.email";
+	public static final String OWNER_OWNERKEY = "owner.ownerkey";
+	public static final String OWNER_UPLOADKEY = "owner.uploadkey";
+	public static final String OWNER_ACTUATIONKEY = "owner.actuationkey";
+	
 	/*
 	 * API names
 	 */
