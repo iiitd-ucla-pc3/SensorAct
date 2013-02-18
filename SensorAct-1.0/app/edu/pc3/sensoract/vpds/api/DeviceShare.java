@@ -81,7 +81,6 @@ public class DeviceShare extends SensorActAPI {
 		GuardRuleAddFormat guardRule = new GuardRuleAddFormat();
 		GuardRuleAssociationAddFormat association = new GuardRuleAssociationAddFormat();
 
-		String grName = null;
 		String accesskey = userProfile.getHashCode(req.brokername
 				+ req.username + req.email);
 
@@ -90,8 +89,11 @@ public class DeviceShare extends SensorActAPI {
 		guardRule.rule.priority = 0;
 		guardRule.rule.condition = "USER.email=='" + req.email + "'";
 		guardRule.rule.action = Const.PARAM_ALLOW;
+
 		// TODO: include broker name also to uniquely identify the rule name
-		guardRule.rule.name = req.device.devicename + ":" + req.username + ":";
+		String guardRuleName = req.device.devicename + ":" + req.username + ":";
+
+		// guardRule.rule.name =
 
 		association.secretkey = req.secretkey;
 		association.devicename = req.device.devicename;
@@ -101,9 +103,8 @@ public class DeviceShare extends SensorActAPI {
 		association.actuatorid = req.device.actuatorid;
 
 		if (req.permission.read) {
-			grName = guardRule.rule.name + Const.PARAM_READ;
-			guardRule.rule.name = grName;
-			guardRule.rule.description = grName;
+			guardRule.rule.name = guardRuleName + Const.PARAM_READ;
+			guardRule.rule.description = guardRule.rule.name;
 			guardRule.rule.targetOperation = Const.PARAM_READ;
 
 			association.rulename = guardRule.rule.name;
@@ -118,9 +119,8 @@ public class DeviceShare extends SensorActAPI {
 		}
 
 		if (req.permission.write) {
-			grName = guardRule.rule.name + Const.PARAM_WRITE;
-			guardRule.rule.name = grName;
-			guardRule.rule.description = grName;
+			guardRule.rule.name = guardRuleName + Const.PARAM_WRITE;
+			guardRule.rule.description = guardRule.rule.name;
 			guardRule.rule.targetOperation = Const.PARAM_WRITE;
 
 			association.rulename = guardRule.rule.name;
@@ -174,7 +174,7 @@ public class DeviceShare extends SensorActAPI {
 			sharedevice(deviceShareRequest);
 
 			// TODO: share device
-			response.SendSuccess(Const.API_DEVICE_SHARE, Const.DEVICE_SHARED );
+			response.SendSuccess(Const.API_DEVICE_SHARE, Const.DEVICE_SHARED);
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_DEVICE_SHARE,
