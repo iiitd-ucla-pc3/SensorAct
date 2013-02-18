@@ -282,6 +282,8 @@ public class Const {
 	public static final String DEVICE_DELETED = "Device successfully deleted";
 	public static final String DEVICE_NOTFOUND = "Device not found";	
 	public static final String DEVICE_NODEVICE_FOUND = "No device found";
+	
+	public static final String DEVICE_SHARED = "Device shared successfully";
 
 	public static final String DEVICE_TEMPLATE_ADDED = "New device template added";
 	public static final String DEVICE_TEMPLATE_ALREADYEXISTS = "Device template already exists";

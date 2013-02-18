@@ -42,7 +42,6 @@ package edu.pc3.sensoract.vpds.api;
 
 import edu.pc3.sensoract.vpds.api.request.DeviceShareFormat;
 import edu.pc3.sensoract.vpds.api.request.GuardRuleAddFormat;
-import edu.pc3.sensoract.vpds.api.request.GuardRuleAddFormat.GuardRuleFormat;
 import edu.pc3.sensoract.vpds.api.request.GuardRuleAssociationAddFormat;
 import edu.pc3.sensoract.vpds.api.response.DeviceProfileFormat;
 import edu.pc3.sensoract.vpds.constants.Const;
@@ -82,6 +81,7 @@ public class DeviceShare extends SensorActAPI {
 		GuardRuleAddFormat guardRule = new GuardRuleAddFormat();
 		GuardRuleAssociationAddFormat association = new GuardRuleAssociationAddFormat();
 
+		String grName = null;
 		String accesskey = userProfile.getHashCode(req.brokername
 				+ req.username + req.email);
 
@@ -101,8 +101,9 @@ public class DeviceShare extends SensorActAPI {
 		association.actuatorid = req.device.actuatorid;
 
 		if (req.permission.read) {
-			guardRule.rule.name += Const.PARAM_READ;
-			guardRule.rule.description = guardRule.rule.name;
+			grName = guardRule.rule.name + Const.PARAM_READ;
+			guardRule.rule.name = grName;
+			guardRule.rule.description = grName;
 			guardRule.rule.targetOperation = Const.PARAM_READ;
 
 			association.rulename = guardRule.rule.name;
@@ -117,9 +118,9 @@ public class DeviceShare extends SensorActAPI {
 		}
 
 		if (req.permission.write) {
-
-			guardRule.rule.name += Const.PARAM_WRITE;
-			guardRule.rule.description = guardRule.rule.name;
+			grName = guardRule.rule.name + Const.PARAM_WRITE;
+			guardRule.rule.name = grName;
+			guardRule.rule.description = grName;
 			guardRule.rule.targetOperation = Const.PARAM_WRITE;
 
 			association.rulename = guardRule.rule.name;
@@ -173,7 +174,7 @@ public class DeviceShare extends SensorActAPI {
 			sharedevice(deviceShareRequest);
 
 			// TODO: share device
-			response.SendSuccess(Const.API_DEVICE_SHARE, Const.TODO);
+			response.SendSuccess(Const.API_DEVICE_SHARE, Const.DEVICE_SHARED );
 
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_DEVICE_SHARE,
