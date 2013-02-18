@@ -40,6 +40,8 @@
  */
 package edu.pc3.sensoract.vpds.api;
 
+import java.util.Date;
+
 import edu.pc3.sensoract.vpds.api.request.DeviceShareFormat;
 import edu.pc3.sensoract.vpds.api.request.GuardRuleAddFormat;
 import edu.pc3.sensoract.vpds.api.request.GuardRuleAssociationAddFormat;
@@ -92,9 +94,7 @@ public class DeviceShare extends SensorActAPI {
 
 		// TODO: include broker name also to uniquely identify the rule name
 		String guardRuleName = req.device.devicename + ":" + req.username + ":";
-
-		// guardRule.rule.name =
-
+		
 		association.secretkey = req.secretkey;
 		association.devicename = req.device.devicename;
 		association.sensorname = req.device.sensorname;
@@ -103,7 +103,7 @@ public class DeviceShare extends SensorActAPI {
 		association.actuatorid = req.device.actuatorid;
 
 		if (req.permission.read) {
-			guardRule.rule.name = guardRuleName + Const.PARAM_READ;
+			guardRule.rule.name = guardRuleName + Const.PARAM_READ + new Date().getTime();
 			guardRule.rule.description = guardRule.rule.name;
 			guardRule.rule.targetOperation = Const.PARAM_READ;
 
@@ -119,7 +119,7 @@ public class DeviceShare extends SensorActAPI {
 		}
 
 		if (req.permission.write) {
-			guardRule.rule.name = guardRuleName + Const.PARAM_WRITE;
+			guardRule.rule.name = guardRuleName + Const.PARAM_WRITE + new Date().getTime()+10; // ???
 			guardRule.rule.description = guardRule.rule.name;
 			guardRule.rule.targetOperation = Const.PARAM_WRITE;
 

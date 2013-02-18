@@ -70,6 +70,6 @@ public class DeviceShareFormat {
 
 	public String username = null;
 	public String email = null;
-	public String brokername = null;
+	public String brokername = null;  // TODO: is't really required
 
 }
