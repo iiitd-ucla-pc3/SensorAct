@@ -40,6 +40,7 @@
  */
 package edu.pc3.sensoract.vpds.api;
 
+import play.Play;
 import edu.pc3.sensoract.vpds.api.request.KeyListFormat;
 import edu.pc3.sensoract.vpds.constants.Const;
 import edu.pc3.sensoract.vpds.enums.ErrorType;
@@ -53,6 +54,9 @@ import edu.pc3.sensoract.vpds.exceptions.InvalidJsonException;
  */
 
 public class KeyList extends SensorActAPI {
+
+	String uploadkey = null;
+	String actuationkey = null;
 
 	/**
 	 * Validates request parameters. If validation fails, sends corresponding
@@ -84,18 +88,36 @@ public class KeyList extends SensorActAPI {
 					KeyListFormat.class);
 			validateRequest(keyListFormat);
 
-			// TODO: need to change UserProfile class
-/*			UserProfileModel user = userProfile
-					.getUserProfile(keyListFormat.secretkey);
+			// TODO: at present it will send only the upload and actuation keys
+			// valid only for the owner
 
-			if (null == user) {
+			String ownerKey = Play.configuration
+					.getProperty(Const.OWNER_OWNERKEY);
+
+			if (keyListFormat.secretkey.equalsIgnoreCase(ownerKey)) {
+				KeyList out = new KeyList();
+				out.uploadkey = Play.configuration
+						.getProperty(Const.OWNER_UPLOADKEY);
+				out.actuationkey = Play.configuration
+						.getProperty(Const.OWNER_ACTUATIONKEY);
+				response.sendJSON(out);
+			} else {
 				response.sendFailure(Const.API_KEY_LIST,
 						ErrorType.UNREGISTERED_SECRETKEY,
 						keyListFormat.secretkey);
+
 			}
 
-			response.sendJSON(user.keylist);
-*/
+			// TODO: need to change UserProfile class
+			/*
+			 * UserProfileModel user = userProfile
+			 * .getUserProfile(keyListFormat.secretkey);
+			 * 
+			 * if (null == user) { response.sendFailure(Const.API_KEY_LIST,
+			 * ErrorType.UNREGISTERED_SECRETKEY, keyListFormat.secretkey); }
+			 * 
+			 * response.sendJSON(user.keylist);
+			 */
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_KEY_LIST, ErrorType.INVALID_JSON,
 					e.getMessage());
