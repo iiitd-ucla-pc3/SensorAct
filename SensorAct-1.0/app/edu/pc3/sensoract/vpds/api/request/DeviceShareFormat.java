@@ -40,36 +40,31 @@
  */
 package edu.pc3.sensoract.vpds.api.request;
 
-
 /**
  * Defines the request format for device/share API.
- *
+ * 
  * @author Pandarasamy Arjunan
  * @version 1.0
  */
 public class DeviceShareFormat {
 
-	public String secretkey = null;
-	
-	public static class Device {
-		public String devicename = null;	
+	public static class Share {
+		public String devicename = null;
 		public String sensorname = null;
-		public String sensorid = null;	
+		public String sensorid = null;
 		public String actuatorname = null;
-		public String actuatorid = null;		
-	}
-
-	public static class Permission {
+		public String actuatorid = null;
 		public boolean read = false;
 		public boolean write = false;
 	}
-		
-	public String vpdsname = null;
-	public Device device = null;
-	public Permission permission = null;
 
+	public String secretkey = null;
+	public String vpdsname = null;
 	public String username = null;
-	public String email = null;
-	public String brokername = null;  // TODO: is't really required
+
+	public Share share = null;
+
+	public String email = null; // from broker
+	public String brokername = null; // TODO: is't really required
 
 }

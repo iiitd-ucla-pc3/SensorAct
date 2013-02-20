@@ -93,17 +93,18 @@ public class DeviceShare extends SensorActAPI {
 		guardRule.rule.action = Const.PARAM_ALLOW;
 
 		// TODO: include broker name also to uniquely identify the rule name
-		String guardRuleName = req.device.devicename + ":" + req.username + ":";
-		
-		association.secretkey = req.secretkey;
-		association.devicename = req.device.devicename;
-		association.sensorname = req.device.sensorname;
-		association.sensorid = req.device.sensorid;
-		association.actuatorname = req.device.actuatorname;
-		association.actuatorid = req.device.actuatorid;
+		String guardRuleName = req.share.devicename + ":" + req.username + ":";
 
-		if (req.permission.read) {
-			guardRule.rule.name = guardRuleName + Const.PARAM_READ + new Date().getTime();
+		association.secretkey = req.secretkey;
+		association.devicename = req.share.devicename;
+		association.sensorname = req.share.sensorname;
+		association.sensorid = req.share.sensorid;
+		association.actuatorname = req.share.actuatorname;
+		association.actuatorid = req.share.actuatorid;
+
+		if (req.share.read) {
+			guardRule.rule.name = guardRuleName + Const.PARAM_READ
+					+ new Date().getTime();
 			guardRule.rule.description = guardRule.rule.name;
 			guardRule.rule.targetOperation = Const.PARAM_READ;
 
@@ -118,8 +119,9 @@ public class DeviceShare extends SensorActAPI {
 			share.save();
 		}
 
-		if (req.permission.write) {
-			guardRule.rule.name = guardRuleName + Const.PARAM_WRITE + new Date().getTime()+10; // ???
+		if (req.share.write) {
+			guardRule.rule.name = guardRuleName + Const.PARAM_WRITE
+					+ new Date().getTime() + 10; // ???
 			guardRule.rule.description = guardRule.rule.name;
 			guardRule.rule.targetOperation = Const.PARAM_WRITE;
 
@@ -140,10 +142,10 @@ public class DeviceShare extends SensorActAPI {
 		// Step 1: Verify the device exists
 		// TODO: verify sensor/actuator also
 		DeviceProfileFormat oneDevice = deviceProfile.getDevice(req.secretkey,
-				req.device.devicename);
+				req.share.devicename);
 		if (null == oneDevice) {
 			response.sendFailure(Const.API_DEVICE_GET,
-					ErrorType.DEVICE_NOTFOUND, req.device.devicename);
+					ErrorType.DEVICE_NOTFOUND, req.share.devicename);
 		}
 
 		// Step 2 : Create a guard rule
