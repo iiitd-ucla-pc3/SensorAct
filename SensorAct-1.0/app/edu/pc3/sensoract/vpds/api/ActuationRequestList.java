@@ -165,7 +165,7 @@ public class ActuationRequestList extends SensorActAPI {
 			if (userProfile.isRegisteredSecretkey(req.secretkey)) {
 				username = userProfile.getUsername(req.secretkey);
 			}
-			if (shareProfile.isAccessKeyExists(req.secretkey)) {
+			else if (shareProfile.isAccessKeyExists(req.secretkey)) {
 				username = shareProfile.getUsername(req.secretkey);
 			}
 			if (null == username) {

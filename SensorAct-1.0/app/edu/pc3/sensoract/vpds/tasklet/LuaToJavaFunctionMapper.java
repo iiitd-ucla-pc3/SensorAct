@@ -369,6 +369,7 @@ public class LuaToJavaFunctionMapper {
 		} catch (Exception e) {
 		}
 
+		System.out.println("after tokenizing");
 		 //System.out.println("write resource " + resource);
 		 //System.out.println("Write Resource " + username + " " + devicename + " "
 		 //+ actuatorname + " " + actuatorid + "status:" + status);
@@ -377,6 +378,7 @@ public class LuaToJavaFunctionMapper {
 
 		RequestingUser requestingUser = new RequestingUser(email);
 		
+		System.out.println("after user " + email);
 
 		//long t2 = new Date().getTime();
 		if(GuardRuleManager.write(username, requestingUser, devicename, actuatorname, actuatorid, status))

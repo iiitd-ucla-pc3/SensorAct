@@ -97,7 +97,7 @@ public class DataQuery extends SensorActAPI {
 
 		// TODO: add extensive query processing options
 		if (false == userProfile.isRegisteredSecretkey(queryObj.secretkey)
-				&& shareProfile.isAccessKeyExists(queryObj.secretkey)) {
+				&& !shareProfile.isAccessKeyExists(queryObj.secretkey)) {
 			response.sendFailure(Const.API_DATA_QUERY,
 					ErrorType.UNREGISTERED_SECRETKEY, queryObj.secretkey);
 		}

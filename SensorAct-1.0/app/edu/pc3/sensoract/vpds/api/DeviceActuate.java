@@ -105,18 +105,18 @@ public class DeviceActuate extends SensorActAPI {
 
 			validateRequest(tasklet);
 			SensorActAPI.taskletAdd.preProcessTasklet(tasklet);
-			System.out.println("TaskletType:" + tasklet.tasklet_type);
-			System.out.println("Actuation Request Added!");
+			System.out.println("TaskletType:" + tasklet.tasklet_type);			
 
-			System.out.println("VPDSUsername:" + tasklet.secretkey);
+			System.out.println("VPDS Secretkey:" + tasklet.secretkey);
 			
 			String username = null;
 			if (userProfile.isRegisteredSecretkey(tasklet.secretkey)) {
 				username = userProfile.getUsername(tasklet.secretkey);
+				
 			}
-			if (shareProfile.isAccessKeyExists(tasklet.secretkey)) {
+			else if (shareProfile.isAccessKeyExists(tasklet.secretkey)) {
 				username = shareProfile.getUsername(tasklet.secretkey);
-				System.out.println("VPDSUsername:" + username);
+				
 			}
 			if (null == username) {
 				response.sendFailure(Const.API_DEVICE_ACTUATE,
@@ -138,6 +138,7 @@ public class DeviceActuate extends SensorActAPI {
 						ErrorType.TASKLET_ALREADY_SCHEDULED,
 						tasklet.taskletname);
 			} else {
+				System.out.println("Actuation Request Added!");
 				response.SendSuccess(Const.API_DEVICE_ACTUATE,
 						Const.TASKLET_SCHEDULED, taskletId);
 			}
