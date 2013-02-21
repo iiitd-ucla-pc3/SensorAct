@@ -108,15 +108,18 @@ public class DeviceActuate extends SensorActAPI {
 			System.out.println("TaskletType:" + tasklet.tasklet_type);
 			System.out.println("Actuation Request Added!");
 
+			System.out.println("VPDSUsername:" + tasklet.secretkey);
+			
 			String username = null;
 			if (userProfile.isRegisteredSecretkey(tasklet.secretkey)) {
 				username = userProfile.getUsername(tasklet.secretkey);
 			}
 			if (shareProfile.isAccessKeyExists(tasklet.secretkey)) {
 				username = shareProfile.getUsername(tasklet.secretkey);
+				System.out.println("VPDSUsername:" + username);
 			}
 			if (null == username) {
-				response.sendFailure(Const.API_DEVICE_ADD,
+				response.sendFailure(Const.API_DEVICE_ACTUATE,
 						ErrorType.UNREGISTERED_SECRETKEY, tasklet.secretkey);
 			}
 

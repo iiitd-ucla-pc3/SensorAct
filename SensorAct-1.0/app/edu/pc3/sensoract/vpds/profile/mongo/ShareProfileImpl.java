@@ -68,8 +68,8 @@ public class ShareProfileImpl implements ShareProfile {
 		List<ShareAccessModel> userList = ShareAccessModel.find("byAccesskey",
 				accesskey).fetchAll();
 
-		if (null == userList || 1 != userList.size()) {
-			return false; // something went wrong if size > 1
+		if (null == userList) {
+			return false; 
 		}
 		return true;
 	}

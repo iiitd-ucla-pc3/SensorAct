@@ -68,6 +68,7 @@ public class RepoInfo extends SensorActAPI {
 		// TODO: Load the repo information from config file
 		RepoInfo repoInfo = new RepoInfo(Const.repoName, Const.repoURL);
 		//log.info(Const.API_REPO_INFO);
+		System.out.println("RepoInfo called");
 		response.sendJSON(repoInfo);
 	}
 

@@ -85,6 +85,7 @@ public class DeviceShare extends SensorActAPI {
 
 		String accesskey = userProfile.getHashCode(req.brokername
 				+ req.username + req.email);
+		System.out.println("\n Access key created!!!  " + accesskey +"\n");
 
 		guardRule.secretkey = req.secretkey;
 		// TODO: what is the default priority?
