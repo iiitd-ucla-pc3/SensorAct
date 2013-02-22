@@ -425,8 +425,8 @@ public class GuardRuleManager {
 		long t2 = new Date().getTime();
 
 		// By pass guard rule engine for owner
-		String ownername = Play.configuration.getProperty(Const.OWNER_NAME);
-		if (ownername.equalsIgnoreCase(username)) {
+		String oemail = SensorActAPI.userProfile.getEmail(username);
+		if (oemail.equalsIgnoreCase(requestingUser.email)) {
 			return wwList;
 		}
 
@@ -523,6 +523,14 @@ public class GuardRuleManager {
 			// No rules for this device.
 			SensorActLogger.error("No rules for this device");
 			return false;
+		}
+
+		// By pass guard rule engine for owner
+		String oemail = SensorActAPI.userProfile.getEmail(username);
+		if (oemail.equalsIgnoreCase(requestingUser.email)) {
+			return SensorActAPI.actuator.write(username, devicename,
+					actuatorname, actuatorid, value);
+
 		}
 
 		engine.put("USER", requestingUser);
