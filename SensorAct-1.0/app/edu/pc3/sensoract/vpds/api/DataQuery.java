@@ -41,6 +41,7 @@
 package edu.pc3.sensoract.vpds.api;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -55,6 +56,8 @@ import edu.pc3.sensoract.vpds.api.response.WaveSegmentRFormat;
 import edu.pc3.sensoract.vpds.constants.Const;
 import edu.pc3.sensoract.vpds.enums.ErrorType;
 import edu.pc3.sensoract.vpds.exceptions.InvalidJsonException;
+import edu.pc3.sensoract.vpds.guardrule.GuardRuleManager;
+import edu.pc3.sensoract.vpds.guardrule.RequestingUser;
 import edu.pc3.sensoract.vpds.model.WaveSegmentModel;
 import edu.pc3.sensoract.vpds.model.rdbms.WaveSegmentChannelRModel;
 
@@ -102,7 +105,8 @@ public class DataQuery extends SensorActAPI {
 					ErrorType.UNREGISTERED_SECRETKEY, queryObj.secretkey);
 		}
 
-		String secretkey = Play.configuration.getProperty(Const.OWNER_UPLOADKEY);
+		String secretkey = Play.configuration
+				.getProperty(Const.OWNER_UPLOADKEY);
 
 		/*
 		 * String secretkey = userProfile.getSecretkey(queryObj.username); if
@@ -222,6 +226,60 @@ public class DataQuery extends SensorActAPI {
 		response.sendJSON(wsf);
 	}
 
+	// modified data/query which pass through guard rule engine
+	private void readData(final DataQueryFormat query) {
+
+		String username = null;
+		String ownername = null;
+		String email = null;
+
+		username = shareProfile.getUsername(query.secretkey);
+		if (null == username) {
+			ownername = userProfile.getUsername(query.secretkey);
+			if (null == ownername) {
+				response.sendFailure(Const.API_DATA_QUERY,
+						ErrorType.UNREGISTERED_SECRETKEY, query.secretkey);
+			}
+		}
+
+		// fetch the email address of the
+		if (username != null) {
+			email = shareProfile.getEmail(username);
+			// update the ownername to fetch data
+			ownername = userProfile.getUsername(query.secretkey);
+		} else { // owner
+			email = userProfile.getEmail(ownername);
+		}
+
+		RequestingUser requestingUser = new RequestingUser(email);
+
+		List<WaveSegmentModel> wsList = GuardRuleManager.read(ownername,
+				requestingUser, query.devicename, query.sensorname,
+				query.sensorid, query.conditions.fromtime,
+				query.conditions.totime);
+
+		
+		// TODO: what the hell is happening here ?? Need to change the output format
+		Iterator<WaveSegmentModel> iteratorData = wsList.iterator();
+		ArrayList<String> outList = new ArrayList<String>();
+
+		while (iteratorData.hasNext()) {
+
+			WaveSegmentModel ww = iteratorData.next();
+			ww.data.timestamp = ww.data.timestamp * 1000; // for plot
+
+			// ww.data.channels.removeAll(Collections.singleton(null));;
+			// ww.data.channels.removeAll(Arrays.asList(new Object[]{null}));
+			String data = json.toJson(ww);
+			outList.add(data);
+		}
+
+		// response.SendJSON(of);
+		// System.out.println(outList.toString());
+		renderText("{\"wavesegmentArray\":" + outList.toString() + "}");
+
+	}
+
 	// private void sendData(List<WaveSegmentModel> allWaveSegments) {
 	// }
 
@@ -238,7 +296,8 @@ public class DataQuery extends SensorActAPI {
 			DataQueryFormat query = convertToRequestFormat(queryJson,
 					DataQueryFormat.class);
 			validateQueryDataFormat(query);
-			executeQuery(query);
+			// executeQuery(query);
+			readData(query);
 		} catch (InvalidJsonException e) {
 			response.sendFailure(Const.API_DATA_QUERY, ErrorType.INVALID_JSON,
 					e.getMessage());

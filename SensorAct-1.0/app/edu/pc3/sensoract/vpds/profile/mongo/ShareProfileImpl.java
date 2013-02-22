@@ -86,4 +86,16 @@ public class ShareProfileImpl implements ShareProfile {
 	}
 
 	
+	@Override
+	public String getEmail(final String username) {
+
+		List<ShareAccessModel> userList = ShareAccessModel.find("byUsername",
+				username).fetchAll();
+		if (null != userList && userList.size() > 0) {
+			return userList.get(0).email;
+		}
+		return null;
+	}
+
+	
 }

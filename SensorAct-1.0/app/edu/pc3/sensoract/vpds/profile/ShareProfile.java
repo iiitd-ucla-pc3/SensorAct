@@ -10,4 +10,5 @@ public interface ShareProfile {
 	public boolean isAccessKeyExists(final String accesskey);
 	
 	public String getUsername(final String accesskey);
+	public String getEmail(final String username);
 }

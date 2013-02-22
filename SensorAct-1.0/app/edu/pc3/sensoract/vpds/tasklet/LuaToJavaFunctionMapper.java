@@ -52,8 +52,11 @@ import org.quartz.JobExecutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import play.Play;
+
 import edu.pc3.sensoract.vpds.api.SensorActAPI;
 import edu.pc3.sensoract.vpds.api.response.DeviceProfileFormat;
+import edu.pc3.sensoract.vpds.constants.Const;
 import edu.pc3.sensoract.vpds.guardrule.GuardRuleManager;
 import edu.pc3.sensoract.vpds.guardrule.RequestingUser;
 import edu.pc3.sensoract.vpds.model.WaveSegmentChannelModel;
@@ -136,7 +139,7 @@ public class LuaToJavaFunctionMapper {
 			for (WaveSegmentChannelModel ch : ws.data.channels) {
 				for (Double d : ch.readings) {
 					map.put(i, d.doubleValue());
-					//map.put(time, d.doubleValue());
+					// map.put(time, d.doubleValue());
 					i++;
 				}
 			}
@@ -169,6 +172,9 @@ public class LuaToJavaFunctionMapper {
 		} catch (Exception e) {
 		}
 
+		// TODO: update the username as ownername
+		username = Play.configuration.getProperty(Const.OWNER_NAME);
+
 		// System.out.println("readCurrent " + resource);
 		// System.out.println("readCurrent " + username + " " + devicename + " "
 		// + sensorname + " " + sensorid + " " + channelname);
@@ -176,7 +182,7 @@ public class LuaToJavaFunctionMapper {
 		// Double d = WaveSegmentData.readLatest(username, devicename,
 		// sensorname, sensorid);
 		// return d;
-		
+
 		String email = SensorActAPI.userProfile.getEmail(username);
 
 		RequestingUser requestingUser = new RequestingUser(email);
@@ -199,30 +205,27 @@ public class LuaToJavaFunctionMapper {
 		return toMap(wsList);
 
 	}
-	
+
 	/**
-	 * Reads wave segments from 'fromTime' to current time	 
+	 * Reads wave segments from 'fromTime' to current time
 	 * 
-	 * @author 
-	 * 		Manaswi Saha
-	 * @param
-	 * 		resource
-	 * 		fromTime
-	 * 		toTime
+	 * @author Manaswi Saha
+	 * @param resource
+	 *            fromTime toTime
 	 */
-	
+
 	public Map readPastToNow(String resource, long fromTime, long toTime) {
 
 		long t1 = new Date().getTime();
-		
-		SensorActLogger.info("readPasttoNow Lua: fromtime: " + fromTime + " ToTime: " + toTime);
 
+		SensorActLogger.info("readPasttoNow Lua: fromtime: " + fromTime
+				+ " ToTime: " + toTime);
 
 		String username = null;
 		String devicename = null;
 		String sensorname = null;
 		String sensorid = null;
-		//String channelname = null;
+		// String channelname = null;
 
 		StringTokenizer tokenizer = new StringTokenizer(resource, ":");
 
@@ -231,7 +234,7 @@ public class LuaToJavaFunctionMapper {
 			devicename = tokenizer.nextToken();
 			sensorname = tokenizer.nextToken();
 			sensorid = tokenizer.nextToken();
-			//channelname = tokenizer.nextToken();
+			// channelname = tokenizer.nextToken();
 		} catch (Exception e) {
 		}
 
@@ -243,7 +246,7 @@ public class LuaToJavaFunctionMapper {
 		List<WaveSegmentModel> wsList = GuardRuleManager.read(username,
 				requestingUser, devicename, sensorname, sensorid, fromTime,
 				toTime);
-		
+
 		SensorActLogger.info("No of readings got:" + wsList.size());
 
 		long t3 = new Date().getTime();
@@ -342,17 +345,17 @@ public class LuaToJavaFunctionMapper {
 		// return Math.random()*100;
 
 	}
-	
+
 	/**
 	 * @author Manaswi Saha
 	 * @param resource
-	 * @param status 
-	 * 	device status - ON/OFF
+	 * @param status
+	 *            device status - ON/OFF
 	 */
-	
+
 	public boolean write(String resource, double status) {
 
-		//long t1 = new Date().getTime();
+		// long t1 = new Date().getTime();
 
 		String username = null;
 		String devicename = null;
@@ -370,29 +373,32 @@ public class LuaToJavaFunctionMapper {
 		}
 
 		System.out.println("after tokenizing");
-		 //System.out.println("write resource " + resource);
-		 //System.out.println("Write Resource " + username + " " + devicename + " "
-		 //+ actuatorname + " " + actuatorid + "status:" + status);
+		// System.out.println("write resource " + resource);
+		// System.out.println("Write Resource " + username + " " + devicename +
+		// " "
+		// + actuatorname + " " + actuatorid + "status:" + status);
 
 		String email = SensorActAPI.userProfile.getEmail(username);
 
 		RequestingUser requestingUser = new RequestingUser(email);
-		
+
 		System.out.println("after user " + email);
 
-		//long t2 = new Date().getTime();
-		if(GuardRuleManager.write(username, requestingUser, devicename, actuatorname, actuatorid, status))
+		// long t2 = new Date().getTime();
+		if (GuardRuleManager.write(username, requestingUser, devicename,
+				actuatorname, actuatorid, status))
 			return true;
 		else
-			SensorActLogger.info("GuardRuleManager:write():: unsuccessful for status "+ status);
-		//long t3 = new Date().getTime();
+			SensorActLogger
+					.info("GuardRuleManager:write():: unsuccessful for status "
+							+ status);
+		// long t3 = new Date().getTime();
 
-		//SensorActLogger.info("GuardRuleManager.write: " + (t3 - t2) + " total: "+ (t3 - t1));
+		// SensorActLogger.info("GuardRuleManager.write: " + (t3 - t2) +
+		// " total: "+ (t3 - t1));
 
 		return false;
 
 	}
-	
-
 
 }
