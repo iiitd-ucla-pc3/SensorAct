@@ -408,6 +408,13 @@ public class GuardRuleManager {
 			return null;
 		}
 
+		// By pass guard rule engine for owner
+		String oemail = Play.configuration.getProperty(Const.OWNER_NAME);
+		if (oemail.equalsIgnoreCase(requestingUser.email)) {
+			return SensorActAPI.waveSegmentData.read(username, devicename,
+					sensorname, sensorid, fromtime, totime);
+		}
+
 		List<GuardRuleModel> ruleList = getRelevantReadGuardRules(secretkey,
 				devicename, sensorname, sensorid);
 
@@ -423,12 +430,6 @@ public class GuardRuleManager {
 		// List<WaveSegmentModel> wwList = WaveSegmentData.readLatest(username,
 		// devicename, sensorname, sensorid);
 		long t2 = new Date().getTime();
-
-		// By pass guard rule engine for owner
-		String oemail = SensorActAPI.userProfile.getEmail(username);
-		if (oemail.equalsIgnoreCase(requestingUser.email)) {
-			return wwList;
-		}
 
 		SensorActLogger.info("WaveSegmentData.read: " + (t2 - t1) + "  size: "
 				+ wwList.size());
