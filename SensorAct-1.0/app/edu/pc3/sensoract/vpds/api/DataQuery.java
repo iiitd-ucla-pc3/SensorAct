@@ -246,7 +246,7 @@ public class DataQuery extends SensorActAPI {
 		if (username != null) {
 			email = shareProfile.getEmail(username);
 			// update the ownername to fetch data
-			ownername = userProfile.getUsername(query.secretkey);
+			ownername = Play.configuration.getProperty(Const.OWNER_NAME);
 		} else { // owner
 			email = userProfile.getEmail(ownername);
 		}
