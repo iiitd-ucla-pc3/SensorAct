@@ -42,7 +42,10 @@ package edu.pc3.sensoract.vpds.profile.mongo;
 
 import java.util.List;
 
+import play.Play;
+
 import edu.pc3.sensoract.vpds.api.SensorActAPI;
+import edu.pc3.sensoract.vpds.constants.Const;
 import edu.pc3.sensoract.vpds.model.WaveSegmentModel;
 import edu.pc3.sensoract.vpds.profile.WaveSegmentData;
 
@@ -105,7 +108,9 @@ public class WaveSegmentDataMongo implements WaveSegmentData {
 
 		// TODO: add extensive query processing options
 		// TODO: add params validations
-		String secretkey = SensorActAPI.userProfile.getSecretkey(username);
+		//String secretkey = SensorActAPI.userProfile.getSecretkey(username);
+		String secretkey = Play.configuration
+				.getProperty(Const.OWNER_UPLOADKEY);
 		if (null == secretkey) {
 			return null;
 		}
@@ -114,7 +119,7 @@ public class WaveSegmentDataMongo implements WaveSegmentData {
 				.filter("secretkey", secretkey)
 				.filter("data.dname", devicename)
 				.filter("data.sname", sensorname)
-				// .filter("data.sid", queryObj.sensorid) // TODO: to be done
+				.filter("data.sid", sensorid)
 				.filter("data.timestamp >=", fromtime)
 				.filter("data.timestamp <=", totime).fetchAll();
 
