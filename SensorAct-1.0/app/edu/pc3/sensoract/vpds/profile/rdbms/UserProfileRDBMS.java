@@ -134,6 +134,16 @@ public class UserProfileRDBMS implements UserProfile<UserProfileRModel> {
 		return null;
 	}
 	
+	@Override
+	public String getOwnername() {
+
+		List<UserProfileRModel> userList = UserProfileRModel.findAll();
+		if (null != userList && userList.size() > 0) {
+			return userList.get(0).username;
+		}
+		return null;
+	}
+	
 	/**
 	 * Retrieves the username corresponding to the given secretkey.
 	 * 

@@ -41,6 +41,7 @@ public interface UserProfile <T> {
 	 * @return Username of the secrectkey, if already registered, otherwise null.
 	 */
 	public String getUsername(final String secretkey);
+	public String getOwnername();
 	
 	/**
 	 * Retrieves the username corresponding to the given email.

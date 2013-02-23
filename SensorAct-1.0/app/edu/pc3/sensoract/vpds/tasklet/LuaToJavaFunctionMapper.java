@@ -173,7 +173,8 @@ public class LuaToJavaFunctionMapper {
 		}
 
 		// TODO: update the username as ownername
-		username = Play.configuration.getProperty(Const.OWNER_NAME);
+		//username = Play.configuration.getProperty(Const.OWNER_NAME);
+		username = SensorActAPI.userProfile.getOwnername();
 
 		// System.out.println("readCurrent " + resource);
 		// System.out.println("readCurrent " + username + " " + devicename + " "
@@ -183,7 +184,7 @@ public class LuaToJavaFunctionMapper {
 		// sensorname, sensorid);
 		// return d;
 
-		String email = SensorActAPI.userProfile.getEmail(username);
+		String email = SensorActAPI.userProfile.getOwnername();
 
 		RequestingUser requestingUser = new RequestingUser(email);
 
@@ -239,7 +240,8 @@ public class LuaToJavaFunctionMapper {
 		}
 
 		// TODO: update the username as ownername
-		username = Play.configuration.getProperty(Const.OWNER_NAME);
+		//username = Play.configuration.getProperty(Const.OWNER_NAME);
+		username = SensorActAPI.userProfile.getOwnername();
 
 		String email = SensorActAPI.userProfile.getEmail(username);
 
@@ -382,7 +384,8 @@ public class LuaToJavaFunctionMapper {
 		// + actuatorname + " " + actuatorid + "status:" + status);
 
 		// TODO: update the username as ownername
-		username = Play.configuration.getProperty(Const.OWNER_NAME);
+		//username = Play.configuration.getProperty(Const.OWNER_NAME);
+		username = SensorActAPI.userProfile.getOwnername();
 
 		String email = SensorActAPI.userProfile.getEmail(username);
 
