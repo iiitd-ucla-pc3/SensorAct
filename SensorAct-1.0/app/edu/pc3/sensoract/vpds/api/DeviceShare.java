@@ -170,6 +170,8 @@ public class DeviceShare extends SensorActAPI {
 			deleteExistingShare(req, guardRule, association);
 			GuardRuleManager.addGuardRule(guardRule);
 			GuardRuleManager.addAssociation(association);
+			
+			req.secretkey = accesskey;
 			ShareAccessModel share = new ShareAccessModel(req,
 					guardRule.rule.name);
 			share.save();
@@ -187,6 +189,7 @@ public class DeviceShare extends SensorActAPI {
 			deleteExistingShare(req, guardRule, association);
 			GuardRuleManager.addGuardRule(guardRule);
 			GuardRuleManager.addAssociation(association);
+			req.secretkey = accesskey;
 			ShareAccessModel share = new ShareAccessModel(req,
 					guardRule.rule.name);
 			share.save();
