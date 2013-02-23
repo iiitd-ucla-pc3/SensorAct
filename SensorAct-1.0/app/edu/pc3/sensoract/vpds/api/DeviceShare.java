@@ -109,12 +109,18 @@ public class DeviceShare extends SensorActAPI {
 
 			System.out.println("shared device " + json.toJson(sDevice));
 
-			if (sDevice.devicename.equalsIgnoreCase(req.share.devicename)
+			if (sDevice.devicename != null
+					&& sDevice.devicename
+							.equalsIgnoreCase(req.share.devicename)
+					&& sDevice.sensorname != null
 					&& sDevice.sensorname
 							.equalsIgnoreCase(req.share.sensorname)
+					&& sDevice.sensorid != null
 					&& sDevice.sensorid.equalsIgnoreCase(req.share.sensorid)
+					&& sDevice.actuatorname != null
 					&& sDevice.actuatorname
 							.equalsIgnoreCase(req.share.actuatorname)
+					&& sDevice.actuatorid != null
 					&& sDevice.actuatorid
 							.equalsIgnoreCase(req.share.actuatorid)) {
 
@@ -170,7 +176,7 @@ public class DeviceShare extends SensorActAPI {
 			deleteExistingShare(req, guardRule, association);
 			GuardRuleManager.addGuardRule(guardRule);
 			GuardRuleManager.addAssociation(association);
-			
+
 			req.secretkey = accesskey;
 			ShareAccessModel share = new ShareAccessModel(req,
 					guardRule.rule.name);
