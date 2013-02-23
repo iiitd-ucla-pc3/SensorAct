@@ -238,6 +238,9 @@ public class LuaToJavaFunctionMapper {
 		} catch (Exception e) {
 		}
 
+		// TODO: update the username as ownername
+		username = Play.configuration.getProperty(Const.OWNER_NAME);
+
 		String email = SensorActAPI.userProfile.getEmail(username);
 
 		RequestingUser requestingUser = new RequestingUser(email);
@@ -377,6 +380,9 @@ public class LuaToJavaFunctionMapper {
 		// System.out.println("Write Resource " + username + " " + devicename +
 		// " "
 		// + actuatorname + " " + actuatorid + "status:" + status);
+
+		// TODO: update the username as ownername
+		username = Play.configuration.getProperty(Const.OWNER_NAME);
 
 		String email = SensorActAPI.userProfile.getEmail(username);
 
