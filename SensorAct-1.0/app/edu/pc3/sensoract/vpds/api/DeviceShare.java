@@ -41,15 +41,21 @@
 package edu.pc3.sensoract.vpds.api;
 
 import java.util.Date;
+import java.util.List;
+
+import play.Play;
 
 import edu.pc3.sensoract.vpds.api.request.DeviceShareFormat;
 import edu.pc3.sensoract.vpds.api.request.GuardRuleAddFormat;
 import edu.pc3.sensoract.vpds.api.request.GuardRuleAssociationAddFormat;
+import edu.pc3.sensoract.vpds.api.request.GuardRuleAssociationGetFormat;
+import edu.pc3.sensoract.vpds.api.request.GuardRuleDeleteFormat;
 import edu.pc3.sensoract.vpds.api.response.DeviceProfileFormat;
 import edu.pc3.sensoract.vpds.constants.Const;
 import edu.pc3.sensoract.vpds.enums.ErrorType;
 import edu.pc3.sensoract.vpds.exceptions.InvalidJsonException;
 import edu.pc3.sensoract.vpds.guardrule.GuardRuleManager;
+import edu.pc3.sensoract.vpds.model.GuardRuleAssociationModel;
 import edu.pc3.sensoract.vpds.model.ShareAccessModel;
 
 /**
@@ -78,14 +84,65 @@ public class DeviceShare extends SensorActAPI {
 		}
 	}
 
-	private void createGuardRule(final DeviceShareFormat req) throws Exception {
+	private void deleteExistingShare(final DeviceShareFormat req,
+			final GuardRuleAddFormat guardRule,
+			final GuardRuleAssociationAddFormat association) {
+
+		/*
+		 * GuardRuleAssociationGetFormat aGet = new
+		 * GuardRuleAssociationGetFormat(); aGet.secretkey =
+		 * association.secretkey; aGet.devicename = association.devicename;
+		 * aGet.sensorname = association.sensorname; aGet.sensorid =
+		 * association.sensorid; aGet.actuatorname = association.actuatorname;
+		 * aGet.actuatorid = association.actuatorid;
+		 */
+
+		List<ShareAccessModel> sharedList = ShareAccessModel.getSharedAccess(
+				req.brokername, req.username, req.email);
+
+		// if no shared device found, just add them
+		if (null == sharedList || sharedList.isEmpty()) {
+			return;
+		}
+
+		for (ShareAccessModel.SharedDevice sDevice : sharedList.get(0).shared) {
+
+			System.out.println("shared device " + json.toJson(sDevice));
+
+			if (sDevice.devicename.equalsIgnoreCase(req.share.devicename)
+					&& sDevice.sensorname
+							.equalsIgnoreCase(req.share.sensorname)
+					&& sDevice.sensorid.equalsIgnoreCase(req.share.sensorid)
+					&& sDevice.actuatorname
+							.equalsIgnoreCase(req.share.actuatorname)
+					&& sDevice.actuatorid
+							.equalsIgnoreCase(req.share.actuatorid)) {
+
+				// delete the existing guard rule and the corresponding
+				// association
+
+				GuardRuleDeleteFormat gDel = new GuardRuleDeleteFormat();
+
+				gDel.secretkey = Play.configuration
+						.getProperty(Const.OWNER_OWNERKEY);
+				gDel.name = sDevice.guardrulename;
+
+				GuardRuleManager.deleteGuardRule(gDel);
+				GuardRuleManager.deleteRuleAssociations(gDel.secretkey,
+						gDel.name);
+			}
+		}
+
+	}
+
+	private void updateGuardRule(final DeviceShareFormat req) throws Exception {
 
 		GuardRuleAddFormat guardRule = new GuardRuleAddFormat();
 		GuardRuleAssociationAddFormat association = new GuardRuleAssociationAddFormat();
 
 		String accesskey = userProfile.getHashCode(req.brokername
 				+ req.username + req.email);
-		System.out.println("\n Access key created!!!  " + accesskey +"\n");
+		System.out.println("\n Access key created!!!  " + accesskey + "\n");
 
 		guardRule.secretkey = req.secretkey;
 		// TODO: what is the default priority?
@@ -108,33 +165,32 @@ public class DeviceShare extends SensorActAPI {
 					+ new Date().getTime();
 			guardRule.rule.description = guardRule.rule.name;
 			guardRule.rule.targetOperation = Const.PARAM_READ;
-
 			association.rulename = guardRule.rule.name;
+
+			deleteExistingShare(req, guardRule, association);
 			GuardRuleManager.addGuardRule(guardRule);
 			GuardRuleManager.addAssociation(association);
-
-			// TODO: find duplicate share
-			ShareAccessModel share = new ShareAccessModel(accesskey,
-					req.brokername, req.username, req.email,
+			ShareAccessModel share = new ShareAccessModel(req,
 					guardRule.rule.name);
 			share.save();
 		}
 
 		if (req.share.write) {
 			guardRule.rule.name = guardRuleName + Const.PARAM_WRITE
-					+ new Date().getTime() + 10; // ???
+					+ (new Date().getTime() + 1); // Just to make the rules
+													// unique
 			guardRule.rule.description = guardRule.rule.name;
 			guardRule.rule.targetOperation = Const.PARAM_WRITE;
 
 			association.rulename = guardRule.rule.name;
+
+			deleteExistingShare(req, guardRule, association);
 			GuardRuleManager.addGuardRule(guardRule);
 			GuardRuleManager.addAssociation(association);
-
-			// TODO: find duplicate share
-			ShareAccessModel share = new ShareAccessModel(accesskey,
-					req.brokername, req.username, req.email,
+			ShareAccessModel share = new ShareAccessModel(req,
 					guardRule.rule.name);
 			share.save();
+
 		}
 	}
 
@@ -151,7 +207,7 @@ public class DeviceShare extends SensorActAPI {
 
 		// Step 2 : Create a guard rule
 		// Step 3 : Update the table
-		createGuardRule(req);
+		updateGuardRule(req);
 	}
 
 	/**

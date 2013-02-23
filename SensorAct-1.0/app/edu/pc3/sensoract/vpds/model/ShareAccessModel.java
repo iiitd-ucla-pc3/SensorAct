@@ -40,9 +40,14 @@
  */
 package edu.pc3.sensoract.vpds.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import play.modules.morphia.Model;
 
 import com.google.code.morphia.annotations.Entity;
+
+import edu.pc3.sensoract.vpds.api.request.DeviceShareFormat;
 
 /**
  * Model class for device profile (Actuator) management
@@ -53,21 +58,54 @@ import com.google.code.morphia.annotations.Entity;
 @Entity(value = "ShareAccessModel", noClassnameStored = true)
 public class ShareAccessModel extends Model {
 
+	public static class SharedDevice {
+		public String devicename = null;
+		public String sensorname = null;
+		public String sensorid = null;
+		public String actuatorname = null;
+		public String actuatorid = null;
+		public String guardrulename = null;
+	}
+
 	public String accesskey = null; // created by the broker
 									// hash(broker+username+email);
 	public String brokername = null;
 	public String username = null;
 	public String email = null;
-	public String guardrulename = null;
 
-	public ShareAccessModel(final String accesskey, final String brokername,
-			final String username, final String email,
-			final String guardrulename) {
-		this.accesskey = accesskey;
-		this.brokername = brokername;
-		this.username = username;
-		this.email = email;
-		this.guardrulename = guardrulename;
+	public List<SharedDevice> shared = new ArrayList<SharedDevice>();
+
+	public ShareAccessModel(final DeviceShareFormat shareReq,
+			final String ruleName) {
+		this.accesskey = shareReq.secretkey;
+		this.brokername = shareReq.brokername;
+		this.username = shareReq.username;
+		this.email = shareReq.email;
+
+		SharedDevice newShare = new SharedDevice();
+		newShare.devicename = shareReq.share.devicename;
+		newShare.sensorname = shareReq.share.sensorname;
+		newShare.sensorid = shareReq.share.sensorid;
+		newShare.actuatorname = shareReq.share.actuatorname;
+		newShare.actuatorid = shareReq.share.actuatorid;
+		newShare.guardrulename = ruleName;
+
+		if (null == shared) {
+			shared = new ArrayList<SharedDevice>();
+		}
+
+		shared.add(newShare);
+	}
+
+	public static List<ShareAccessModel> getSharedAccess(final String brokername,
+			final String username, final String email) {
+
+		List<ShareAccessModel> shared = ShareAccessModel.q().filter("brokername", brokername)
+				.filter("username", username)
+				.filter("email", email)
+				.fetchAll();
+		
+		return shared;
 	}
 
 	ShareAccessModel() {
