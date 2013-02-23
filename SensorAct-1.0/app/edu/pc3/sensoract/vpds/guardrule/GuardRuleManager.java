@@ -517,6 +517,14 @@ public class GuardRuleManager {
 			return false;
 		}
 
+		// By pass guard rule engine for owner
+		String oemail = SensorActAPI.userProfile.getEmail(username);
+		if (oemail.equalsIgnoreCase(requestingUser.email)) {
+			return SensorActAPI.actuator.write(username, devicename,
+					actuatorname, actuatorid, value);
+
+		}
+		
 		List<GuardRuleModel> ruleList = getRelevantWriteGuardRules(secretkey,
 				devicename, actuatorname, actuatorid);
 
@@ -526,13 +534,6 @@ public class GuardRuleManager {
 			return false;
 		}
 
-		// By pass guard rule engine for owner
-		String oemail = SensorActAPI.userProfile.getEmail(username);
-		if (oemail.equalsIgnoreCase(requestingUser.email)) {
-			return SensorActAPI.actuator.write(username, devicename,
-					actuatorname, actuatorid, value);
-
-		}
 
 		engine.put("USER", requestingUser);
 		engine.put("VALUE", value);
