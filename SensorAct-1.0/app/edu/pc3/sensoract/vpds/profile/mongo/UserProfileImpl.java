@@ -134,6 +134,16 @@ public class UserProfileImpl implements UserProfile<UserProfileModel> {
 		return null;
 	}
 	
+	@Override
+	public String getOwnername() {
+
+		List<UserProfileModel> userList = UserProfileModel.findAll();
+		if (null != userList && userList.size() > 0) {
+			return userList.get(0).username;
+		}
+		return null;
+	}
+	
 	/**
 	 * Retrieves the username corresponding to the given secretkey.
 	 * 

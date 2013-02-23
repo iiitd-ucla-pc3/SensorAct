@@ -409,11 +409,13 @@ public class GuardRuleManager {
 		}
 
 		// By pass guard rule engine for owner
-		String oemail = Play.configuration.getProperty(Const.OWNER_NAME);
+		String oemail = SensorActAPI.userProfile.getEmail(username);
+		
 		if (oemail.equalsIgnoreCase(requestingUser.email)) {
 			return SensorActAPI.waveSegmentData.read(username, devicename,
 					sensorname, sensorid, fromtime, totime);
 		}
+		
 
 		List<GuardRuleModel> ruleList = getRelevantReadGuardRules(secretkey,
 				devicename, sensorname, sensorid);

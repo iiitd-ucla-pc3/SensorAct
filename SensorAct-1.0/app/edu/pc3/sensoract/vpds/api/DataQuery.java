@@ -133,7 +133,7 @@ public class DataQuery extends SensorActAPI {
 		while (iteratorData.hasNext()) {
 
 			WaveSegmentModel ww = iteratorData.next();
-			ww.data.timestamp = ww.data.timestamp * 1000; // for plot
+			ww.data.timestamp = ww.data.timestamp; // for plot
 
 			// ww.data.channels.removeAll(Collections.singleton(null));;
 			// ww.data.channels.removeAll(Arrays.asList(new Object[]{null}));
