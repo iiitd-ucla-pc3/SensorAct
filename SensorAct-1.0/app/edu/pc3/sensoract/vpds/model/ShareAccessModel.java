@@ -110,14 +110,16 @@ public class ShareAccessModel extends Model {
 			final String operation) {
 
 		// TODO: include broker name also to uniquely identify the rule name
-		String guardRuleName = shareReq.share.devicename + ":"
-				+ shareReq.username + ":";
+		String guardRuleName = shareReq.username + ":"
+				+ shareReq.share.devicename + ":" + shareReq.share.sensorname
+				+ ":" + shareReq.share.sensorid + ":";
 
 		return guardRuleName + operation + new Date().getTime();
 	}
 
 	private void delExistingSharedDevice(final DeviceShareFormat shareReq) {
 
+		System.out.println("this.shared count before " + this.shared.size());
 		Iterator<SharedDevice> iterator = this.shared.iterator();
 		while (iterator.hasNext()) {
 			SharedDevice sDevice = iterator.next();
@@ -134,11 +136,15 @@ public class ShareAccessModel extends Model {
 									.equalsIgnoreCase(shareReq.share.actuatorname)
 							&& sDevice.actuatorid != null && sDevice.actuatorid
 								.equalsIgnoreCase(shareReq.share.actuatorid))) {
+
 				remvoeGuardRuleAndAssociation(sDevice.guardrulename);
+				System.out.println(" located and removing."
+						+ SensorActAPI.json.toJson(sDevice));
 				iterator.remove();
 			}
 		}
 
+		System.out.println("this.shared count after" + this.shared.size());
 	}
 
 	public static ShareAccessModel getSharedAccess(final String brokername,
@@ -171,21 +177,29 @@ public class ShareAccessModel extends Model {
 			sharedAccess.shared = new ArrayList<SharedDevice>();
 		}
 
-		SharedDevice sharedDevice = newSharedDevice(shareReq);
-
 		if (shareReq.share.read) {
+			SharedDevice sharedDevice = newSharedDevice(shareReq);
 			sharedDevice.read = true;
+			sharedDevice.write = false;
 			sharedDevice.guardrulename = getNewGuardRuleName(shareReq,
 					Const.PARAM_READ);
+
+			System.out.println("graningt read..." + sharedDevice.guardrulename);
 			sharedAccess.shared.add(sharedDevice);
 			addGuardRuleAndAssociation(shareReq, sharedDevice.guardrulename,
 					Const.PARAM_READ);
 		}
 
 		if (shareReq.share.write) {
+			SharedDevice sharedDevice = newSharedDevice(shareReq);
 			sharedDevice.write = true;
+			sharedDevice.read = false;
 			sharedDevice.guardrulename = getNewGuardRuleName(shareReq,
 					Const.PARAM_WRITE);
+
+			System.out
+					.println("graningt write..." + sharedDevice.guardrulename);
+
 			sharedAccess.shared.add(sharedDevice);
 			addGuardRuleAndAssociation(shareReq, sharedDevice.guardrulename,
 					Const.PARAM_WRITE);
