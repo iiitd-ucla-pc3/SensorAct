@@ -199,11 +199,6 @@ public class DeviceShare extends SensorActAPI {
 					ErrorType.DEVICE_NOTFOUND, shareReq.share.devicename);
 		}
 
-		String accesskey = SensorActAPI.userProfile
-				.getHashCode(shareReq.brokername + shareReq.username
-						+ shareReq.email);
-		shareReq.secretkey = accesskey;
-
 		ShareAccessModel.updateShareAccessModel(shareReq);
 	}
 

@@ -190,9 +190,12 @@ public class ShareAccessModel extends Model {
 			addGuardRuleAndAssociation(shareReq, sharedDevice.guardrulename,
 					Const.PARAM_WRITE);
 		}
-		
-		sharedAccess.save();
 
+		// create the access key
+		sharedAccess.accesskey = SensorActAPI.userProfile
+				.getHashCode(shareReq.brokername + shareReq.username
+						+ shareReq.email);
+		sharedAccess.save();
 	}
 
 	private void remvoeGuardRuleAndAssociation(final String guardRuleName) {
@@ -200,7 +203,8 @@ public class ShareAccessModel extends Model {
 		GuardRuleDeleteFormat gDel = new GuardRuleDeleteFormat();
 		gDel.secretkey = Play.configuration.getProperty(Const.OWNER_OWNERKEY);
 		gDel.name = guardRuleName;
-		System.out.println("deleting guardrule and asso " + gDel.name);
+		System.out.println("deleting guardrule and asso " + gDel.name + " "
+				+ gDel.secretkey);
 
 		GuardRuleManager.deleteGuardRule(gDel);
 		GuardRuleManager.deleteRuleAssociations(gDel.secretkey, gDel.name);
