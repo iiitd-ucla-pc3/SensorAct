@@ -41,21 +41,17 @@
 package edu.pc3.sensoract.vpds.api;
 
 import java.util.Date;
-import java.util.List;
 
 import play.Play;
-
 import edu.pc3.sensoract.vpds.api.request.DeviceShareFormat;
 import edu.pc3.sensoract.vpds.api.request.GuardRuleAddFormat;
 import edu.pc3.sensoract.vpds.api.request.GuardRuleAssociationAddFormat;
-import edu.pc3.sensoract.vpds.api.request.GuardRuleAssociationGetFormat;
 import edu.pc3.sensoract.vpds.api.request.GuardRuleDeleteFormat;
 import edu.pc3.sensoract.vpds.api.response.DeviceProfileFormat;
 import edu.pc3.sensoract.vpds.constants.Const;
 import edu.pc3.sensoract.vpds.enums.ErrorType;
 import edu.pc3.sensoract.vpds.exceptions.InvalidJsonException;
 import edu.pc3.sensoract.vpds.guardrule.GuardRuleManager;
-import edu.pc3.sensoract.vpds.model.GuardRuleAssociationModel;
 import edu.pc3.sensoract.vpds.model.ShareAccessModel;
 
 /**
@@ -84,45 +80,35 @@ public class DeviceShare extends SensorActAPI {
 		}
 	}
 
+	/*
 	private void deleteExistingShare(final DeviceShareFormat req,
 			final GuardRuleAddFormat guardRule,
 			final GuardRuleAssociationAddFormat association) {
 
-		/*
-		 * GuardRuleAssociationGetFormat aGet = new
-		 * GuardRuleAssociationGetFormat(); aGet.secretkey =
-		 * association.secretkey; aGet.devicename = association.devicename;
-		 * aGet.sensorname = association.sensorname; aGet.sensorid =
-		 * association.sensorid; aGet.actuatorname = association.actuatorname;
-		 * aGet.actuatorid = association.actuatorid;
-		 */
-
-		List<ShareAccessModel> sharedList = ShareAccessModel.getSharedAccess(
+		ShareAccessModel sharedAccess = ShareAccessModel.getSharedAccess(
 				req.brokername, req.username, req.email);
 
-		// if no shared device found, just add them
-		if (null == sharedList || sharedList.isEmpty()) {
+		if (null == sharedAccess) {
 			return;
 		}
 
-		for (ShareAccessModel.SharedDevice sDevice : sharedList.get(0).shared) {
+		for (ShareAccessModel.SharedDevice sDevice : sharedAccess.shared) {
 
 			System.out.println("shared device " + json.toJson(sDevice));
 
 			if (sDevice.devicename != null
 					&& sDevice.devicename
 							.equalsIgnoreCase(req.share.devicename)
-					&& sDevice.sensorname != null
-					&& sDevice.sensorname
-							.equalsIgnoreCase(req.share.sensorname)
-					&& sDevice.sensorid != null
-					&& sDevice.sensorid.equalsIgnoreCase(req.share.sensorid)
-					&& sDevice.actuatorname != null
-					&& sDevice.actuatorname
-							.equalsIgnoreCase(req.share.actuatorname)
-					&& sDevice.actuatorid != null
-					&& sDevice.actuatorid
-							.equalsIgnoreCase(req.share.actuatorid)) {
+					&& (sDevice.sensorname != null
+							&& sDevice.sensorname
+									.equalsIgnoreCase(req.share.sensorname)
+							&& sDevice.sensorid != null && sDevice.sensorid
+								.equalsIgnoreCase(req.share.sensorid))
+					|| (sDevice.actuatorname != null
+							&& sDevice.actuatorname
+									.equalsIgnoreCase(req.share.actuatorname)
+							&& sDevice.actuatorid != null && sDevice.actuatorid
+								.equalsIgnoreCase(req.share.actuatorid))) {
 
 				// delete the existing guard rule and the corresponding
 				// association
@@ -132,6 +118,8 @@ public class DeviceShare extends SensorActAPI {
 				gDel.secretkey = Play.configuration
 						.getProperty(Const.OWNER_OWNERKEY);
 				gDel.name = sDevice.guardrulename;
+
+				System.out.println("deleting guardrule and asso " + gDel.name);
 
 				GuardRuleManager.deleteGuardRule(gDel);
 				GuardRuleManager.deleteRuleAssociations(gDel.secretkey,
@@ -178,9 +166,7 @@ public class DeviceShare extends SensorActAPI {
 			GuardRuleManager.addAssociation(association);
 
 			req.secretkey = accesskey;
-			ShareAccessModel share = new ShareAccessModel(req,
-					guardRule.rule.name);
-			share.save();
+			ShareAccessModel.updateShareAccessModel(req, guardRule.rule.name);
 		}
 
 		if (req.share.write) {
@@ -196,27 +182,29 @@ public class DeviceShare extends SensorActAPI {
 			GuardRuleManager.addGuardRule(guardRule);
 			GuardRuleManager.addAssociation(association);
 			req.secretkey = accesskey;
-			ShareAccessModel share = new ShareAccessModel(req,
-					guardRule.rule.name);
-			share.save();
-
+			ShareAccessModel.updateShareAccessModel(req, guardRule.rule.name);
 		}
 	}
 
-	private void sharedevice(DeviceShareFormat req) throws Exception {
+	*/
+	
+	private void sharedevice(DeviceShareFormat shareReq) throws Exception {
 
 		// Step 1: Verify the device exists
 		// TODO: verify sensor/actuator also
-		DeviceProfileFormat oneDevice = deviceProfile.getDevice(req.secretkey,
-				req.share.devicename);
+		DeviceProfileFormat oneDevice = deviceProfile.getDevice(
+				shareReq.secretkey, shareReq.share.devicename);
 		if (null == oneDevice) {
 			response.sendFailure(Const.API_DEVICE_GET,
-					ErrorType.DEVICE_NOTFOUND, req.share.devicename);
+					ErrorType.DEVICE_NOTFOUND, shareReq.share.devicename);
 		}
 
-		// Step 2 : Create a guard rule
-		// Step 3 : Update the table
-		updateGuardRule(req);
+		String accesskey = SensorActAPI.userProfile
+				.getHashCode(shareReq.brokername + shareReq.username
+						+ shareReq.email);
+		shareReq.secretkey = accesskey;
+
+		ShareAccessModel.updateShareAccessModel(shareReq);
 	}
 
 	/**
@@ -239,6 +227,7 @@ public class DeviceShare extends SensorActAPI {
 						deviceShareRequest.secretkey);
 			}
 
+			System.out.println("sharing request..." + deviceShareJson);
 			sharedevice(deviceShareRequest);
 
 			// TODO: share device
@@ -248,6 +237,7 @@ public class DeviceShare extends SensorActAPI {
 			response.sendFailure(Const.API_DEVICE_SHARE,
 					ErrorType.INVALID_JSON, e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.sendFailure(Const.API_DEVICE_SHARE,
 					ErrorType.SYSTEM_ERROR, e.getMessage());
 		}
