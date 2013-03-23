@@ -108,14 +108,25 @@ public class DeviceGet extends SensorActAPI {
 
 			validateRequest(deviceGetRequest);
 
-			if (!userProfile.isRegisteredSecretkey(deviceGetRequest.secretkey)) {
-				response.sendFailure(Const.API_DEVICE_GET,
-						ErrorType.UNREGISTERED_SECRETKEY,
-						deviceGetRequest.secretkey);
+			String username = null;
+			if (userProfile.isRegisteredSecretkey(deviceGetRequest.secretkey)) {
+				username = userProfile.getUsername(deviceGetRequest.secretkey);
+				
 			}
+			else if (shareProfile.isAccessKeyExists(deviceGetRequest.secretkey)) {
+				username = shareProfile.getUsername(deviceGetRequest.secretkey);
+				
+			}
+			if (null == username) {
+				response.sendFailure(Const.API_DEVICE_ACTUATE,
+						ErrorType.UNREGISTERED_SECRETKEY, deviceGetRequest.secretkey);
+			}
+			
+			String secretkey = userProfile.getSecretkey(userProfile.getOwnername());
+			System.out.println("Owner Secretkey" + secretkey);
 
 			DeviceProfileFormat oneDevice = deviceProfile.getDevice(
-					deviceGetRequest.secretkey, deviceGetRequest.devicename);
+					secretkey, deviceGetRequest.devicename);
 			if (null == oneDevice) {
 				response.sendFailure(Const.API_DEVICE_GET,
 						ErrorType.DEVICE_NOTFOUND, deviceGetRequest.devicename);
