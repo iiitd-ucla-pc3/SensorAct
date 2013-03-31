@@ -99,7 +99,7 @@ public class GuardRuleAdd extends SensorActAPI {
 						guardRule.rule.name);
 			}
 			
-			//Update the condition with USER.email==<emailaddressoftheuser>
+			/*//Update the condition with USER.email==<emailaddressoftheuser>
 			String condition = "";
 			String email = null, token = null;
 			
@@ -114,7 +114,7 @@ public class GuardRuleAdd extends SensorActAPI {
 			}
 			condition = condition.substring(0, condition.length() - 2);
 			
-			guardRule.rule.condition = condition;
+			guardRule.rule.condition = condition;*/
 
 			GuardRuleManager.addGuardRule(guardRule);
 			response.SendSuccess(Const.API_GUARDRULE_ADD, Const.GUARDRULE_ADDED, guardRule.rule.name);

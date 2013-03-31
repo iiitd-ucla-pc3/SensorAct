@@ -110,9 +110,9 @@ public class GuardRuleList extends SensorActAPI {
 						ErrorType.GUARDRULE_NOTFOUND, Const.MSG_NONE);
 			}
 			
-			List<GuardRuleModel> updatedRules = updateRulesWithUsernameForCondition(rules);
+			//List<GuardRuleModel> updatedRules = updateRulesWithUsernameForCondition(rules);
 			
-			JsonArray jsRuleArray = convertFromListToJsonArrayRemovingSecretKeyAndId(updatedRules);
+			JsonArray jsRuleArray = convertFromListToJsonArrayRemovingSecretKeyAndId(rules);
 
 			JsonObject jsOutput = new JsonObject();
 			jsOutput.add("guardrulelist", jsRuleArray);
