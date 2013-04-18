@@ -252,11 +252,16 @@ public class DataQuery extends SensorActAPI {
 		}
 
 		RequestingUser requestingUser = new RequestingUser(email);
+		
+		long tStart = new Date().getTime();
 
 		List<WaveSegmentModel> wsList = GuardRuleManager.read(ownername,
 				requestingUser, query.devicename, query.sensorname,
 				query.sensorid, query.conditions.fromtime,
 				query.conditions.totime);
+		long tEnd = new Date().getTime();
+		
+		System.out.println("Owner: Time to retrieve data" + (tEnd - tStart));		
 
 		
 		// TODO: what the hell is happening here ?? Need to change the output format
