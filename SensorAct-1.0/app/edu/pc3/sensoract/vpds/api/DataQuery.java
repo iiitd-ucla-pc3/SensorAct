@@ -263,7 +263,7 @@ public class DataQuery extends SensorActAPI {
 		
 		System.out.println("Data size for " + query.devicename + ":" + 
 					query.sensorname + " is " + wsList.size());
-		System.out.println("For Owner:: Time to retrieve data: " + (tEnd - tStart)/1000);		
+		System.out.println("For Owner:: Time to retrieve data: " + (tEnd - tStart)/1000 + " seconds");		
 
 		
 		// TODO: what the hell is happening here ?? Need to change the output format

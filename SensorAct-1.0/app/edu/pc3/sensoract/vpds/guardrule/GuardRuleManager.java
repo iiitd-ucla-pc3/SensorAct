@@ -438,7 +438,7 @@ public class GuardRuleManager {
 		// devicename, sensorname, sensorid);
 		long t2 = new Date().getTime();
 
-		SensorActLogger.info("WaveSegmentData.read: " + (t2 - t1) + "  size: "
+		SensorActLogger.info("WaveSegmentData.read: " + (t2 - t1)/1000 + " seconds  size: "
 				+ wwList.size());
 		// System.out.println("guard size " + wwList.size());
 
