@@ -50,6 +50,7 @@ import edu.pc3.sensoract.vpds.constants.Const;
 import edu.pc3.sensoract.vpds.guardrule.GuardRuleManager;
 import edu.pc3.sensoract.vpds.model.WaveSegmentModel;
 import edu.pc3.sensoract.vpds.profile.WaveSegmentData;
+import edu.pc3.sensoract.vpds.util.SensorActLogger;
 
 /**
  * Wavesegment reads
@@ -129,7 +130,7 @@ public class WaveSegmentDataMongo implements WaveSegmentData {
 
 		long tEnd = new Date().getTime();
 		
-		System.out.println("\t Actual Time to retrieve data: " + (tEnd - tStart)/1000 + " seconds");
+		SensorActLogger.info("\t Actual Time to retrieve data: " + (tEnd - tStart)/1000 + " seconds");
 		
 		return listWaveSegment;
 

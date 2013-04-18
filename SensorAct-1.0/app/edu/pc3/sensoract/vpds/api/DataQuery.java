@@ -60,6 +60,7 @@ import edu.pc3.sensoract.vpds.guardrule.GuardRuleManager;
 import edu.pc3.sensoract.vpds.guardrule.RequestingUser;
 import edu.pc3.sensoract.vpds.model.WaveSegmentModel;
 import edu.pc3.sensoract.vpds.model.rdbms.WaveSegmentChannelRModel;
+import edu.pc3.sensoract.vpds.util.SensorActLogger;
 
 /**
  * data/query API: Retrieves wavesegmetns from the repository based upong the
@@ -261,9 +262,9 @@ public class DataQuery extends SensorActAPI {
 				query.conditions.totime);
 		long tEnd = new Date().getTime();
 		
-		System.out.println("Data size for " + query.devicename + ":" + 
+		SensorActLogger.info("Data size for " + query.devicename + ":" + 
 					query.sensorname + " is " + wsList.size());
-		System.out.println("With Guardrules:: Time to retrieve data: " + (tEnd - tStart)/1000 + " seconds");		
+		SensorActLogger.info("With Guardrules:: Time to retrieve data: " + (tEnd - tStart)/1000 + " seconds\n\n");		
 
 		
 		// TODO: what the hell is happening here ?? Need to change the output format
