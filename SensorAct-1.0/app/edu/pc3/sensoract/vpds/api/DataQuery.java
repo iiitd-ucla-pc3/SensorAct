@@ -264,9 +264,9 @@ public class DataQuery extends SensorActAPI {
 		
 		SensorActLogger.info("Data size for " + query.devicename + ":" + 
 					query.sensorname + " is " + wsList.size());
-		SensorActLogger.info("With Guardrules:: Time to retrieve data: " + (tEnd - tStart)/1000 + " seconds\n\n");		
+		SensorActLogger.info("With Guardrules:: Time to retrieve data: " + (tEnd - tStart)/1000 + " seconds");		
 
-		
+		long t1 = new Date().getTime();
 		// TODO: what the hell is happening here ?? Need to change the output format
 		Iterator<WaveSegmentModel> iteratorData = wsList.iterator();
 		ArrayList<String> outList = new ArrayList<String>();
@@ -281,6 +281,9 @@ public class DataQuery extends SensorActAPI {
 			String data = json.toJson(ww);
 			outList.add(data);
 		}
+		
+		long t2 = new Date().getTime();
+		SensorActLogger.info("Iterator Array Addition: " + (t2 - t1)/1000 + " seconds\n\n");
 
 		// response.SendJSON(of);
 		// System.out.println(outList.toString());
