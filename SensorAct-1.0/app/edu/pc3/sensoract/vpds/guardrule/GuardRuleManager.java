@@ -425,6 +425,11 @@ public class GuardRuleManager {
 			System.out.println("No rules");
 			return null;
 		}
+		
+		SensorActLogger.info("Query received: \n"+ " username: " + username + 
+				" devicename: " + devicename + " sensorname: " + sensorname + 
+				" sensorid: " + sensorid + " fromtime: " + fromtime + 
+				" totime: " + totime);
 
 		long t1 = new Date().getTime();
 		List<WaveSegmentModel> wwList = SensorActAPI.waveSegmentData.read(
