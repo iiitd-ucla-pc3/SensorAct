@@ -40,12 +40,14 @@
  */
 package edu.pc3.sensoract.vpds.profile.mongo;
 
+import java.util.Date;
 import java.util.List;
 
 import play.Play;
 
 import edu.pc3.sensoract.vpds.api.SensorActAPI;
 import edu.pc3.sensoract.vpds.constants.Const;
+import edu.pc3.sensoract.vpds.guardrule.GuardRuleManager;
 import edu.pc3.sensoract.vpds.model.WaveSegmentModel;
 import edu.pc3.sensoract.vpds.profile.WaveSegmentData;
 
@@ -114,6 +116,8 @@ public class WaveSegmentDataMongo implements WaveSegmentData {
 		if (null == secretkey) {
 			return null;
 		}
+		
+		long tStart = new Date().getTime();				
 
 		List<WaveSegmentModel> listWaveSegment = WaveSegmentModel.q()
 				.filter("secretkey", secretkey)
@@ -123,6 +127,10 @@ public class WaveSegmentDataMongo implements WaveSegmentData {
 				.filter("data.timestamp >=", fromtime)
 				.filter("data.timestamp <=", totime).fetchAll();
 
+		long tEnd = new Date().getTime();
+		
+		System.out.println("\t Actual Time to retrieve data: " + (tEnd - tStart)/1000 + " seconds");
+		
 		return listWaveSegment;
 
 		/*
