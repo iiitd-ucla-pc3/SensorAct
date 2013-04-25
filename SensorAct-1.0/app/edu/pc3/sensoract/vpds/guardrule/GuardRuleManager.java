@@ -102,8 +102,9 @@ public class GuardRuleManager {
 		protected Decision decision[];
 
 		public ChannelDecisionResult(WaveSegmentChannelModel wc) {
-			decision = new Decision[wc.readings.size()];
-			System.out.println("Readings inside Guard rule: " + wc.readings.toString());
+			System.out.println("Readings inside Guard rule: \n channel name:" + wc.cname 
+					+ " Readings: " + wc.readings.toString());
+			decision = new Decision[wc.readings.size()];			
 			for (int i = 0; i < wc.readings.size(); i++) {
 				decision[i] = Decision.NOT_DECIDED;
 			}
