@@ -122,6 +122,8 @@ public class GuardRuleManager {
 			channelDecisionResult = new ChannelDecisionResult[ww.data.channels
 					.size()];
 			for (int i = 0; i < ww.data.channels.size(); i++) {
+				System.out.println("Readings inside Guard rule: \n device name:" + ww.data.dname 
+						+ " sname: " + ww.data.sname);
 				channelDecisionResult[i] = new ChannelDecisionResult(
 						ww.data.channels.get(i));
 			}
