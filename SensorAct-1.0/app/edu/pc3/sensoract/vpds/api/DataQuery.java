@@ -313,6 +313,7 @@ public class DataQuery extends SensorActAPI {
 			response.sendFailure(Const.API_DATA_QUERY, ErrorType.INVALID_JSON,
 					e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.sendFailure(Const.API_DATA_QUERY, ErrorType.SYSTEM_ERROR,
 					e.getMessage());
 		}
