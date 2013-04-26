@@ -14,6 +14,7 @@ import org.quartz.JobDetail;
 
 import edu.pc3.sensoract.vpds.api.DataUploadWaveSegment;
 import edu.pc3.sensoract.vpds.api.request.WaveSegmentFormat;
+import edu.pc3.sensoract.vpds.util.SensorActLogger;
 
 /**
  * @author samy
@@ -40,8 +41,8 @@ public class DeviceEvent extends Observable {
 		DeviceId deviceId = new DeviceId(ws.secretkey, ws.data.dname,
 				ws.data.sname, ws.data.sid);
 		
-		Logger uploadLog = Logger.getLogger(DataUploadWaveSegment.class);
-		uploadLog.info("notifyWaveSegmentArrived.. DeviceId "
+		//Logger uploadLog = Logger.getLogger(DataUploadWaveSegment.class);
+		SensorActLogger.info("notifyWaveSegmentArrived.. DeviceId "
 				+ deviceId.toString());
 
 		ArrayList<DeviceEventListener> listListener = mapListeners.get(deviceId
@@ -49,7 +50,7 @@ public class DeviceEvent extends Observable {
 		if (null == listListener)
 			return;
 
-		uploadLog.info("notifyWaveSegmentArrived.. Listeners "
+		SensorActLogger.info("notifyWaveSegmentArrived.. Listeners "
 				+ listListener.size() + "\n");
 
 		for (DeviceEventListener listener : listListener) {

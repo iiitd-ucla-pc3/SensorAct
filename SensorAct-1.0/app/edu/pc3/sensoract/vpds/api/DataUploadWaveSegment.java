@@ -55,6 +55,7 @@ import edu.pc3.sensoract.vpds.model.WaveSegmentModel;
 import edu.pc3.sensoract.vpds.model.rdbms.WaveSegmentRModel;
 import edu.pc3.sensoract.vpds.tasklet.DeviceEvent;
 import edu.pc3.sensoract.vpds.tasklet.DeviceEventListener;
+import edu.pc3.sensoract.vpds.util.SensorActLogger;
 
 /**
  * data/upload/wavesegment API: Uploads the wave segments sent by a device to
@@ -118,15 +119,15 @@ public class DataUploadWaveSegment extends SensorActAPI {
 
 		// WaveSegmentRModel ws = new WaveSegmentRModel(waveSegment);
 		// ws.save();
-		Logger uploadLog = Logger.getLogger(DataUploadWaveSegment.class);
+		//Logger uploadLog = Logger.getLogger(DataUploadWaveSegment.class);
 
 		WaveSegmentModel waveSegmentModel = new WaveSegmentModel(waveSegment);
 		waveSegmentModel.save();
 
-		uploadLog.info(System.currentTimeMillis()/1000 + " "
+		SensorActLogger.info(System.currentTimeMillis()/1000 + " "
 				+ waveSegment.data.sid + " notifing... " + waveSegment.data.timestamp);
 		deviceEvent.notifyWaveSegmentArrived(waveSegment);
-		uploadLog.info(System.currentTimeMillis()/1000 + " "
+		SensorActLogger.info(System.currentTimeMillis()/1000 + " "
 				+ waveSegment.data.sid + " notified...");
 
 	}
