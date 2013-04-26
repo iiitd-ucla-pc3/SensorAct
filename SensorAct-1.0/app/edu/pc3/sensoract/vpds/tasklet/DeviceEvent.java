@@ -42,7 +42,7 @@ public class DeviceEvent extends Observable {
 		DeviceId deviceId = new DeviceId(ws.secretkey, ws.data.dname,
 				ws.data.sname, ws.data.sid);
 		
-		uploadLog.info("notifyWaveSegmentArrived.. DeviceId "
+		uploadLog.info(System.currentTimeMillis()/1000 + " :: notifyWaveSegmentArrived.. DeviceId "
 				+ deviceId.toString());
 
 		ArrayList<DeviceEventListener> listListener = mapListeners.get(deviceId
