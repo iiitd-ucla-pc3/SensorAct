@@ -27,6 +27,7 @@ public class DeviceEvent extends Observable {
 
 	private static Map<String, ArrayList<DeviceEventListener>> mapListeners = 
 			new HashMap<String, ArrayList<DeviceEventListener>>();
+	private static Logger uploadLog = Logger.getLogger("UploadLogger");
 
 	public DeviceEvent() {
 	//	mapListeners = new HashMap<String, ArrayList<DeviceEventListener>>();
@@ -41,8 +42,7 @@ public class DeviceEvent extends Observable {
 		DeviceId deviceId = new DeviceId(ws.secretkey, ws.data.dname,
 				ws.data.sname, ws.data.sid);
 		
-		//Logger uploadLog = Logger.getLogger(DataUploadWaveSegment.class);
-		SensorActLogger.info("notifyWaveSegmentArrived.. DeviceId "
+		uploadLog.info("notifyWaveSegmentArrived.. DeviceId "
 				+ deviceId.toString());
 
 		ArrayList<DeviceEventListener> listListener = mapListeners.get(deviceId
@@ -50,7 +50,7 @@ public class DeviceEvent extends Observable {
 		if (null == listListener)
 			return;
 
-		SensorActLogger.info("notifyWaveSegmentArrived.. Listeners "
+		uploadLog.info("notifyWaveSegmentArrived.. Listeners "
 				+ listListener.size() + "\n");
 
 		for (DeviceEventListener listener : listListener) {

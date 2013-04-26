@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.Observer;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 import play.data.validation.Error;
 import edu.pc3.sensoract.vpds.api.request.WaveSegmentFormat;
@@ -68,6 +69,7 @@ public class DataUploadWaveSegment extends SensorActAPI {
 
 	private static int WaveSegmentSize = 5;
 	private static boolean isSendResponseEnabled = true;
+	private static Logger uploadLog = Logger.getLogger("UploadLogger");
 
 	private HashMap<String, ArrayList<WaveSegmentFormat>> hashmapWaveSegments = new HashMap<String, ArrayList<WaveSegmentFormat>>();
 
@@ -119,15 +121,15 @@ public class DataUploadWaveSegment extends SensorActAPI {
 
 		// WaveSegmentRModel ws = new WaveSegmentRModel(waveSegment);
 		// ws.save();
-		//Logger uploadLog = Logger.getLogger(DataUploadWaveSegment.class);
+		
 
 		WaveSegmentModel waveSegmentModel = new WaveSegmentModel(waveSegment);
 		waveSegmentModel.save();
 
-		SensorActLogger.info(System.currentTimeMillis()/1000 + " "
+		uploadLog.info(System.currentTimeMillis()/1000 + " "
 				+ waveSegment.data.sid + " notifing... " + waveSegment.data.timestamp);
 		deviceEvent.notifyWaveSegmentArrived(waveSegment);
-		SensorActLogger.info(System.currentTimeMillis()/1000 + " "
+		uploadLog.info(System.currentTimeMillis()/1000 + " "
 				+ waveSegment.data.sid + " notified...");
 
 	}
