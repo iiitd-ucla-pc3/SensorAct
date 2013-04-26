@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Observable;
+import org.apache.log4j.Logger;
 
 import org.quartz.JobDetail;
 
@@ -37,8 +38,9 @@ public class DeviceEvent extends Observable {
 
 		DeviceId deviceId = new DeviceId(ws.secretkey, ws.data.dname,
 				ws.data.sname, ws.data.sid);
-
-		System.out.println("notifyWaveSegmentArrived.. DeviceId "
+		
+		Logger uploadLog = Logger.getLogger("DataUploadWavesegments");
+		uploadLog.info("notifyWaveSegmentArrived.. DeviceId "
 				+ deviceId.toString());
 
 		ArrayList<DeviceEventListener> listListener = mapListeners.get(deviceId
@@ -46,7 +48,7 @@ public class DeviceEvent extends Observable {
 		if (null == listListener)
 			return;
 
-		System.out.println("notifyWaveSegmentArrived.. Listeners "
+		uploadLog.info("notifyWaveSegmentArrived.. Listeners "
 				+ listListener.size() + "\n");
 
 		for (DeviceEventListener listener : listListener) {
