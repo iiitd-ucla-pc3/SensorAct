@@ -118,7 +118,7 @@ public class DataUploadWaveSegment extends SensorActAPI {
 
 		// WaveSegmentRModel ws = new WaveSegmentRModel(waveSegment);
 		// ws.save();
-		Logger uploadLog = Logger.getLogger("DataUploadWavesegments");
+		Logger uploadLog = Logger.getLogger(DataUploadWaveSegment.class);
 
 		WaveSegmentModel waveSegmentModel = new WaveSegmentModel(waveSegment);
 		waveSegmentModel.save();

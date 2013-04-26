@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import org.quartz.JobDetail;
 
+import edu.pc3.sensoract.vpds.api.DataUploadWaveSegment;
 import edu.pc3.sensoract.vpds.api.request.WaveSegmentFormat;
 
 /**
@@ -39,7 +40,7 @@ public class DeviceEvent extends Observable {
 		DeviceId deviceId = new DeviceId(ws.secretkey, ws.data.dname,
 				ws.data.sname, ws.data.sid);
 		
-		Logger uploadLog = Logger.getLogger("DataUploadWavesegments");
+		Logger uploadLog = Logger.getLogger(DataUploadWaveSegment.class);
 		uploadLog.info("notifyWaveSegmentArrived.. DeviceId "
 				+ deviceId.toString());
 
