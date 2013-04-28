@@ -145,7 +145,7 @@ public class DataUploadWaveSegment extends SensorActAPI {
 
 		String hashKey = waveSegment.secretkey;
 		hashKey = hashKey.concat(waveSegment.data.dname)
-				.concat(waveSegment.data.sname).concat(waveSegment.data.sid);
+				.concat(waveSegment.data.sname).concat(""+waveSegment.data.sid);
 
 		ArrayList<WaveSegmentFormat> pendingWaveSegmentsList = hashmapWaveSegments
 				.get(hashKey);
@@ -159,11 +159,11 @@ public class DataUploadWaveSegment extends SensorActAPI {
 			pendingWaveSegmentsList.add(0, waveSegment);
 			hashmapWaveSegments.put(hashKey, pendingWaveSegmentsList);
 
-			log.info(Const.API_DATA_UPLOAD_WAVESEGMENT, hashKey + " "
-					+ waveSegment.data.timestamp + " "
-					+ hashmapWaveSegments.get(hashKey).size());
+            log.info(Const.API_DATA_UPLOAD_WAVESEGMENT, " "
+                    + waveSegment.data.timestamp + " buffer "
+                    + hashmapWaveSegments.get(hashKey).size() + " " + hashKey);
 
-			// renderText(hashKey + " count : "
+            // renderText(hashKey + " count : "
 			// + hashmapWaveSegments.get(hashKey).size());
 			return;
 		}
@@ -187,11 +187,12 @@ public class DataUploadWaveSegment extends SensorActAPI {
 		waveSegment.data.timestamp = oldestTimestamp;
 
 		persistWaveSegment(waveSegment);
-		hashmapWaveSegments.remove(hashKey);
+		
+        log.info(Const.API_DATA_UPLOAD_WAVESEGMENT, " "
+                + currentTimestamp + " stored " 
+                + hashmapWaveSegments.get(hashKey).size() + " " + hashKey);
 
-		log.info(Const.API_DATA_UPLOAD_WAVESEGMENT, hashKey + " "
-				+ currentTimestamp + " " + Const.UPLOAD_WAVESEGMENT_SUCCESS
-				+ "\n" + json.toJson(waveSegment) + "\n");
+        hashmapWaveSegments.remove(hashKey);
 
 		if (isSendResponseEnabled) {
 			response.SendSuccess(Const.API_DATA_UPLOAD_WAVESEGMENT,
