@@ -41,11 +41,11 @@
 
 package edu.pc3.sensoract.vpds.tasklet;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import org.quartz.JobExecutionContext;
@@ -53,15 +53,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import play.Play;
-
 import edu.pc3.sensoract.vpds.api.SensorActAPI;
-import edu.pc3.sensoract.vpds.api.response.DeviceProfileFormat;
+import edu.pc3.sensoract.vpds.api.request.WaveSegmentFormat;
 import edu.pc3.sensoract.vpds.constants.Const;
 import edu.pc3.sensoract.vpds.guardrule.GuardRuleManager;
 import edu.pc3.sensoract.vpds.guardrule.RequestingUser;
 import edu.pc3.sensoract.vpds.model.WaveSegmentChannelModel;
 import edu.pc3.sensoract.vpds.model.WaveSegmentModel;
-import edu.pc3.sensoract.vpds.profile.UserProfile;
 import edu.pc3.sensoract.vpds.util.SensorActLogger;
 
 public class LuaToJavaFunctionMapper {
@@ -146,7 +144,149 @@ public class LuaToJavaFunctionMapper {
 		}
 		return map;
 	}
+	
+	class DeviceInfo {
+		String username = null;
+		String devicename = null;
+		String sensorname = null;
+		String sensorid = null;
+		String channelname = null;		
+	}
+	
+	public DeviceInfo toDeviceInfo(String resource) {
+		
+		DeviceInfo dd = new DeviceInfo();
+		
+		StringTokenizer tokenizer = new StringTokenizer(resource, ":");
 
+		try {
+			dd.username = tokenizer.nextToken();
+			dd.devicename = tokenizer.nextToken();
+			dd.sensorname = tokenizer.nextToken();
+			dd.sensorid = tokenizer.nextToken();
+			dd.channelname = tokenizer.nextToken();
+		} catch (Exception e) {
+		}
+		
+		return dd;
+	}
+
+
+	// read past nMins data
+	public Map read(String resource, int nMins) {
+
+		DeviceInfo device = toDeviceInfo(resource);
+		device.username = SensorActAPI.userProfile.getOwnername();
+
+		String email = SensorActAPI.userProfile.getEmail(SensorActAPI.userProfile.getOwnername());
+		RequestingUser requestingUser = new RequestingUser(email);
+
+		long timeNow = new Date().getTime()/1000;		
+		List<WaveSegmentModel> wsList = GuardRuleManager.read(device.username,
+				requestingUser, device.devicename, device.sensorname, device.sensorid, timeNow-(nMins*60), timeNow);
+
+		if (null == wsList)
+			return null;
+
+		return toMap(wsList);
+	}
+
+	public Double readAvg(String resource, int nMins) {
+
+		DeviceInfo device = toDeviceInfo(resource);
+		device.username = SensorActAPI.userProfile.getOwnername();
+
+		String email = SensorActAPI.userProfile.getEmail(SensorActAPI.userProfile.getOwnername());
+		RequestingUser requestingUser = new RequestingUser(email);
+
+		long timeNow = new Date().getTime()/1000;		
+		List<WaveSegmentModel> wsList = GuardRuleManager.read(device.username,
+				requestingUser, device.devicename, device.sensorname, device.sensorid, timeNow-(nMins*60), timeNow);
+
+		if (null == wsList)
+			return null;
+
+		/*
+		DescriptiveStatistics stat = new DescriptiveStatistics();
+		stat.addValue(0);
+		
+		for (WaveSegmentModel ws : wsList) {
+			for (WaveSegmentChannelModel ch : ws.data.channels) {
+				for (Double d : ch.readings) {
+					stat.addValue(d);			
+				}
+			}
+		}
+		
+		//System.out.println("readings mean is " + stat.getMean());
+		
+		return stat.getMean();
+		*/
+
+		double sum = 0;
+		int count = 0;
+		
+		for (WaveSegmentModel ws : wsList) {
+			for (WaveSegmentChannelModel ch : ws.data.channels) {
+				for (Double d : ch.readings) {
+					sum += d;
+					count++;
+				}
+			}
+		}
+
+		return sum/count;
+		
+	}
+
+	public WaveSegmentFormat makeWaveSegment(DeviceInfo device, double data) {
+
+		WaveSegmentFormat ws = new WaveSegmentFormat();
+		
+		//ws.secretkey = SensorActAPI.userProfile.getSecretkey(device.username);
+		ws.secretkey = Play.configuration.getProperty(Const.OWNER_UPLOADKEY);
+		
+		ws.data = new WaveSegmentFormat.DeviceData();
+		
+		// TODO: get device profile and update all the readings accordingly
+		ws.data.dname = device.devicename;
+		ws.data.sname = device.sensorname;
+		ws.data.sid = device.sensorid;
+		ws.data.sinterval = "10";
+		ws.data.loc = "On earth";		
+		ws.data.timestamp = new Date().getTime()/1000;
+		
+		WaveSegmentFormat.Channels channel = new WaveSegmentFormat.Channels();
+		channel.cname = "channel1";
+		channel.unit = "Boolean";
+		channel.readings = new ArrayList<Double>();
+		
+		for(int i=0; i<1;++i)			
+		channel.readings.add(data);
+		
+		ws.data.channels = new ArrayList<WaveSegmentFormat.Channels>();
+		
+			ws.data.channels.add(channel);
+
+		return ws;
+	}
+	
+	public boolean writeData(String resource, double data) {
+		
+		DeviceInfo device = toDeviceInfo(resource);
+		WaveSegmentFormat ws = makeWaveSegment(device, data);
+		
+		String jsonStr = SensorActAPI.json.toJson(ws);
+		
+		System.out.println("writing new wavesegment " + jsonStr);
+		//SensorActAPI.dataUploadWaveseg.doProcess(jsonStr);
+		
+		SensorActAPI.dataUploadWaveseg.persistWaveSegment(ws);
+		
+		return true;
+	}
+	
+	
 	public Map read(String resource) {
 
 		long t1 = new Date().getTime();
@@ -155,26 +295,11 @@ public class LuaToJavaFunctionMapper {
 		// + jobContext.getJobDetail().getKey().getName() + " "
 		// + new Date().getTime());
 
-		String username = null;
-		String devicename = null;
-		String sensorname = null;
-		String sensorid = null;
-		String channelname = null;
-
-		StringTokenizer tokenizer = new StringTokenizer(resource, ":");
-
-		try {
-			username = tokenizer.nextToken();
-			devicename = tokenizer.nextToken();
-			sensorname = tokenizer.nextToken();
-			sensorid = tokenizer.nextToken();
-			channelname = tokenizer.nextToken();
-		} catch (Exception e) {
-		}
-
+		DeviceInfo device = toDeviceInfo(resource);
+		
 		// TODO: update the username as ownername
 		//username = Play.configuration.getProperty(Const.OWNER_NAME);
-		username = SensorActAPI.userProfile.getOwnername();
+		device.username = SensorActAPI.userProfile.getOwnername();
 
 		// System.out.println("readCurrent " + resource);
 		// System.out.println("readCurrent " + username + " " + devicename + " "
@@ -184,21 +309,20 @@ public class LuaToJavaFunctionMapper {
 		// sensorname, sensorid);
 		// return d;
 
-		String email = SensorActAPI.userProfile.getOwnername();
+		String email = SensorActAPI.userProfile.getEmail(SensorActAPI.userProfile.getOwnername());
 
 		RequestingUser requestingUser = new RequestingUser(email);
 
 		long t2 = new Date().getTime();
-		List<WaveSegmentModel> wsList = GuardRuleManager.read(username,
-				requestingUser, devicename, sensorname, sensorid, 1344247818,
-				new Date().getTime());
+		List<WaveSegmentModel> wsList = GuardRuleManager.read(device.username,
+				requestingUser, device.devicename, device.sensorname, device.sensorid, 1366832160,
+				1366846560);
 		// List<WaveSegmentModel> wsList = WaveSegmentData.readLatest(username,
 		// devicename,
 		// sensorname, sensorid);
 		long t3 = new Date().getTime();
 
-		SensorActLogger.info("GuardRuleManager.read: " + (t3 - t2) + " total: "
-				+ (t3 - t1));
+		//SensorActLogger.info("GuardRuleManager.read: " + (t3 - t2) + " total: " 	+ (t3 - t1));
 
 		if (null == wsList)
 			return null;

@@ -180,9 +180,9 @@ public class LuaScriptTasklet implements InterruptableJob {
 			// + ", " + ccount
 			// + ",   " + val);
 
-			SensorActLogger.info(jobKey.getName() + " export: " + (t3 - t1)
-					+ " lua: " + (e2 - e1) + " total: " + (e2 - t1)
-					+ " #threads: " + ccount);
+//			SensorActLogger.info(jobKey.getName() + " export: " + (t3 - t1)
+	//				+ " lua: " + (e2 - e1) + " total: " + (e2 - t1)
+		//			+ " #threads: " + ccount);
 			// System.out.println( key.getName() + ": " + (e2 - t1) + " " +
 			// ccount);
 			TaskletScheduler.updateElapsed((e2 - t1));
