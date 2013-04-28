@@ -408,6 +408,13 @@ public class GuardRuleManager {
 			return null;
 		}
 
+		
+		 SensorActLogger.info("Query received: \n"+ " username: " + username + 
+				" devicename: " + devicename + " sensorname: " + sensorname + 
+				" sensorid: " + sensorid + " fromtime: " + fromtime + 
+				" totime: " + totime);
+
+		
 		// By pass guard rule engine for owner
 		String oemail = SensorActAPI.userProfile.getEmail(username);
 		
@@ -416,20 +423,17 @@ public class GuardRuleManager {
 					sensorname, sensorid, fromtime, totime);
 		}
 		
-
+		//System.out.println("owner email : " + oemail+ "  requestingUser.email " + requestingUser.email);
+				
 		List<GuardRuleModel> ruleList = getRelevantReadGuardRules(secretkey,
 				devicename, sensorname, sensorid);
 
 		if (ruleList == null || ruleList.size() == 0) {
 			// No rules for this device.
-			System.out.println("No rules");
+			System.out.println("No rules!!");
 			return null;
 		}
 		
-		SensorActLogger.info("Query received: \n"+ " username: " + username + 
-				" devicename: " + devicename + " sensorname: " + sensorname + 
-				" sensorid: " + sensorid + " fromtime: " + fromtime + 
-				" totime: " + totime);
 
 		long t1 = new Date().getTime();
 		List<WaveSegmentModel> wwList = SensorActAPI.waveSegmentData.read(
