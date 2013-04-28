@@ -44,6 +44,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observer;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
 import play.data.validation.Error;
 import edu.pc3.sensoract.vpds.api.request.WaveSegmentFormat;
 import edu.pc3.sensoract.vpds.constants.Const;
@@ -53,6 +56,7 @@ import edu.pc3.sensoract.vpds.model.WaveSegmentModel;
 import edu.pc3.sensoract.vpds.model.rdbms.WaveSegmentRModel;
 import edu.pc3.sensoract.vpds.tasklet.DeviceEvent;
 import edu.pc3.sensoract.vpds.tasklet.DeviceEventListener;
+import edu.pc3.sensoract.vpds.util.SensorActLogger;
 
 /**
  * data/upload/wavesegment API: Uploads the wave segments sent by a device to
@@ -65,6 +69,7 @@ public class DataUploadWaveSegment extends SensorActAPI {
 
 	private static int WaveSegmentSize = 5;
 	private static boolean isSendResponseEnabled = true;
+	private static Logger uploadLog = Logger.getLogger("UploadLogger");
 
 	private HashMap<String, ArrayList<WaveSegmentFormat>> hashmapWaveSegments = new HashMap<String, ArrayList<WaveSegmentFormat>>();
 
@@ -116,15 +121,24 @@ public class DataUploadWaveSegment extends SensorActAPI {
 
 		// WaveSegmentRModel ws = new WaveSegmentRModel(waveSegment);
 		// ws.save();
+		
 
 		WaveSegmentModel waveSegmentModel = new WaveSegmentModel(waveSegment);
 		waveSegmentModel.save();
 
+<<<<<<< HEAD
 		//System.out.println(System.currentTimeMillis()/1000 + " "
 			//	+ waveSegment.data.sid + " notifing... " + waveSegment.data.timestamp);
 		deviceEvent.notifyWaveSegmentArrived(waveSegment);
 		//System.out.println(System.currentTimeMillis()/1000 + " "
 			//	+ waveSegment.data.sid + " notified...");
+=======
+		uploadLog.info(System.currentTimeMillis()/1000 + " "
+				+ waveSegment.data.sid + " notifing... " + waveSegment.data.timestamp);
+		deviceEvent.notifyWaveSegmentArrived(waveSegment);
+		uploadLog.info(System.currentTimeMillis()/1000 + " "
+				+ waveSegment.data.sid + " notified...");
+>>>>>>> e3ceed0bbf45c19b11087c700038bcc55a120e08
 
 	}
 

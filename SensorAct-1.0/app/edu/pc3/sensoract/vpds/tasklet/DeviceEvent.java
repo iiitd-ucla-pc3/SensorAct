@@ -8,10 +8,13 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Observable;
+import org.apache.log4j.Logger;
 
 import org.quartz.JobDetail;
 
+import edu.pc3.sensoract.vpds.api.DataUploadWaveSegment;
 import edu.pc3.sensoract.vpds.api.request.WaveSegmentFormat;
+import edu.pc3.sensoract.vpds.util.SensorActLogger;
 
 /**
  * @author samy
@@ -24,6 +27,7 @@ public class DeviceEvent extends Observable {
 
 	private static Map<String, ArrayList<DeviceEventListener>> mapListeners = 
 			new HashMap<String, ArrayList<DeviceEventListener>>();
+	private static Logger uploadLog = Logger.getLogger("UploadLogger");
 
 	public DeviceEvent() {
 	//	mapListeners = new HashMap<String, ArrayList<DeviceEventListener>>();
@@ -37,8 +41,8 @@ public class DeviceEvent extends Observable {
 
 		DeviceId deviceId = new DeviceId(ws.secretkey, ws.data.dname,
 				ws.data.sname, ws.data.sid);
-
-		System.out.println("notifyWaveSegmentArrived.. DeviceId "
+		
+		uploadLog.info(System.currentTimeMillis()/1000 + " :: notifyWaveSegmentArrived.. DeviceId "
 				+ deviceId.toString());
 
 		ArrayList<DeviceEventListener> listListener = mapListeners.get(deviceId
@@ -46,7 +50,7 @@ public class DeviceEvent extends Observable {
 		if (null == listListener)
 			return;
 
-		System.out.println("notifyWaveSegmentArrived.. Listeners "
+		uploadLog.info("notifyWaveSegmentArrived.. Listeners "
 				+ listListener.size() + "\n");
 
 		for (DeviceEventListener listener : listListener) {
