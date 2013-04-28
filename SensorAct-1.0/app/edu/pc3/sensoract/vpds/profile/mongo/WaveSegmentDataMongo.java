@@ -124,13 +124,13 @@ public class WaveSegmentDataMongo implements WaveSegmentData {
 				.filter("secretkey", secretkey)
 				.filter("data.dname", devicename)
 				.filter("data.sname", sensorname)
-				.filter("data.sid", sensorid)
+//				.filter("data.sid", sensorid)
 				.filter("data.timestamp >=", fromtime)
 				.filter("data.timestamp <=", totime).fetchAll();
 
 		long tEnd = new Date().getTime();
 		
-		SensorActLogger.info("\t Actual Time to retrieve data: " + (tEnd - tStart)/1000 + " seconds");
+		//SensorActLogger.info("\t Actual Time to retrieve data: " + (tEnd - tStart)/1000 + " seconds");
 		
 		return listWaveSegment;
 
