@@ -273,20 +273,20 @@ public class DataUploadWaveSegment extends SensorActAPI {
 					waveSegmentJson, WaveSegmentFormat.class);
 			
 
-			long t1 = new java.util.Date().getTime();
+			//long t1 = new java.util.Date().getTime();
 			
 			validateWaveSegment(newWaveSegment);
 			verifyWaveSegment(newWaveSegment);
-			long t2 = new java.util.Date().getTime();
+			//long t2 = new java.util.Date().getTime();
 			
 			
 			// userProfile.checkRegisteredSecretkey(newWaveSegment.secretkey,
 			// Const.API_UPLOAD_WAVESEGMENT);
 			persistWaveSegment(newWaveSegment);
 			
-			long t3 = new java.util.Date().getTime();
+			//long t3 = new java.util.Date().getTime();
 			
-			System.out.println("waveseg t2-t1 : " + (t2-t1) + "  t3-t2 : " + (t3-t2));
+			//System.out.println("waveseg t2-t1 : " + (t2-t1) + "  t3-t2 : " + (t3-t2));
 			
 			// applyPreInsertMerge(newWaveSegment);
 		} catch (InvalidJsonException e) {
