@@ -107,7 +107,7 @@ public class DataUploadWaveSegment extends SensorActAPI {
 		validator.validateWaveSegmentDeviceName(data.dname);
 		validator.validateWaveSegmentSensorName(data.sname);
 		validator.validateWaveSegmentSensorId(data.sid);
-		validator.validateWaveSegmentSInterval(data.sinterval);
+		//validator.validateWaveSegmentSInterval(data.sinterval);
 		validator.validateWaveSegmentTimestamp(data.timestamp);
 
 		if (null == data.channels || data.channels.isEmpty()) {
