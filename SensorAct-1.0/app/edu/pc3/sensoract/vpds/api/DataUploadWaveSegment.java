@@ -94,6 +94,45 @@ public class DataUploadWaveSegment extends SensorActAPI {
 		}
 	}
 
+	private void validateWaveSegmentData(final WaveSegmentFormat waveSegment) {
+
+		WaveSegmentFormat.DeviceData data = waveSegment.data;
+
+		if (null == data) {
+			validator.addError(Const.PARAM_WS_DATA, Const.PARAM_WS_DATA
+					+ Const.MSG_REQUIRED);
+			return;
+		}
+
+		validator.validateWaveSegmentDeviceName(data.dname);
+		validator.validateWaveSegmentSensorName(data.sname);
+		validator.validateWaveSegmentSensorId(data.sid);
+		validator.validateWaveSegmentSInterval(data.sinterval);
+		validator.validateWaveSegmentTimestamp(data.timestamp);
+
+		if (null == data.channels || data.channels.isEmpty()) {
+			validator.addError(Const.PARAM_WS_CHANNELS, Const.PARAM_WS_DATA
+					+ "." + Const.PARAM_WS_CHANNELS + Const.MSG_REQUIRED);
+			return;
+		}
+
+		for (int cIndex = 0; cIndex < data.channels.size(); ++cIndex) {
+			WaveSegmentFormat.Channels channel = data.channels.get(cIndex);
+			validator.validateWaveSegmentChannelName(channel.cname, cIndex);
+			validator.validateWaveSegmentChannelUnit(channel.unit, cIndex);
+
+			if (null == channel.readings || channel.readings.isEmpty()) {
+				validator.addError(Const.PARAM_WS_READINGS, Const.PARAM_WS_DATA
+						+ "." + Const.PARAM_WS_CHANNELS + "[" + cIndex + "]."
+						+ Const.PARAM_WS_READINGS + Const.MSG_REQUIRED);
+				return;
+			}
+
+			// TODO: check the type of data and any error in each readings
+		}
+
+	}
+
 	/**
 	 * Validates the wave segment attributes. If validation fails, sends
 	 * corresponding failure message, if enabled, to the caller.
@@ -105,10 +144,22 @@ public class DataUploadWaveSegment extends SensorActAPI {
 
 		// TODO: Add validation for other attributes as well.
 		validator.validateSecretKey(waveSegment.secretkey);
+		validateWaveSegmentData(waveSegment);
 
 		if (validator.hasErrors()) {
 			sendError(ErrorType.VALIDATION_FAILED, validator.getErrorMessages());
 		}
+	}
+
+	private void verifyWaveSegment(final WaveSegmentFormat waveSegment) {
+
+		if (!userProfile.isRegisteredSecretkey(waveSegment.secretkey)) {
+			response.sendFailure(Const.API_DATA_UPLOAD_WAVESEGMENT,
+					ErrorType.UNREGISTERED_SECRETKEY, waveSegment.secretkey);
+
+		}
+		
+		// TODO: verifty the device parameters
 	}
 
 	/**
@@ -121,16 +172,16 @@ public class DataUploadWaveSegment extends SensorActAPI {
 
 		// WaveSegmentRModel ws = new WaveSegmentRModel(waveSegment);
 		// ws.save();
-		
 
 		WaveSegmentModel waveSegmentModel = new WaveSegmentModel(waveSegment);
 		waveSegmentModel.save();
 
-		//System.out.println(System.currentTimeMillis()/1000 + " "
-			//	+ waveSegment.data.sid + " notifing... " + waveSegment.data.timestamp);
+		// System.out.println(System.currentTimeMillis()/1000 + " "
+		// + waveSegment.data.sid + " notifing... " +
+		// waveSegment.data.timestamp);
 		deviceEvent.notifyWaveSegmentArrived(waveSegment);
-		//System.out.println(System.currentTimeMillis()/1000 + " "
-			//	+ waveSegment.data.sid + " notified...");
+		// System.out.println(System.currentTimeMillis()/1000 + " "
+		// + waveSegment.data.sid + " notified...");
 
 	}
 
@@ -145,7 +196,8 @@ public class DataUploadWaveSegment extends SensorActAPI {
 
 		String hashKey = waveSegment.secretkey;
 		hashKey = hashKey.concat(waveSegment.data.dname)
-				.concat(waveSegment.data.sname).concat(""+waveSegment.data.sid);
+				.concat(waveSegment.data.sname)
+				.concat("" + waveSegment.data.sid);
 
 		ArrayList<WaveSegmentFormat> pendingWaveSegmentsList = hashmapWaveSegments
 				.get(hashKey);
@@ -159,11 +211,11 @@ public class DataUploadWaveSegment extends SensorActAPI {
 			pendingWaveSegmentsList.add(0, waveSegment);
 			hashmapWaveSegments.put(hashKey, pendingWaveSegmentsList);
 
-            log.info(Const.API_DATA_UPLOAD_WAVESEGMENT, " "
-                    + waveSegment.data.timestamp + " buffer "
-                    + hashmapWaveSegments.get(hashKey).size() + " " + hashKey);
+			log.info(Const.API_DATA_UPLOAD_WAVESEGMENT, " "
+					+ waveSegment.data.timestamp + " buffer "
+					+ hashmapWaveSegments.get(hashKey).size() + " " + hashKey);
 
-            // renderText(hashKey + " count : "
+			// renderText(hashKey + " count : "
 			// + hashmapWaveSegments.get(hashKey).size());
 			return;
 		}
@@ -187,12 +239,12 @@ public class DataUploadWaveSegment extends SensorActAPI {
 		waveSegment.data.timestamp = oldestTimestamp;
 
 		persistWaveSegment(waveSegment);
-		
-        log.info(Const.API_DATA_UPLOAD_WAVESEGMENT, " "
-                + currentTimestamp + " stored " 
-                + hashmapWaveSegments.get(hashKey).size() + " " + hashKey);
 
-        hashmapWaveSegments.remove(hashKey);
+		log.info(Const.API_DATA_UPLOAD_WAVESEGMENT, " " + currentTimestamp
+				+ " stored " + hashmapWaveSegments.get(hashKey).size() + " "
+				+ hashKey);
+
+		hashmapWaveSegments.remove(hashKey);
 
 		if (isSendResponseEnabled) {
 			response.SendSuccess(Const.API_DATA_UPLOAD_WAVESEGMENT,
@@ -215,10 +267,23 @@ public class DataUploadWaveSegment extends SensorActAPI {
 		try {
 			WaveSegmentFormat newWaveSegment = convertToRequestFormat(
 					waveSegmentJson, WaveSegmentFormat.class);
+			
+
+			long t1 = new java.util.Date().getTime();
+			
 			validateWaveSegment(newWaveSegment);
+			verifyWaveSegment(newWaveSegment);
+			long t2 = new java.util.Date().getTime();
+			
+			
 			// userProfile.checkRegisteredSecretkey(newWaveSegment.secretkey,
 			// Const.API_UPLOAD_WAVESEGMENT);
 			persistWaveSegment(newWaveSegment);
+			
+			long t3 = new java.util.Date().getTime();
+			
+			System.out.println("waveseg t2-t1 : " + (t2-t1) + "  t3-t2 : " + (t3-t2));
+			
 			// applyPreInsertMerge(newWaveSegment);
 		} catch (InvalidJsonException e) {
 			sendError(ErrorType.INVALID_JSON, e.getMessage());

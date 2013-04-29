@@ -199,8 +199,8 @@ public class ParamValidator extends SensorActAPI {
 	}
 
 	/**
-	 * Validates templatename parameter and sets the corresponding error message,
-	 * if validation fails.
+	 * Validates templatename parameter and sets the corresponding error
+	 * message, if validation fails.
 	 * 
 	 * @param templatename
 	 *            Template name to validate
@@ -231,9 +231,8 @@ public class ParamValidator extends SensorActAPI {
 	 *            Device name to validate
 	 */
 	public void validateDeviceProfileDeviceName(final String name) {
-		validateString(name,
-				Const.PARAM_DEVICEPROFILE + "." + Const.PARAM_DEVICENAME,
-				Const.DEVICEPROFILENAME_MIN_LENGTH,
+		validateString(name, Const.PARAM_DEVICEPROFILE + "."
+				+ Const.PARAM_DEVICENAME, Const.DEVICEPROFILENAME_MIN_LENGTH,
 				Const.DEVICEPROFILENAME_MAX_LENGTH);
 	}
 
@@ -245,9 +244,8 @@ public class ParamValidator extends SensorActAPI {
 	 *            Device name to validate
 	 */
 	public void validateDeviceProfileTemplateName(final String name) {
-		validateString(name,
-				Const.PARAM_DEVICEPROFILE + "." + Const.PARAM_TEMPLATENAME,
-				Const.DEVICEPROFILENAME_MIN_LENGTH,
+		validateString(name, Const.PARAM_DEVICEPROFILE + "."
+				+ Const.PARAM_TEMPLATENAME, Const.DEVICEPROFILENAME_MIN_LENGTH,
 				Const.DEVICEPROFILENAME_MAX_LENGTH);
 	}
 
@@ -479,10 +477,10 @@ public class ParamValidator extends SensorActAPI {
 				+ Const.PARAM_NAME, Const.ACTUATORNAME_MIN_LENGTH,
 				Const.ACTUATORNAME_MAX_LENGTH);
 	}
-	
+
 	/**
-	 * Validates actuator status parameter and sets the corresponding error message, if
-	 * validation fails.
+	 * Validates actuator status parameter and sets the corresponding error
+	 * message, if validation fails.
 	 * 
 	 * @param status
 	 *            to validate actuator status
@@ -490,6 +488,83 @@ public class ParamValidator extends SensorActAPI {
 	public void validateActuatorStatus(final String status) {
 		validateString(status, Const.PARAM_KEY, Const.SECRETKEY_MIN_LENGTH,
 				Const.SECRETKEY_MAX_LENGTH);
+	}
+
+	// Wavesegment validations
+	public void validateWaveSegmentDeviceName(final String device) {
+		validateString(device,
+				Const.PARAM_WS_DATA + "." + Const.PARAM_WS_DNAME,
+				Const.DEVICENAME_MIN_LENGTH, Const.DEVICENAME_MAX_LENGTH);
+	}
+
+	public void validateWaveSegmentSensorName(final String sensor) {
+		validateString(sensor,
+				Const.PARAM_WS_DATA + "." + Const.PARAM_WS_SNAME,
+				Const.SENSORNAME_MIN_LENGTH, Const.SENSORNAME_MAX_LENGTH);
+	}
+
+	public void validateWaveSegmentSensorId(final String sensorId) {
+
+		if (null == sensorId) {
+			validator.addError(Const.PARAM_WS_SID, Const.PARAM_WS_DATA + "."
+					+ Const.PARAM_WS_SID + Const.MSG_REQUIRED);
+			return;
+		}
+
+		int sid = 0;
+		try {
+			sid = Integer.parseInt(sensorId);
+		} catch (Exception e) {
+			validator.addError(Const.PARAM_WS_SID, Const.PARAM_WS_DATA + "."
+					+ Const.PARAM_WS_SID + Const.MSG_INVALID);
+			return;
+		}
+
+		validateNumber(sid, Const.PARAM_WS_DATA + "." + Const.PARAM_WS_SID,
+				Const.SENSORID_MIN_VALUE, Const.SENSORID_MIN_VALUE);
+	}
+
+	public void validateWaveSegmentSInterval(final String sinterval) {
+
+		if (null == sinterval) {
+			validator.addError(Const.PARAM_WS_SINTERVAL, Const.PARAM_WS_DATA
+					+ "." + Const.PARAM_WS_SINTERVAL + Const.MSG_REQUIRED);
+			return;
+		}
+
+		int sint = 0;
+		try {
+			sint = Integer.parseInt(sinterval);
+		} catch (Exception e) {
+			validator.addError(Const.PARAM_WS_SINTERVAL, Const.PARAM_WS_DATA
+					+ "." + Const.PARAM_WS_SINTERVAL + Const.MSG_INVALID);
+			return;
+		}
+
+		validateNumber(sint, Const.PARAM_WS_DATA + "."
+				+ Const.PARAM_WS_SINTERVAL, Const.SAMPLING_PERIOD_MIN_VALUE,
+				Const.SAMPLING_PERIOD_MAX_VALUE);
+	}
+
+	public void validateWaveSegmentTimestamp(final long timestamp) {
+		validateNumber(timestamp, Const.PARAM_WS_TIMESTAMP,
+				Const.WS_TIMESTAMP_MIN_VALUE, Const.WS_TIMESTAMP_MAX_VALUE);
+	}
+
+	public void validateWaveSegmentChannelName(final String cname,
+			final int cIndex) {
+		validateString(cname, Const.PARAM_WS_DATA + "."
+				+ Const.PARAM_WS_CHANNELS + "[" + cIndex + "]."
+				+ Const.PARAM_WS_CNAME, Const.CHANNELNAME_MIN_LENGTH,
+				Const.CHANNELNAME_MAX_LENGTH);
+	}
+
+	public void validateWaveSegmentChannelUnit(final String cunit,
+			final int cIndex) {
+		validateString(cunit, Const.PARAM_WS_DATA + "."
+				+ Const.PARAM_WS_CHANNELS + "[" + cIndex + "]."
+				+ Const.PARAM_WS_UNIT, Const.CHANNELUNIT_MIN_LENGTH,
+				Const.CHANNELUNIT_MAX_LENGTH);
 	}
 
 }

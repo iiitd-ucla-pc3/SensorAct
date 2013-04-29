@@ -174,6 +174,18 @@ public class Const {
 	public static final String PARAM_READ = "read";
 	public static final String PARAM_WRITE = "write";
 	
+	public static final String PARAM_WS_DATA = "data";
+	public static final String PARAM_WS_DNAME = "dname";
+	public static final String PARAM_WS_SNAME = "sname";
+	public static final String PARAM_WS_SID = "sid";
+	public static final String PARAM_WS_SINTERVAL = "sinterval";
+	public static final String PARAM_WS_TIMESTAMP = "timestamp";
+	public static final String PARAM_WS_LOCATION = "location";
+	public static final String PARAM_WS_CHANNELS = "channels";
+	public static final String PARAM_WS_CNAME = "cname";
+	public static final String PARAM_WS_UNIT = "unit";
+	public static final String PARAM_WS_READINGS = "readings";
+	
 	/*
 	 * API parameter validation limits
 	 */
@@ -242,6 +254,9 @@ public class Const {
 
 	public static final int TASKLET_PARAM_MAX_LENGTH = 20;
 	public static final int TASKLET_PARAM_VALUE_MAX_LENGTH = 100;
+	
+	public static final long WS_TIMESTAMP_MIN_VALUE = 510667932; // epoch
+	public static final long WS_TIMESTAMP_MAX_VALUE = 1583669532; // epoch 2020
 
 	/*
 	 * API parameter validation error messages
