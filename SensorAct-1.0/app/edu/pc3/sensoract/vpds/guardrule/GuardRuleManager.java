@@ -103,9 +103,16 @@ public class GuardRuleManager {
 
 		public ChannelDecisionResult(WaveSegmentChannelModel wc) {
 			//System.out.println("Readings inside Guard rule: \n channel name:" + wc.cname);
-			decision = new Decision[wc.readings.size()];			
-			for (int i = 0; i < wc.readings.size(); i++) {
-				decision[i] = Decision.NOT_DECIDED;
+			try{
+			
+				decision = new Decision[wc.readings.size()];			
+				for (int i = 0; i < wc.readings.size(); i++) {
+					decision[i] = Decision.NOT_DECIDED;
+				}
+			}
+			catch(Exception e){
+				SensorActLogger.error("GuardRuleEngine::ChannelDecisionResult : Error while processing wavesegments!");
+				e.printStackTrace();
 			}
 		}
 	}
@@ -121,9 +128,7 @@ public class GuardRuleManager {
 		public WaveSegDecisionResult(WaveSegmentModel ww) {
 			channelDecisionResult = new ChannelDecisionResult[ww.data.channels
 					.size()];
-			for (int i = 0; i < ww.data.channels.size(); i++) {
-				System.out.println("Readings inside Guard rule: \n device name:" + ww.data.dname 
-						+ " sname: " + ww.data.sname);
+			for (int i = 0; i < ww.data.channels.size(); i++) {				
 				channelDecisionResult[i] = new ChannelDecisionResult(
 						ww.data.channels.get(i));
 			}
@@ -453,6 +458,7 @@ public class GuardRuleManager {
 
 		// Initialize decision variable
 		DecisionResult decisionResult = new DecisionResult(wwList);
+		
 
 		// System.out.println("DecisionResult");
 

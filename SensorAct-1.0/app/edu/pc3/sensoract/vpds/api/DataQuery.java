@@ -310,9 +310,11 @@ public class DataQuery extends SensorActAPI {
 			// executeQuery(query);
 			readData(query);
 		} catch (InvalidJsonException e) {
+			SensorActLogger.error("JSONExceptionError:" + e.getMessage());
 			response.sendFailure(Const.API_DATA_QUERY, ErrorType.INVALID_JSON,
 					e.getMessage());
 		} catch (Exception e) {
+			SensorActLogger.error("Error:" + e.getMessage());
 			e.printStackTrace();
 			response.sendFailure(Const.API_DATA_QUERY, ErrorType.SYSTEM_ERROR,
 					e.getMessage());
