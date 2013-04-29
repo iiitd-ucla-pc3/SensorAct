@@ -47,6 +47,7 @@ import java.util.Observer;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+import play.Play;
 import play.data.validation.Error;
 import edu.pc3.sensoract.vpds.api.request.WaveSegmentFormat;
 import edu.pc3.sensoract.vpds.constants.Const;
@@ -152,8 +153,11 @@ public class DataUploadWaveSegment extends SensorActAPI {
 	}
 
 	private void verifyWaveSegment(final WaveSegmentFormat waveSegment) {
+		
+		String secretkey = Play.configuration
+				.getProperty(Const.OWNER_UPLOADKEY);
 
-		if (!userProfile.isRegisteredSecretkey(waveSegment.secretkey)) {
+		if (!secretkey.equals(waveSegment.secretkey)) {
 			response.sendFailure(Const.API_DATA_UPLOAD_WAVESEGMENT,
 					ErrorType.UNREGISTERED_SECRETKEY, waveSegment.secretkey);
 
@@ -272,7 +276,7 @@ public class DataUploadWaveSegment extends SensorActAPI {
 			long t1 = new java.util.Date().getTime();
 			
 			validateWaveSegment(newWaveSegment);
-			//verifyWaveSegment(newWaveSegment);
+			verifyWaveSegment(newWaveSegment);
 			long t2 = new java.util.Date().getTime();
 			
 			
