@@ -272,7 +272,7 @@ public class DataUploadWaveSegment extends SensorActAPI {
 			long t1 = new java.util.Date().getTime();
 			
 			validateWaveSegment(newWaveSegment);
-			verifyWaveSegment(newWaveSegment);
+			//verifyWaveSegment(newWaveSegment);
 			long t2 = new java.util.Date().getTime();
 			
 			
