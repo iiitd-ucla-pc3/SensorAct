@@ -43,7 +43,7 @@ public class DeviceEvent extends Observable {
 				ws.data.sname, ws.data.sid);
 		
 		//uploadLog.info(System.currentTimeMillis()/1000 + " :: notifyWaveSegmentArrived.. DeviceId "
-				+ deviceId.toString());
+			//	+ deviceId.toString());
 		uploadLog.info(ws.data.timestamp + " :: notifyWaveSegmentArrived.. DeviceId "
 				+ deviceId.toString());
 
