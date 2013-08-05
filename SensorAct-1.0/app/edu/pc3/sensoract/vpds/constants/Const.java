@@ -220,7 +220,7 @@ public class Const {
 	public static final double LONGITUDE_MAX_VALUE = 180.0;
 
 	public static final int SAMPLING_PERIOD_MIN_VALUE = 1;
-	public static final int SAMPLING_PERIOD_MAX_VALUE = 60;
+	public static final int SAMPLING_PERIOD_MAX_VALUE = 900;
 
 	public static final int DEVICEPROFILENAME_MIN_LENGTH = 2;
 	public static final int DEVICEPROFILENAME_MAX_LENGTH = 20;
